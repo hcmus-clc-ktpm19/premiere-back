@@ -1,173 +1,183 @@
+CREATE SCHEMA premiere;
+SET SEARCH_PATH TO premiere;
+
 CREATE TYPE GENDER AS ENUM ('MALE', 'FEMALE', 'OTHER');
-CREATE TYPE ROLE AS ENUM ('CUSTOMER', 'EMPLOYEE', 'ADMIN');
+CREATE TYPE PREMIERE_ROLE AS ENUM ('CUSTOMER', 'EMPLOYEE', 'PREMIERE_ADMIN');
 CREATE TYPE LOAN_STATUS AS ENUM ('APPROVED', 'REJECTED', 'PENDING');
 CREATE TYPE TRANSACTION_TYPE AS ENUM ('PURCHASE', 'REDEMPTION');
 CREATE TYPE TRANSACTION_STATUS AS ENUM ('CHECKING', 'COMPLETED');
 
-CREATE TABLE "USER"
+CREATE TABLE "user"
 (
-    "USER_ID"    SERIAL       NOT NULL,
-    "FIRST_NAME" VARCHAR(255) NOT NULL,
-    "LAST_NAME"  VARCHAR(255) NOT NULL,
-    "DOB"        DATE,
-    "GENDER"     GENDER       NOT NULL,
-    "EMAIL"      VARCHAR(255) NOT NULL UNIQUE,
-    "PHONE"      CHAR(10)     NOT NULL UNIQUE,
-    "PAN_NUMBER" VARCHAR(255) NOT NULL,
-    "ADDRESS"    VARCHAR(255) NOT NULL,
-    "AVATAR"     VARCHAR(255) NOT NULL,
-    CONSTRAINT "USER_PK" PRIMARY KEY ("USER_ID")
+    "id"         SERIAL       NOT NULL,
+    "first_name" VARCHAR(255) NOT NULL,
+    "last_name"  VARCHAR(255) NOT NULL,
+    "dob"        DATE,
+    "gender"     GENDER       NOT NULL,
+    "email"      VARCHAR(255) NOT NULL UNIQUE,
+    "phone"      VARCHAR(10)  NOT NULL UNIQUE,
+    "pan_number" VARCHAR(255) NOT NULL,
+    "address"    VARCHAR(255) NOT NULL,
+    "avatar"     VARCHAR(255),
+    "version"    INT          NOT NULL DEFAULT 0,
+    CONSTRAINT "user_pk" PRIMARY KEY ("id")
 ) WITH (
       OIDS= FALSE
     );
 
-CREATE TABLE "ACCOUNT"
+CREATE TABLE "account"
 (
-    "ACCOUNT_ID" SERIAL       NOT NULL,
-    "USER_ID"    INTEGER      NOT NULL,
-    "USERNAME"   VARCHAR(255) NOT NULL UNIQUE,
-    "PASSWORD"   VARCHAR(255) NOT NULL,
-    "ROLE"       ROLE         NOT NULL,
-    CONSTRAINT "ACCOUNT_PK" PRIMARY KEY ("ACCOUNT_ID")
+    "id"       SERIAL        NOT NULL,
+    "user_id"  INTEGER       NOT NULL,
+    "username" VARCHAR(255)  NOT NULL UNIQUE,
+    "password" VARCHAR(255)  NOT NULL,
+    "role"     PREMIERE_ROLE NOT NULL,
+    "version"  INT           NOT NULL DEFAULT 0,
+    CONSTRAINT "account_pk" PRIMARY KEY ("id")
 ) WITH (
       OIDS= FALSE
     );
 
-CREATE TABLE "CREDIT_CARD"
+CREATE TABLE "credit_card"
 (
-    "CREDIT_CARD_ID" SERIAL       NOT NULL,
-    "USER_ID"        INTEGER      NOT NULL,
-    "BALANCE"        MONEY        NOT NULL,
-    "OPEN_DAY"       TIMESTAMP    NOT NULL,
-    "CARD_NUMBER"    VARCHAR(255) NOT NULL UNIQUE,
-    "BANK_ID"        INTEGER      NOT NULL,
-    CONSTRAINT "CREDIT_CARD_PK" PRIMARY KEY ("CREDIT_CARD_ID")
+    "id"          SERIAL       NOT NULL,
+    "user_id"     INTEGER      NOT NULL,
+    "balance"     NUMERIC      NOT NULL,
+    "open_day"    TIMESTAMP    NOT NULL,
+    "card_number" VARCHAR(255) NOT NULL UNIQUE,
+    "bank_id"     INTEGER      NOT NULL,
+    "version"     INT          NOT NULL DEFAULT 0,
+    CONSTRAINT "credit_card_pk" PRIMARY KEY ("id")
 ) WITH (
       OIDS= FALSE
     );
 
-CREATE TABLE "BANK"
+CREATE TABLE "bank"
 (
-    "BANK_ID"   SERIAL       NOT NULL,
-    "BANK_NAME" VARCHAR(255) NOT NULL UNIQUE,
-    CONSTRAINT "BANK_PK" PRIMARY KEY ("BANK_ID")
+    "id"        SERIAL       NOT NULL,
+    "bank_name" VARCHAR(255) NOT NULL UNIQUE,
+    "version"   INT          NOT NULL DEFAULT 0,
+    CONSTRAINT "bank_pk" PRIMARY KEY ("id")
 ) WITH (
       OIDS= FALSE
     );
 
-CREATE TABLE "RECEIVER"
+CREATE TABLE "receiver"
 (
-    "RECEIVER_ID" SERIAL       NOT NULL,
-    "CARD_NUMBER" VARCHAR(255) NOT NULL,
-    "NICKNAME"    VARCHAR(255) NOT NULL,
-    "FULL_NAME"   VARCHAR(255) NOT NULL,
-    "USER_ID"     INTEGER      NOT NULL,
-    "BANK_ID"     INTEGER      NOT NULL,
-    CONSTRAINT "RECEIVERS_PK" PRIMARY KEY ("RECEIVER_ID")
+    "id"          SERIAL       NOT NULL,
+    "card_number" VARCHAR(255) NOT NULL,
+    "nickname"    VARCHAR(255) NOT NULL,
+    "full_name"   VARCHAR(255) NOT NULL,
+    "user_id"     INTEGER      NOT NULL,
+    "bank_id"     INTEGER      NOT NULL,
+    "version"     INT          NOT NULL DEFAULT 0,
+    CONSTRAINT "receivers_pk" PRIMARY KEY ("id")
 ) WITH (
       OIDS= FALSE
     );
 
-CREATE TABLE "LOAN_REMINDER"
+CREATE TABLE "loan_reminder"
 (
-    "LOAN_REMINDER_ID"        SERIAL       NOT NULL,
-    "LOAN_BALANCE"            MONEY        NOT NULL,
-    "SENDER_CREDIT_CARD_ID"   INTEGER      NOT NULL,
-    "RECEIVER_CREDIT_CARD_ID" INTEGER      NOT NULL,
-    "STATUS"                  LOAN_STATUS  NOT NULL,
-    "TIME"                    TIMESTAMP    NOT NULL,
-    "LOAN_REMARK"             VARCHAR(255) NOT NULL,
-    CONSTRAINT "LOAN_REMINDER_PK" PRIMARY KEY ("LOAN_REMINDER_ID")
+    "id"                      SERIAL       NOT NULL,
+    "loan_balance"            NUMERIC      NOT NULL,
+    "sender_credit_card_id"   INTEGER      NOT NULL,
+    "receiver_credit_card_id" INTEGER      NOT NULL,
+    "status"                  LOAN_STATUS  NOT NULL,
+    "time"                    TIMESTAMP    NOT NULL,
+    "loan_remark"             VARCHAR(255) NOT NULL,
+    "version"                 INT          NOT NULL DEFAULT 0,
+    CONSTRAINT "loan_reminder_pk" PRIMARY KEY ("id")
 ) WITH (
       OIDS= FALSE
     );
 
-CREATE TABLE "TRANSACTION"
+CREATE TABLE "transaction"
 (
-    "TRANSACTION_ID"              SERIAL             NOT NULL,
-    "AMOUNT"                      FLOAT              NOT NULL,
-    "TYPE"                        TRANSACTION_TYPE   NOT NULL,
-    "TIME"                        TIMESTAMP          NOT NULL,
-    "TRANSACTION_REMARK"          VARCHAR(255)       NOT NULL,
-    "TOTAL_BALANCE"               MONEY              NOT NULL,
-    "SENDER_CREDIT_CARD_ID"       INTEGER            NOT NULL,
-    "RECEIVER_CREDIT_CARD_NUMBER" INTEGER            NOT NULL,
-    "SENDER_BANK_ID"              INTEGER            NOT NULL,
-    "RECEIVER_BANK_ID"            INTEGER            NOT NULL,
-    "FEE"                         FLOAT              NOT NULL,
-    "IS_SELF_PAYMENT_FEE"         BOOLEAN            NOT NULL,
-    "STATUS"                      TRANSACTION_STATUS NOT NULL,
-    CONSTRAINT "TRANSACTION_PK" PRIMARY KEY ("TRANSACTION_ID")
+    "id"                          SERIAL             NOT NULL,
+    "amount"                      NUMERIC            NOT NULL,
+    "type"                        TRANSACTION_TYPE   NOT NULL,
+    "time"                        TIMESTAMP          NOT NULL,
+    "transaction_remark"          VARCHAR(255)       NOT NULL,
+    "total_balance"               NUMERIC            NOT NULL,
+    "sender_credit_card_id"       INTEGER            NOT NULL,
+    "receiver_credit_card_number" VARCHAR(255)       NOT NULL,
+    "sender_bank_id"              INTEGER            NOT NULL,
+    "receiver_bank_id"            INTEGER            NOT NULL,
+    "fee"                         NUMERIC            NOT NULL,
+    "is_self_payment_fee"         BOOLEAN            NOT NULL,
+    "status"                      TRANSACTION_STATUS NOT NULL,
+    "version"                     INT                NOT NULL DEFAULT 0,
+    CONSTRAINT "transaction_pk" PRIMARY KEY ("id")
 ) WITH (
       OIDS= FALSE
     );
 
-ALTER TABLE "ACCOUNT"
-    ADD CONSTRAINT "ACCOUNT_FK0" FOREIGN KEY ("USER_ID") REFERENCES "USER" ("USER_ID");
+ALTER TABLE "account"
+    ADD CONSTRAINT "account_fk0" FOREIGN KEY ("user_id") REFERENCES "user" ("id");
 
-ALTER TABLE "CREDIT_CARD"
-    ADD CONSTRAINT "CREDIT_CARD_FK0" FOREIGN KEY ("USER_ID") REFERENCES "USER" ("USER_ID");
-ALTER TABLE "CREDIT_CARD"
-    ADD CONSTRAINT "CREDIT_CARD_FK1" FOREIGN KEY ("BANK_ID") REFERENCES "BANK" ("BANK_ID");
+ALTER TABLE "credit_card"
+    ADD CONSTRAINT "credit_card_fk0" FOREIGN KEY ("user_id") REFERENCES "user" ("id");
+ALTER TABLE "credit_card"
+    ADD CONSTRAINT "credit_card_fk1" FOREIGN KEY ("bank_id") REFERENCES "bank" ("id");
 
-ALTER TABLE "RECEIVER"
-    ADD CONSTRAINT "RECEIVERS_FK0" FOREIGN KEY ("USER_ID") REFERENCES "USER" ("USER_ID");
-ALTER TABLE "RECEIVER"
-    ADD CONSTRAINT "RECEIVERS_FK1" FOREIGN KEY ("BANK_ID") REFERENCES "BANK" ("BANK_ID");
+ALTER TABLE "receiver"
+    ADD CONSTRAINT "receivers_fk0" FOREIGN KEY ("user_id") REFERENCES "user" ("id");
+ALTER TABLE "receiver"
+    ADD CONSTRAINT "receivers_fk1" FOREIGN KEY ("bank_id") REFERENCES "bank" ("id");
 
-ALTER TABLE "LOAN_REMINDER"
-    ADD CONSTRAINT "LOAN_REMINDER_FK0" FOREIGN KEY ("SENDER_CREDIT_CARD_ID") REFERENCES "CREDIT_CARD" ("CREDIT_CARD_ID");
-ALTER TABLE "LOAN_REMINDER"
-    ADD CONSTRAINT "LOAN_REMINDER_FK1" FOREIGN KEY ("RECEIVER_CREDIT_CARD_ID") REFERENCES "CREDIT_CARD" ("CREDIT_CARD_ID");
+ALTER TABLE "loan_reminder"
+    ADD CONSTRAINT "loan_reminder_fk0" FOREIGN KEY ("sender_credit_card_id") REFERENCES "credit_card" ("id");
+ALTER TABLE "loan_reminder"
+    ADD CONSTRAINT "loan_reminder_fk1" FOREIGN KEY ("receiver_credit_card_id") REFERENCES "credit_card" ("id");
 
-ALTER TABLE "TRANSACTION"
-    ADD CONSTRAINT "TRANSACTION_FK0" FOREIGN KEY ("SENDER_CREDIT_CARD_ID") REFERENCES "CREDIT_CARD" ("CREDIT_CARD_ID");
-ALTER TABLE "TRANSACTION"
-    ADD CONSTRAINT "TRANSACTION_FK1" FOREIGN KEY ("SENDER_BANK_ID") REFERENCES "BANK" ("BANK_ID");
-ALTER TABLE "TRANSACTION"
-    ADD CONSTRAINT "TRANSACTION_FK2" FOREIGN KEY ("RECEIVER_BANK_ID") REFERENCES "BANK" ("BANK_ID");
+ALTER TABLE "transaction"
+    ADD CONSTRAINT "transaction_fk0" FOREIGN KEY ("sender_credit_card_id") REFERENCES "credit_card" ("id");
+ALTER TABLE "transaction"
+    ADD CONSTRAINT "transaction_fk1" FOREIGN KEY ("sender_bank_id") REFERENCES "bank" ("id");
+ALTER TABLE "transaction"
+    ADD CONSTRAINT "transaction_fk2" FOREIGN KEY ("receiver_bank_id") REFERENCES "bank" ("id");
 
-INSERT INTO "USER"
+INSERT INTO "user"
 VALUES (1, 'Nam', 'Nguyen Duc', '01/01/2001', 'MALE', 'keke@gmail.com', '0987654321', 'pan_number',
         'address', 'avatar');
-INSERT INTO "USER"
+INSERT INTO "user"
 VALUES (2, 'Giap', 'Hoang Huu', '01/01/2001', 'FEMALE', 'hehe@gmail.com', '0987654322',
         'pan_number', 'address', 'avatar');
-INSERT INTO "USER"
+INSERT INTO "user"
 VALUES (3, 'Nhat', 'Le Ngoc Minh', '01/01/2001', 'MALE', 'hihi@gmail.com', '0987654323',
         'pan_number', 'address', 'avatar');
 
-INSERT INTO "ACCOUNT"
-VALUES (1, 1, 'admin', 'admin', 'ADMIN');
-INSERT INTO "ACCOUNT"
+INSERT INTO "account"
+VALUES (1, 1, 'admin', 'admin', 'PREMIERE_ADMIN');
+INSERT INTO "account"
 VALUES (2, 2, 'customer', 'customer', 'CUSTOMER');
-INSERT INTO "ACCOUNT"
+INSERT INTO "account"
 VALUES (3, 3, 'employee', 'employee', 'EMPLOYEE');
 
-INSERT INTO "BANK"
+INSERT INTO "bank"
 VALUES (1, 'Vietcombank');
-INSERT INTO "BANK"
+INSERT INTO "bank"
 VALUES (2, 'Vietinbank');
-INSERT INTO "BANK"
+INSERT INTO "bank"
 VALUES (3, 'Techcombank');
 
-INSERT INTO "CREDIT_CARD"
+INSERT INTO "credit_card"
 VALUES (1, 2, 100000, CURRENT_TIMESTAMP, '1234567890123456', 1);
-INSERT INTO "CREDIT_CARD"
+INSERT INTO "credit_card"
 VALUES (2, 2, 100000, CURRENT_TIMESTAMP, '1234567890123457', 2);
-INSERT INTO "CREDIT_CARD"
+INSERT INTO "credit_card"
 VALUES (3, 2, 100000, CURRENT_TIMESTAMP, '1234567890123458', 3);
 
-INSERT INTO "LOAN_REMINDER"
-VALUES (1, 100000, 1, 2, 'APPROVED',CURRENT_TIMESTAMP, 'hehe');
-INSERT INTO "LOAN_REMINDER"
-VALUES (2, 100000, 2, 3, 'REJECTED',CURRENT_TIMESTAMP, 'hihi');
-INSERT INTO "LOAN_REMINDER"
+INSERT INTO "loan_reminder"
+VALUES (1, 100000, 1, 2, 'APPROVED', CURRENT_TIMESTAMP, 'hehe');
+INSERT INTO "loan_reminder"
+VALUES (2, 100000, 2, 3, 'REJECTED', CURRENT_TIMESTAMP, 'hihi');
+INSERT INTO "loan_reminder"
 VALUES (3, 100000, 3, 1, 'PENDING', CURRENT_TIMESTAMP, 'hoho');
 
-INSERT INTO "RECEIVER"
+INSERT INTO "receiver"
 VALUES (1, '1234567890123456', 'Nam', 'Nguyen Duc Nam', 1, 1);
-INSERT INTO "RECEIVER"
+INSERT INTO "receiver"
 VALUES (2, '1234567890123457', 'Giap', 'Hoang Huu Giap', 2, 2);
-INSERT INTO "RECEIVER"
+INSERT INTO "receiver"
 VALUES (3, '1234567890123456', 'Nhat', 'Le Ngoc Minh Nhat', 3, 3);
