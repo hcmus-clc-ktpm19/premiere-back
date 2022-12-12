@@ -47,17 +47,6 @@ public class CustomizeExceptionHandler extends ResponseEntityExceptionHandler {
     return handleExceptionInternal(e, error, headers, UNPROCESSABLE_ENTITY, request);
   }
 
-  @ExceptionHandler(InvalidAuthenticationException.class)
-  public ResponseEntity<Object> handleInvalidAuthentication(
-      InvalidAuthenticationException e, WebRequest request) {
-    return ResponseEntity.status(UNPROCESSABLE_ENTITY)
-        .body(
-            new HashMap<String, Object>() {
-              {
-                put("message", e.getMessage());
-              }
-            });
-  }
 
   @Override
   protected ResponseEntity<Object> handleMethodArgumentNotValid(

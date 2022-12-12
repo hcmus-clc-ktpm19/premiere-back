@@ -18,3 +18,7 @@ keycloak:
   resource: premiere-client
   public-client: true
   bearer-only: true
+
+server:
+  error:
+    include-stacktrace: never
