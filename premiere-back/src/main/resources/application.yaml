@@ -11,3 +11,10 @@ spring:
     url: jdbc:postgresql://localhost:5432/PREMIERE
     username: admin
     password: admin
+
+keycloak:
+  realm: premiere-realm
+  auth-server-url: http://localhost:8180
+  resource: premiere-client
+  public-client: true
+  bearer-only: true

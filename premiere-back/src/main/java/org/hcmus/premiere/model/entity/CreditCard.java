@@ -1,6 +1,5 @@
 package org.hcmus.premiere.model.entity;
 
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
