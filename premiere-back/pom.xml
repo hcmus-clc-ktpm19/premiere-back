@@ -16,6 +16,7 @@
   <description>premiere-back</description>
   <properties>
     <java.version>17</java.version>
+    <org.mapstruct.version>1.5.3.Final</org.mapstruct.version>
   </properties>
   <dependencies>
     <dependency>
@@ -49,15 +50,32 @@
       <scope>runtime</scope>
     </dependency>
     <dependency>
+      <groupId>org.keycloak</groupId>
+      <artifactId>keycloak-admin-client</artifactId>
+      <version>19.0.0</version>
+    </dependency>
+
+    <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <optional>true</optional>
     </dependency>
     <dependency>
-      <groupId>org.keycloak</groupId>
-      <artifactId>keycloak-admin-client</artifactId>
-      <version>19.0.0</version>
+      <groupId>org.mapstruct</groupId>
+      <artifactId>mapstruct</artifactId>
+      <version>${org.mapstruct.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.mapstruct</groupId>
+      <artifactId>mapstruct-processor</artifactId>
+      <version>${org.mapstruct.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok-mapstruct-binding</artifactId>
+      <version>0.2.0</version>
+    </dependency>
+
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
@@ -87,6 +105,14 @@
             <exclude>
               <groupId>org.projectlombok</groupId>
               <artifactId>lombok</artifactId>
+            </exclude>
+            <exclude>
+              <groupId>org.mapstruct</groupId>
+              <artifactId>mapstruct-processor</artifactId>
+            </exclude>
+            <exclude>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok-mapstruct-binding</artifactId>
             </exclude>
           </excludes>
         </configuration>
