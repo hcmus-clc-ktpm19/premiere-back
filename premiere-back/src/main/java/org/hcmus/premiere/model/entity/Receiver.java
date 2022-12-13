@@ -1,5 +1,6 @@
 package org.hcmus.premiere.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Objects;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -26,6 +27,7 @@ public class Receiver extends PremiereAbstractEntity {
   @Column(name = "full_name", nullable = false, columnDefinition = "VARCHAR(255)")
   private String fullName;
 
+  @JsonIgnore
   @ManyToOne
   @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
   private User user;
