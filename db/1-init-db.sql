@@ -2,7 +2,6 @@ CREATE SCHEMA premiere;
 SET SEARCH_PATH TO premiere;
 
 CREATE TYPE GENDER AS ENUM ('MALE', 'FEMALE', 'OTHER');
-CREATE TYPE PREMIERE_ROLE AS ENUM ('CUSTOMER', 'EMPLOYEE', 'PREMIERE_ADMIN');
 CREATE TYPE LOAN_STATUS AS ENUM ('APPROVED', 'REJECTED', 'PENDING');
 CREATE TYPE TRANSACTION_TYPE AS ENUM ('PURCHASE', 'REDEMPTION');
 CREATE TYPE TRANSACTION_STATUS AS ENUM ('CHECKING', 'COMPLETED');
@@ -25,27 +24,13 @@ CREATE TABLE "user"
       OIDS= FALSE
     );
 
-CREATE TABLE "account"
-(
-    "id"       SERIAL        NOT NULL,
-    "user_id"  INTEGER       NOT NULL,
-    "username" VARCHAR(255)  NOT NULL UNIQUE,
-    "password" VARCHAR(255)  NOT NULL,
-    "role"     PREMIERE_ROLE NOT NULL,
-    "version"  INT           NOT NULL DEFAULT 0,
-    CONSTRAINT "account_pk" PRIMARY KEY ("id")
-) WITH (
-      OIDS= FALSE
-    );
-
 CREATE TABLE "credit_card"
 (
     "id"          SERIAL       NOT NULL,
-    "user_id"     INTEGER      NOT NULL,
+    "user_id"     INTEGER      NOT NULL UNIQUE,
     "balance"     NUMERIC      NOT NULL,
     "open_day"    TIMESTAMP    NOT NULL,
     "card_number" VARCHAR(255) NOT NULL UNIQUE,
-    "bank_id"     INTEGER      NOT NULL,
     "version"     INT          NOT NULL DEFAULT 0,
     CONSTRAINT "credit_card_pk" PRIMARY KEY ("id")
 ) WITH (
@@ -99,7 +84,7 @@ CREATE TABLE "transaction"
     "time"                        TIMESTAMP          NOT NULL,
     "transaction_remark"          VARCHAR(255)       NOT NULL,
     "total_balance"               NUMERIC            NOT NULL,
-    "sender_credit_card_id"       INTEGER            NOT NULL,
+    "sender_credit_card_number"   VARCHAR(255)       NOT NULL,
     "receiver_credit_card_number" VARCHAR(255)       NOT NULL,
     "sender_bank_id"              INTEGER            NOT NULL,
     "receiver_bank_id"            INTEGER            NOT NULL,
@@ -112,13 +97,9 @@ CREATE TABLE "transaction"
       OIDS= FALSE
     );
 
-ALTER TABLE "account"
-    ADD CONSTRAINT "account_fk0" FOREIGN KEY ("user_id") REFERENCES "user" ("id");
 
 ALTER TABLE "credit_card"
     ADD CONSTRAINT "credit_card_fk0" FOREIGN KEY ("user_id") REFERENCES "user" ("id");
-ALTER TABLE "credit_card"
-    ADD CONSTRAINT "credit_card_fk1" FOREIGN KEY ("bank_id") REFERENCES "bank" ("id");
 
 ALTER TABLE "receiver"
     ADD CONSTRAINT "receivers_fk0" FOREIGN KEY ("user_id") REFERENCES "user" ("id");
@@ -130,8 +111,6 @@ ALTER TABLE "loan_reminder"
 ALTER TABLE "loan_reminder"
     ADD CONSTRAINT "loan_reminder_fk1" FOREIGN KEY ("receiver_credit_card_id") REFERENCES "credit_card" ("id");
 
-ALTER TABLE "transaction"
-    ADD CONSTRAINT "transaction_fk0" FOREIGN KEY ("sender_credit_card_id") REFERENCES "credit_card" ("id");
 ALTER TABLE "transaction"
     ADD CONSTRAINT "transaction_fk1" FOREIGN KEY ("sender_bank_id") REFERENCES "bank" ("id");
 ALTER TABLE "transaction"
@@ -147,12 +126,6 @@ INSERT INTO "user"
 VALUES (3, 'Nhat', 'Le Ngoc Minh', '01/01/2001', 'MALE', 'hihi@gmail.com', '0987654323',
         'pan_number', 'address', 'avatar');
 
-INSERT INTO "account"
-VALUES (1, 1, 'admin', 'admin', 'PREMIERE_ADMIN');
-INSERT INTO "account"
-VALUES (2, 2, 'customer', 'customer', 'CUSTOMER');
-INSERT INTO "account"
-VALUES (3, 3, 'employee', 'employee', 'EMPLOYEE');
 
 INSERT INTO "bank"
 VALUES (1, 'Vietcombank');
@@ -163,10 +136,6 @@ VALUES (3, 'Techcombank');
 
 INSERT INTO "credit_card"
 VALUES (1, 2, 100000, CURRENT_TIMESTAMP, '1234567890123456', 1);
-INSERT INTO "credit_card"
-VALUES (2, 2, 100000, CURRENT_TIMESTAMP, '1234567890123457', 2);
-INSERT INTO "credit_card"
-VALUES (3, 2, 100000, CURRENT_TIMESTAMP, '1234567890123458', 3);
 
 INSERT INTO "loan_reminder"
 VALUES (1, 100000, 1, 2, 'APPROVED', CURRENT_TIMESTAMP, 'hehe');

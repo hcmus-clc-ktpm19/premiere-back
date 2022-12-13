@@ -59,10 +59,7 @@ public class User extends PremiereAbstractEntity {
   private String avatar;
 
   @OneToOne(mappedBy = "user")
-  private Account account;
-
-  @OneToMany(mappedBy = "user")
-  private Set<CreditCard> creditCards;
+  private CreditCard creditCards;
 
   @OneToMany(mappedBy = "user")
   private Set<Receiver> receivers;

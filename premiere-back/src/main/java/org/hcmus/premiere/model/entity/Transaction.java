@@ -39,6 +39,10 @@ public class Transaction extends PremiereAbstractEntity {
   private BigDecimal totalBalance;
 
   @Basic
+  @Column(name = "sender_credit_card_number", nullable = false, columnDefinition = "VARCHAR(255)")
+  private String  senderCreditCardNumber;
+
+  @Basic
   @Column(name = "receiver_credit_card_number", nullable = false, columnDefinition = "VARCHAR(255)")
   private String receiverCreditCardNumber;
 
@@ -53,10 +57,6 @@ public class Transaction extends PremiereAbstractEntity {
   @Basic
   @Column(name = "status", nullable = false, columnDefinition = "TRANSACTION_STATUS")
   private TransactionStatus status;
-
-  @ManyToOne
-  @JoinColumn(name = "sender_credit_card_id", referencedColumnName = "id", nullable = false)
-  private CreditCard senderCreditCard;
 
   @ManyToOne
   @JoinColumn(name = "sender_bank_id", referencedColumnName = "id", nullable = false)
