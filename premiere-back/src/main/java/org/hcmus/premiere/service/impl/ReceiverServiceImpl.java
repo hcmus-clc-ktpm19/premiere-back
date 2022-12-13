@@ -3,6 +3,7 @@ package org.hcmus.premiere.service.impl;
 import static org.hcmus.premiere.model.exception.ReceiverExistedException.RECEIVER_EXISTED_MESSAGE;
 import static org.hcmus.premiere.model.exception.ReceiverNotFoundException.RECEIVER_NOT_FOUND_MESSAGE;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.hcmus.premiere.model.dto.ReceiverDto;
 import org.hcmus.premiere.model.entity.Bank;
@@ -28,10 +29,16 @@ public class ReceiverServiceImpl implements ReceiverService {
   private final BankService bankService;
 
   @Override
+  public List<Receiver> findAllReceiverByUserId(Long userId) {
+    return receiverRepository.findAllByUserId(userId);
+  }
+
+  @Override
   public Receiver findReceiverById(Long id) {
     return receiverRepository
         .findById(id)
-        .orElseThrow(() -> new ReceiverNotFoundException(RECEIVER_NOT_FOUND_MESSAGE, id.toString()));
+        .orElseThrow(
+            () -> new ReceiverNotFoundException(RECEIVER_NOT_FOUND_MESSAGE, id.toString()));
   }
 
   @Override
@@ -49,19 +56,13 @@ public class ReceiverServiceImpl implements ReceiverService {
   }
 
   @Override
-  public Receiver findReceiverByCardNumberAndNickname(String cardNumber, String nickname) {
-    return receiverRepository
-        .findByCardNumberAndNickname(cardNumber, nickname)
-        .orElseThrow(() -> new ReceiverNotFoundException(RECEIVER_NOT_FOUND_MESSAGE, cardNumber));
-  }
-
-  @Override
   public Receiver saveReceiver(ReceiverDto receiverDto) {
     receiverRepository
         .findByCardNumber(receiverDto.getCardNumber())
         .ifPresent(
             receiver -> {
-              throw new ReceiverExistedException(RECEIVER_EXISTED_MESSAGE, receiverDto.getCardNumber());
+              throw new ReceiverExistedException(RECEIVER_EXISTED_MESSAGE,
+                  receiverDto.getCardNumber());
             });
     CreditCard creditCard = creditCardService.findCreditCardByNumber(receiverDto.getCardNumber());
     User user = userService.findUserById(receiverDto.getUserId());
@@ -70,10 +71,25 @@ public class ReceiverServiceImpl implements ReceiverService {
     Receiver receiver = new Receiver();
     receiver.setCardNumber(creditCard.getCardNumber());
     receiver.setNickname(receiverDto.getNickname());
-    receiver.setFullName(creditCard.getUser().getFirstName() + " " + creditCard.getUser().getLastName());
+    receiver.setFullName(
+        creditCard.getUser().getFirstName() + " " + creditCard.getUser().getLastName());
     receiver.setUser(user);
     receiver.setBank(bank);
     return receiverRepository.save(receiver);
+  }
+
+  @Override
+  public Receiver updateReceiver(ReceiverDto receiverDto) {
+    Receiver receiver = findReceiverById(receiverDto.getId());
+    receiver.setNickname(receiverDto.getNickname());
+    return receiverRepository.save(receiver);
+  }
+
+  @Override
+  public void deleteReceiver(String cardNumber) {
+    Receiver receiver = receiverRepository.findByCardNumber(cardNumber)
+        .orElseThrow(() -> new ReceiverNotFoundException(RECEIVER_NOT_FOUND_MESSAGE, cardNumber));
+    receiverRepository.deleteById(receiver.getId());
   }
 }
 
