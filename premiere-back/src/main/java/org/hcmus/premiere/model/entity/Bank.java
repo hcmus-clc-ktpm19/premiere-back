@@ -19,9 +19,6 @@ public class Bank extends PremiereAbstractEntity {
   private String bankName;
 
   @OneToMany(mappedBy = "bank")
-  private Set<CreditCard> creditCards;
-
-  @OneToMany(mappedBy = "bank")
   private Set<Receiver> receivers;
 
   @OneToMany(mappedBy = "senderBank")
