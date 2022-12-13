@@ -18,3 +18,4 @@ keycloak:
   resource: premiere-client
   public-client: true
   bearer-only: true
+  cors: true
