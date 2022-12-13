@@ -1,5 +1,6 @@
 package org.hcmus.premiere.service.impl;
 
+import static org.hcmus.premiere.model.exception.ReceiverExistedException.RECEIVER_EXISTED_MESSAGE;
 import static org.hcmus.premiere.model.exception.ReceiverNotFoundException.RECEIVER_NOT_FOUND_MESSAGE;
 
 import lombok.RequiredArgsConstructor;
@@ -8,6 +9,7 @@ import org.hcmus.premiere.model.entity.Bank;
 import org.hcmus.premiere.model.entity.CreditCard;
 import org.hcmus.premiere.model.entity.Receiver;
 import org.hcmus.premiere.model.entity.User;
+import org.hcmus.premiere.model.exception.ReceiverExistedException;
 import org.hcmus.premiere.model.exception.ReceiverNotFoundException;
 import org.hcmus.premiere.repository.ReceiverRepository;
 import org.hcmus.premiere.service.BankService;
@@ -55,6 +57,12 @@ public class ReceiverServiceImpl implements ReceiverService {
 
   @Override
   public Receiver saveReceiver(ReceiverDto receiverDto) {
+    receiverRepository
+        .findByCardNumber(receiverDto.getCardNumber())
+        .ifPresent(
+            receiver -> {
+              throw new ReceiverExistedException(RECEIVER_EXISTED_MESSAGE, receiverDto.getCardNumber());
+            });
     CreditCard creditCard = creditCardService.findCreditCardByNumber(receiverDto.getCardNumber());
     User user = userService.findUserById(receiverDto.getUserId());
     Bank bank = bankService.findBankById(receiverDto.getBankId());

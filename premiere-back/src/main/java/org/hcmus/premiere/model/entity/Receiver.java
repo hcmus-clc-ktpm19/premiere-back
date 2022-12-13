@@ -27,7 +27,6 @@ public class Receiver extends PremiereAbstractEntity {
   @Column(name = "full_name", nullable = false, columnDefinition = "VARCHAR(255)")
   private String fullName;
 
-  @JsonIgnore
   @ManyToOne
   @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
   private User user;
