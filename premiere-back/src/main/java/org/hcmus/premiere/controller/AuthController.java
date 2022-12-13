@@ -23,7 +23,7 @@ public class AuthController {
   @GetMapping("/token/user")
   public UserDto getUserByToken() {
     UserRepresentation userRepresentation = keycloakService.getCurrentUser();
-    User user = userService.getUserById(Long.valueOf(userRepresentation.getAttributes().get("userId").get(0)));
+    User user = userService.findUserById(Long.valueOf(userRepresentation.getAttributes().get("userId").get(0)));
 
     UserDto userDto = new UserDto();
     userDto.setId(user.getId());

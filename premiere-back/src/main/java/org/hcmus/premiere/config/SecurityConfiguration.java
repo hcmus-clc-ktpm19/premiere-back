@@ -1,7 +1,6 @@
 package org.hcmus.premiere.config;
 
 import static java.util.Arrays.asList;
-
 import org.hcmus.premiere.model.enums.PremiereRole;
 import org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver;
 import org.keycloak.adapters.springsecurity.KeycloakConfiguration;
