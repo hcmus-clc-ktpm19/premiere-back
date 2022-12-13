@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/credit-card")
+@RequestMapping("/api/v1/credit_card")
 public class CreditCardController extends AbstractApplicationController {
 
   private CreditCardService creditCardService;
 
   @GetMapping("/{id}")
-  @RolesAllowed("CUSTOMER")
+//  @RolesAllowed("CUSTOMER")
   public CreditCard getCreditCardInfo(@PathVariable Long id) {
     return creditCardService.findCreditCardById(id);
   }

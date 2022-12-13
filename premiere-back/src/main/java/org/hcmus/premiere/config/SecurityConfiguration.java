@@ -6,7 +6,6 @@ import org.hcmus.premiere.model.enums.PremiereRole;
 import org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver;
 import org.keycloak.adapters.springsecurity.KeycloakConfiguration;
 import org.keycloak.adapters.springsecurity.authentication.KeycloakAuthenticationProvider;
-import org.keycloak.adapters.springsecurity.authentication.KeycloakLogoutHandler;
 import org.keycloak.adapters.springsecurity.config.KeycloakWebSecurityConfigurerAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -42,10 +41,10 @@ public class SecurityConfiguration extends KeycloakWebSecurityConfigurerAdapter 
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
+    super.configure(http);
     http.cors().and().csrf().disable();
     http.authorizeRequests()
-        .antMatchers("/credit_card*")
-        .hasRole(PremiereRole.CUSTOMER.name())
+        .antMatchers("/api/v1/credit_card/**").hasRole(PremiereRole.CUSTOMER.name())
         .anyRequest()
         .permitAll();
   }
