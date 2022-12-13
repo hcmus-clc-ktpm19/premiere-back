@@ -10,7 +10,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -35,7 +34,7 @@ public class CreditCard extends PremiereAbstractEntity {
 
   @JsonIgnore
   @OneToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+  @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false, unique = true)
   private User user;
 
   @OneToMany(mappedBy = "senderCreditCard")

@@ -17,7 +17,7 @@ public class CreditCardController extends AbstractApplicationController {
   private CreditCardService creditCardService;
 
   @GetMapping("/{id}")
-//  @RolesAllowed("CUSTOMER")
+  //  @RolesAllowed("CUSTOMER")
   public CreditCard getCreditCardInfo(@PathVariable Long id) {
     return creditCardService.findCreditCardById(id);
   }
