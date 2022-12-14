@@ -14,6 +14,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.Data;
+import lombok.ToString;
 
 @Entity
 @Table(name = "credit_card", schema = "premiere")
@@ -35,6 +36,7 @@ public class CreditCard extends PremiereAbstractEntity {
   @JsonIgnore
   @OneToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false, unique = true)
+  @ToString.Exclude
   private User user;
 
   @OneToMany(mappedBy = "senderCreditCard")
