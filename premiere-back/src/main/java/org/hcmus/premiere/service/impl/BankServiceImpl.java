@@ -20,4 +20,11 @@ public class BankServiceImpl implements BankService {
         .findById(id)
         .orElseThrow(() -> new BankNotFoundException(BANK_NOT_FOUND_MESSAGE, id.toString()));
   }
+
+  @Override
+  public Bank findBankByName(String bankName) {
+    return bankRepository
+        .findByBankName(bankName)
+        .orElseThrow(() -> new BankNotFoundException(BANK_NOT_FOUND_MESSAGE, bankName));
+  }
 }

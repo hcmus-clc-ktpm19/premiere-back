@@ -1,6 +1,8 @@
 package org.hcmus.premiere.service.impl;
 
-import java.util.Collections;
+import java.util.Set;
+import java.util.EnumSet;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.hcmus.premiere.model.enums.PremiereRole;
 import org.hcmus.premiere.service.KeycloakService;
@@ -31,6 +33,7 @@ public class KeycloakServiceImpl implements KeycloakService {
   @Override
   public RoleRepresentation getCurrentUserRole() {
     KeycloakPrincipal<KeycloakSecurityContext> principal = (KeycloakPrincipal<KeycloakSecurityContext>) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    Set<String> allRoleNames = EnumSet.allOf(PremiereRole.class).stream().map(Enum::name).collect(Collectors.toSet());
 
     return realmResource
         .users()
@@ -39,7 +42,7 @@ public class KeycloakServiceImpl implements KeycloakService {
         .realmLevel()
         .listAll()
         .stream()
-        .filter(roleRepresentation -> roleRepresentation.getName().equals(PremiereRole.PREMIERE_ADMIN.toString()))
+        .filter(roleRepresentation -> allRoleNames.contains(roleRepresentation.getName()))
         .findFirst()
         .orElse(null);
   }

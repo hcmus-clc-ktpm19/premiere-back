@@ -66,7 +66,7 @@ public class ReceiverServiceImpl implements ReceiverService {
             });
     CreditCard creditCard = creditCardService.findCreditCardByNumber(receiverDto.getCardNumber());
     User user = userService.findUserById(receiverDto.getUserId());
-    Bank bank = bankService.findBankById(receiverDto.getBankId());
+    Bank bank = bankService.findBankByName(receiverDto.getBankName());
 
     Receiver receiver = new Receiver();
     receiver.setCardNumber(creditCard.getCardNumber());
