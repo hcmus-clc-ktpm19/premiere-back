@@ -1,5 +1,6 @@
 package org.hcmus.premiere.service.impl;
 
+import static org.hcmus.premiere.model.exception.UserNotFoundException.USER_NOT_FOUND;
 import static org.hcmus.premiere.model.exception.UserNotFoundException.USER_NOT_FOUND_MESSAGE;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +20,7 @@ public class UserServiceImpl implements UserService {
   public User findUserById(Long id) {
     return userRepository
         .findById(id)
-        .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND_MESSAGE, id.toString()));
+        .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND_MESSAGE, id.toString(), USER_NOT_FOUND));
   }
 
 

@@ -26,6 +26,9 @@
           "manage-account-links",
           "view-profile"
         ]
+      },
+      "attributes": {
+        "userId": "1"
       }
     },
     {
@@ -51,6 +54,9 @@
           "manage-account-links",
           "view-profile"
         ]
+      },
+      "attributes": {
+        "userId": "2"
       }
     },
     {
@@ -76,6 +82,9 @@
           "manage-account-links",
           "view-profile"
         ]
+      },
+      "attributes": {
+        "userId": "3"
       }
     }
   ],
@@ -87,7 +96,7 @@
   "defaultSignatureAlgorithm": "RS256",
   "revokeRefreshToken": false,
   "refreshTokenMaxReuse": 0,
-  "accessTokenLifespan": 300,
+  "accessTokenLifespan": 2592000,
   "accessTokenLifespanForImplicitFlow": 900,
   "ssoSessionIdleTimeout": 1800,
   "ssoSessionMaxLifespan": 36000,

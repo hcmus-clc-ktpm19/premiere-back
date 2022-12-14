@@ -5,8 +5,10 @@ import org.hcmus.premiere.model.entity.LoanReminder;
 import org.hcmus.premiere.repository.LoanReminderRepository;
 import org.hcmus.premiere.service.LoanReminderService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(rollbackFor = Throwable.class)
 @RequiredArgsConstructor
 public class LoanReminderServiceImpl implements LoanReminderService {
 
@@ -14,6 +16,7 @@ public class LoanReminderServiceImpl implements LoanReminderService {
 
   @Override
   public Long saveLoanReminder(LoanReminder loanReminder) {
-    return null;
+    loanReminderRepository.saveAndFlush(loanReminder);
+    return loanReminder.getId();
   }
 }

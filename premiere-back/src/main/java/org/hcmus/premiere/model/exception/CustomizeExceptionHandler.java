@@ -4,11 +4,11 @@ import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import org.hcmus.premiere.model.dto.ErrorDto;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -85,6 +85,15 @@ public class CustomizeExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     return new ErrorResource(errors);
+  }
+
+  @ExceptionHandler(AbstractNotFoundException.class)
+  public ResponseEntity<ErrorDto> handleNotFoundException(AbstractNotFoundException e) {
+    ErrorDto errorDto = new ErrorDto(e.getMessage(), e.getI18nPlaceHolder());
+
+    return ResponseEntity
+        .status(HttpStatus.ACCEPTED)
+        .body(errorDto);
   }
 
   private String getParam(String s) {
