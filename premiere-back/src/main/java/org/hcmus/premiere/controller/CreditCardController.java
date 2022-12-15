@@ -2,8 +2,10 @@ package org.hcmus.premiere.controller;
 
 import javax.annotation.security.RolesAllowed;
 import lombok.AllArgsConstructor;
+import org.hcmus.premiere.model.dto.CreditCardDto;
 import org.hcmus.premiere.model.entity.CreditCard;
 import org.hcmus.premiere.service.CreditCardService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,10 +18,9 @@ public class CreditCardController extends AbstractApplicationController {
 
   private CreditCardService creditCardService;
 
-  @GetMapping("/{id}")
-  //  @RolesAllowed("CUSTOMER")
-  public CreditCard getCreditCardInfo(@PathVariable Long id) {
-    return creditCardService.findCreditCardById(id);
+  @GetMapping("/{userId}")
+  public ResponseEntity<CreditCardDto> getCreditCardInfo(@PathVariable Long userId) {
+    return ResponseEntity.ok(applicationMapper.toCreditCardDto(creditCardService.findCreditCardByUserId(userId)));
   }
 
 }
