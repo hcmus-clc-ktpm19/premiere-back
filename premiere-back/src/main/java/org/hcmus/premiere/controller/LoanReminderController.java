@@ -7,6 +7,7 @@ import org.hcmus.premiere.model.dto.LoanReminderDto;
 import org.hcmus.premiere.model.entity.LoanReminder;
 import org.hcmus.premiere.service.CreditCardService;
 import org.hcmus.premiere.service.LoanReminderService;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +21,11 @@ public class LoanReminderController extends AbstractApplicationController {
   private final LoanReminderService loanReminderService;
 
   private final CreditCardService creditCardService;
+
+  @GetMapping("/debtors")
+  public Object getDebtors() {
+    return loanReminderService.getDebtors();
+  }
 
   @PostMapping
   public Long saveLoanReminder(@RequestBody LoanReminderDto loanReminderDto) {

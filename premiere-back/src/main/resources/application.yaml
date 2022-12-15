@@ -8,7 +8,7 @@ spring:
         format_sql: true
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/PREMIERE
+    url: jdbc:postgresql://localhost:5432/PREMIERE?stringtype=unspecified
     username: admin
     password: admin
 
