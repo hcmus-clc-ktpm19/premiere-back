@@ -5,6 +5,7 @@ import java.util.HashMap;
 import lombok.extern.slf4j.Slf4j;
 import org.hcmus.premiere.model.exception.AbstractExistedException;
 import org.hcmus.premiere.model.exception.AbstractNotFoundException;
+import org.hcmus.premiere.model.exception.WrongPasswordException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -26,6 +27,15 @@ public class ExceptionController {
 
   @ExceptionHandler(AbstractExistedException.class)
   public ResponseEntity<Map<String, String>> handleRuntimeException(AbstractExistedException e) {
+    log.error(e.getMessage(), e);
+    Map<String, String> response = new HashMap<>();
+    response.put(ERROR_MESSAGE, e.getMessage() + " " + e.getIdentify());
+
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+  }
+
+  @ExceptionHandler(WrongPasswordException.class)
+  public ResponseEntity<Map<String, String>> handleWrongPasswordException(WrongPasswordException e) {
     log.error(e.getMessage(), e);
     Map<String, String> response = new HashMap<>();
     response.put(ERROR_MESSAGE, e.getMessage() + " " + e.getIdentify());
