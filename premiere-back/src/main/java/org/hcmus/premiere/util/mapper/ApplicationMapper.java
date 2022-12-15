@@ -31,7 +31,7 @@ public class ApplicationMapper {
       receiverDto.setNickname(receiver.getNickname());
       receiverDto.setFullName(receiver.getFullName());
       receiverDto.setUserId(receiver.getUser().getId());
-      receiverDto.setBankId(receiver.getBank().getId());
+      receiverDto.setBankName(receiver.getBank().getBankName());
       return receiverDto;
     }
   }
