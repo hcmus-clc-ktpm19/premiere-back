@@ -70,9 +70,13 @@ public class ReceiverServiceImpl implements ReceiverService {
 
     Receiver receiver = new Receiver();
     receiver.setCardNumber(creditCard.getCardNumber());
-    receiver.setNickname(receiverDto.getNickname());
     receiver.setFullName(
         creditCard.getUser().getFirstName() + " " + creditCard.getUser().getLastName());
+    if (receiverDto.getNickname().isEmpty()) {
+      receiver.setNickname(receiver.getFullName());
+    } else {
+      receiver.setNickname(receiverDto.getNickname());
+    }
     receiver.setUser(user);
     receiver.setBank(bank);
     return receiverRepository.save(receiver);
