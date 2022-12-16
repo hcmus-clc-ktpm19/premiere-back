@@ -1,6 +1,5 @@
 package org.hcmus.premiere.controller;
 
-import java.net.URI;
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import javax.ws.rs.core.Response;
@@ -48,6 +47,6 @@ public class AuthController {
   @RolesAllowed("EMPLOYEE")
   public ResponseEntity register(@RequestBody @Valid RegisterAccountDto registerAccountDto) {
     keycloakService.createUser(registerAccountDto);
-    return ResponseEntity.created(URI.create("Register successfully")).build();
+    return ResponseEntity.status(201).body("Register successfully");
   }
 }
