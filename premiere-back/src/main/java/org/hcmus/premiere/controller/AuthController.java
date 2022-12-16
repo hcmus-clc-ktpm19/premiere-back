@@ -1,13 +1,21 @@
 package org.hcmus.premiere.controller;
 
+import java.net.URI;
+import javax.annotation.security.RolesAllowed;
+import javax.validation.Valid;
+import javax.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
+import org.hcmus.premiere.model.dto.RegisterAccountDto;
 import org.hcmus.premiere.model.dto.UserDto;
 import org.hcmus.premiere.model.entity.User;
 import org.hcmus.premiere.model.enums.PremiereRole;
 import org.hcmus.premiere.service.KeycloakService;
 import org.hcmus.premiere.service.UserService;
 import org.keycloak.representations.idm.UserRepresentation;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -34,5 +42,12 @@ public class AuthController {
     userDto.setUsername(userRepresentation.getUsername());
     userDto.setRole(PremiereRole.valueOf(keycloakService.getCurrentUserRole().getName()));
     return userDto;
+  }
+
+  @PostMapping("/register")
+  @RolesAllowed("EMPLOYEE")
+  public ResponseEntity register(@RequestBody @Valid RegisterAccountDto registerAccountDto) {
+    keycloakService.createUser(registerAccountDto);
+    return ResponseEntity.created(URI.create("Register successfully")).build();
   }
 }

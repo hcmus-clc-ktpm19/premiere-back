@@ -33,13 +33,13 @@ public class ExceptionController {
     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
   }
 
-  @ExceptionHandler(Throwable.class)
-  public ResponseEntity<Map<String, String>> handleTokenExpiredException(Throwable e) {
-    String message = e.getMessage();
-    log.error("Unexpected error: {}", message);
-
-    return ResponseEntity
-        .internalServerError()
-        .body(Map.of(ERROR_MESSAGE, message));
-  }
+//  @ExceptionHandler(Throwable.class)
+//  public ResponseEntity<Map<String, String>> handleTokenExpiredException(Throwable e) {
+//    String message = e.getMessage();
+//    log.error("Unexpected error: {}", message);
+//
+//    return ResponseEntity
+//        .internalServerError()
+//        .body(Map.of(ERROR_MESSAGE, message));
+//  }
 }
