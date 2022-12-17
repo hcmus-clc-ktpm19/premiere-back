@@ -15,5 +15,5 @@ public class ReceiverDto {
   private String nickname;
   private String fullName;
   private Long userId;
-  private Long bankId;
+  private String bankName;
 }

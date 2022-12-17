@@ -1,5 +1,6 @@
 package org.hcmus.premiere.service;
 
+import org.hcmus.premiere.model.dto.PasswordDto;
 import javax.ws.rs.core.Response;
 import org.hcmus.premiere.model.dto.RegisterAccountDto;
 import org.keycloak.representations.idm.RoleRepresentation;
@@ -12,4 +13,6 @@ public interface KeycloakService {
   RoleRepresentation getCurrentUserRole();
 
   void createUser(RegisterAccountDto registerAccountDto);
+
+  void changePassword(PasswordDto passwordDto);
 }
