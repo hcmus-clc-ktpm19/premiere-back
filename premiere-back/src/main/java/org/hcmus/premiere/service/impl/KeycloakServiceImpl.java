@@ -40,7 +40,8 @@ public class KeycloakServiceImpl implements KeycloakService {
 
   @Override
   public UserRepresentation getCurrentUser() {
-    KeycloakPrincipal<KeycloakSecurityContext> principal = (KeycloakPrincipal<KeycloakSecurityContext>) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    KeycloakPrincipal<KeycloakSecurityContext> principal = (KeycloakPrincipal<KeycloakSecurityContext>) SecurityContextHolder.getContext()
+        .getAuthentication().getPrincipal();
 
     return realmResource
         .users()
@@ -50,7 +51,8 @@ public class KeycloakServiceImpl implements KeycloakService {
 
   @Override
   public RoleRepresentation getCurrentUserRole() {
-    KeycloakPrincipal<KeycloakSecurityContext> principal = (KeycloakPrincipal<KeycloakSecurityContext>) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    KeycloakPrincipal<KeycloakSecurityContext> principal = (KeycloakPrincipal<KeycloakSecurityContext>) SecurityContextHolder.getContext()
+        .getAuthentication().getPrincipal();
     Set<String> allRoleNames = EnumSet.allOf(PremiereRole.class).stream().map(Enum::name)
         .collect(Collectors.toSet());
 
@@ -79,16 +81,20 @@ public class KeycloakServiceImpl implements KeycloakService {
 
     HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
 
-    ResponseEntity<String> response = restTemplate.postForEntity(
-        "http://localhost:8180/realms/premiere-realm/protocol/openid-connect/token", request,
-        String.class);
-
-    return response.getStatusCode() == HttpStatus.OK;
+    try {
+      ResponseEntity<String> response = restTemplate.postForEntity(
+          "http://localhost:8180/realms/premiere-realm/protocol/openid-connect/token", request,
+          String.class);
+      return response.getStatusCode() == HttpStatus.OK;
+    } catch (Exception e) {
+      throw new WrongPasswordException(WRONG_PASSWORD_MESSAGE, password);
+    }
   }
 
   @Override
   public void changePassword(PasswordDto passwordDto) {
-    KeycloakPrincipal<KeycloakSecurityContext> principal = (KeycloakPrincipal<KeycloakSecurityContext>) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    KeycloakPrincipal<KeycloakSecurityContext> principal = (KeycloakPrincipal<KeycloakSecurityContext>) SecurityContextHolder.getContext()
+        .getAuthentication().getPrincipal();
 
     if (isPasswordCorrect(passwordDto.getUsername(), passwordDto.getCurrentPassword())) {
       CredentialRepresentation credential = new CredentialRepresentation();

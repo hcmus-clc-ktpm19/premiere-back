@@ -1,13 +1,12 @@
 package org.hcmus.premiere.controller;
 
-import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.hcmus.premiere.model.dto.OTPDto;
 import org.hcmus.premiere.model.dto.PasswordDto;
 import org.hcmus.premiere.model.dto.UserDto;
 import org.hcmus.premiere.model.entity.User;
 import org.hcmus.premiere.model.enums.PremiereRole;
-import org.hcmus.premiere.service.EmailService;
+import org.hcmus.premiere.service.OTPService;
 import org.hcmus.premiere.service.KeycloakService;
 import org.hcmus.premiere.service.UserService;
 import org.keycloak.representations.idm.UserRepresentation;
@@ -27,12 +26,13 @@ public class AuthController {
   private final UserService userService;
 
   private final KeycloakService keycloakService;
-  private final EmailService emailService;
+  private final OTPService otpService;
 
   @GetMapping("/token/user")
   public UserDto getUserByToken() {
     UserRepresentation userRepresentation = keycloakService.getCurrentUser();
-    User user = userService.findUserById(Long.valueOf(userRepresentation.getAttributes().get("userId").get(0)));
+    User user = userService.findUserById(
+        Long.valueOf(userRepresentation.getAttributes().get("userId").get(0)));
 
     UserDto userDto = new UserDto();
     userDto.setId(user.getId());
@@ -53,7 +53,7 @@ public class AuthController {
 
   @PostMapping("/request-otp")
   public ResponseEntity<?> requestOTP(@RequestBody OTPDto otpDto) {
-    emailService.sendOTPEmail(otpDto.getEmail());
+    otpService.sendOTPEmail(otpDto.getEmail());
     return ResponseEntity.ok().build();
   }
 
@@ -61,5 +61,14 @@ public class AuthController {
   public ResponseEntity<?> resetPassword(@RequestBody PasswordDto passwordDto) {
     keycloakService.resetPassword(passwordDto);
     return ResponseEntity.ok().build();
+  }
+
+  @PostMapping("/verify-otp")
+  public ResponseEntity<?> verifyOTP(@RequestBody OTPDto otpDto) {
+    Boolean verifyOTP = otpService.verifyOTP(otpDto.getOtp(), otpDto.getEmail());
+    if (verifyOTP) {
+      return ResponseEntity.ok().build();
+    }
+    return ResponseEntity.badRequest().build();
   }
 }
