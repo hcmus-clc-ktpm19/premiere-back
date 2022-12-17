@@ -23,7 +23,7 @@ keycloak:
   resource: premiere-client
   cors: true
   credentials:
-    secret: D8Bk3vIzvTYBTkZ97aHFQuYlXbqOHhSO
+    secret: HvdzEq0XOcO2DQJnQEyXpCToUojGlfEj
 
 server:
   error:

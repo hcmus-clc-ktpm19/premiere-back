@@ -130,6 +130,7 @@ public class KeycloakServiceImpl implements KeycloakService {
 
     map.add("grant_type", "password");
     map.add("client_id", "premiere-client");
+    map.add("client_secret", "HvdzEq0XOcO2DQJnQEyXpCToUojGlfEj");
     map.add("username", username);
     map.add("password", password);
 
