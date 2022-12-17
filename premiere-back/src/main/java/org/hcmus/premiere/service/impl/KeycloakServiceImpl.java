@@ -3,7 +3,9 @@ package org.hcmus.premiere.service.impl;
 import static org.hcmus.premiere.model.exception.WrongPasswordException.WRONG_PASSWORD_MESSAGE;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Collections;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -65,16 +67,15 @@ public class KeycloakServiceImpl implements KeycloakService {
   }
 
   @Override
-  public void changePassword(PasswordDto passwordDto) {
-    KeycloakPrincipal<KeycloakSecurityContext> principal = (KeycloakPrincipal<KeycloakSecurityContext>) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+  public Boolean isPasswordCorrect(String username, String password) {
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
     MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
 
     map.add("grant_type", "password");
     map.add("client_id", "premiere-client");
-    map.add("username", passwordDto.getUsername());
-    map.add("password", passwordDto.getCurrentPassword());
+    map.add("username", username);
+    map.add("password", password);
 
     HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
 
@@ -82,7 +83,14 @@ public class KeycloakServiceImpl implements KeycloakService {
         "http://localhost:8180/realms/premiere-realm/protocol/openid-connect/token", request,
         String.class);
 
-    if (response.getStatusCode() == HttpStatus.OK) {
+    return response.getStatusCode() == HttpStatus.OK;
+  }
+
+  @Override
+  public void changePassword(PasswordDto passwordDto) {
+    KeycloakPrincipal<KeycloakSecurityContext> principal = (KeycloakPrincipal<KeycloakSecurityContext>) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+    if (isPasswordCorrect(passwordDto.getUsername(), passwordDto.getCurrentPassword())) {
       CredentialRepresentation credential = new CredentialRepresentation();
       credential.setType(CredentialRepresentation.PASSWORD);
       credential.setValue(passwordDto.getNewPassword());
@@ -94,5 +102,23 @@ public class KeycloakServiceImpl implements KeycloakService {
     } else {
       throw new WrongPasswordException(WRONG_PASSWORD_MESSAGE, passwordDto.getUsername());
     }
+  }
+
+  @Override
+  public void resetPassword(PasswordDto passwordDto) {
+    // search user by email in realm resource
+    UserRepresentation userRepresentation = realmResource.users()
+        .search(null, null, null, passwordDto.getEmail(), null, null, null, null)
+        .stream()
+        .findFirst()
+        .get();
+    CredentialRepresentation credential = new CredentialRepresentation();
+    credential.setType(CredentialRepresentation.PASSWORD);
+    credential.setValue(passwordDto.getNewPassword());
+    credential.setTemporary(false);
+    userRepresentation.setCredentials(Collections.singletonList(credential));
+
+    // update user to keycloak
+    realmResource.users().get(userRepresentation.getId()).update(userRepresentation);
   }
 }

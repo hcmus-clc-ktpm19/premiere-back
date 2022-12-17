@@ -11,4 +11,7 @@ public interface KeycloakService {
   RoleRepresentation getCurrentUserRole();
 
   void changePassword(PasswordDto passwordDto);
+
+  Boolean isPasswordCorrect(String username, String password);
+  void resetPassword(PasswordDto passwordDto);
 }
