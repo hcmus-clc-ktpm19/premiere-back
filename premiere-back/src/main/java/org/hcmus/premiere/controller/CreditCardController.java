@@ -1,9 +1,7 @@
 package org.hcmus.premiere.controller;
 
-import javax.annotation.security.RolesAllowed;
 import lombok.AllArgsConstructor;
 import org.hcmus.premiere.model.dto.CreditCardDto;
-import org.hcmus.premiere.model.entity.CreditCard;
 import org.hcmus.premiere.service.CreditCardService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

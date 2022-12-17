@@ -3,7 +3,6 @@ package org.hcmus.premiere.service.impl;
 import java.net.URI;
 import java.util.Collections;
 import static org.hcmus.premiere.model.exception.WrongPasswordException.WRONG_PASSWORD_MESSAGE;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.EnumSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -22,7 +21,6 @@ import org.keycloak.KeycloakSecurityContext;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
-import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.http.HttpEntity;
@@ -35,7 +33,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.json.JSONObject;
 
 @Service
 @RequiredArgsConstructor

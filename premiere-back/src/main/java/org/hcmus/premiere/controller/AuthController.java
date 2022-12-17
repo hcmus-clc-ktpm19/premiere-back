@@ -2,7 +2,6 @@ package org.hcmus.premiere.controller;
 
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
-import javax.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
 import org.hcmus.premiere.model.dto.RegisterAccountDto;
 import org.hcmus.premiere.model.dto.PasswordDto;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -54,7 +52,7 @@ public class AuthController {
 
   @PostMapping("/register")
   @RolesAllowed("EMPLOYEE")
-  public ResponseEntity register(@RequestBody @Valid RegisterAccountDto registerAccountDto) {
+  public ResponseEntity<?> register(@RequestBody @Valid RegisterAccountDto registerAccountDto) {
     keycloakService.createUser(registerAccountDto);
     return ResponseEntity.status(201).body("Register successfully");
   }
