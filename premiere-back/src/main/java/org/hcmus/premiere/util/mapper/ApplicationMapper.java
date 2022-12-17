@@ -1,8 +1,10 @@
 package org.hcmus.premiere.util.mapper;
 
 import org.hcmus.premiere.model.dto.CreditCardDto;
+import org.hcmus.premiere.model.dto.OTPDto;
 import org.hcmus.premiere.model.dto.ReceiverDto;
 import org.hcmus.premiere.model.entity.CreditCard;
+import org.hcmus.premiere.model.entity.OTP;
 import org.hcmus.premiere.model.entity.Receiver;
 import org.springframework.stereotype.Component;
 
@@ -36,4 +38,15 @@ public class ApplicationMapper {
     }
   }
 
+  public OTPDto toOTPDto(OTP otp){
+    if (otp == null) {
+      return null;
+    } else {
+      OTPDto otpDto = new OTPDto();
+      otpDto.setOtp(otp.getOtp());
+      otpDto.setEmail(otp.getEmail());
+      otpDto.setCreatedAt(otp.getCreatedAt());
+      return otpDto;
+    }
+  }
 }
