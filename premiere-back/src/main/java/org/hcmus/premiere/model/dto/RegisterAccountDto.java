@@ -21,7 +21,7 @@ public class RegisterAccountDto {
   @ValueOfEnum(enumClass = Gender.class)
   @NotBlank(message = "Gender may not be blank")
   private String gender;
-  @NotBlank(message = "Pan Number may not be blank")
+  @NotBlank(message = "Identification number may not be blank")
   private String panNumber;
   @NotBlank(message = "Address may not be blank")
   private String address;
