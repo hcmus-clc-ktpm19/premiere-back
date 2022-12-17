@@ -13,7 +13,7 @@ spring:
 
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/PREMIERE
+    url: jdbc:postgresql://localhost:5432/PREMIERE?stringtype=unspecified
     username: admin
     password: admin
 
@@ -21,9 +21,9 @@ keycloak:
   realm: premiere-realm
   auth-server-url: http://localhost:8180
   resource: premiere-client
-  public-client: true
-  bearer-only: true
   cors: true
+  credentials:
+    secret: D8Bk3vIzvTYBTkZ97aHFQuYlXbqOHhSO
 
 server:
   error:

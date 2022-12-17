@@ -1,6 +1,7 @@
 package org.hcmus.premiere.config;
 
 import lombok.RequiredArgsConstructor;
+import org.keycloak.OAuth2Constants;
 import org.keycloak.adapters.springboot.KeycloakSpringBootProperties;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
@@ -26,7 +27,9 @@ public class PremiereConfiguration {
         .builder()
         .realm(keycloakSpringBootProperties.getRealm())
         .serverUrl(keycloakSpringBootProperties.getAuthServerUrl())
+        .grantType(OAuth2Constants.CLIENT_CREDENTIALS)
         .clientId(keycloakSpringBootProperties.getResource())
+        .clientSecret(keycloakSpringBootProperties.getCredentials().get("secret").toString())
         .username("admin")
         .password("admin")
         .build();
