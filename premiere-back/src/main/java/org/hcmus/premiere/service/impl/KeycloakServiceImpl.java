@@ -1,23 +1,22 @@
 package org.hcmus.premiere.service.impl;
 
-import java.net.URI;
-import java.util.Collections;
 import static org.hcmus.premiere.model.exception.WrongPasswordException.WRONG_PASSWORD_MESSAGE;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.net.URI;
 import java.util.Collections;
 import java.util.EnumSet;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
+import org.hcmus.premiere.common.Constants;
+import org.hcmus.premiere.model.dto.PasswordDto;
 import org.hcmus.premiere.model.dto.RegisterAccountDto;
 import org.hcmus.premiere.model.entity.User;
-import org.hcmus.premiere.model.dto.PasswordDto;
 import org.hcmus.premiere.model.enums.PremiereRole;
 import org.hcmus.premiere.model.exception.WrongPasswordException;
+import org.hcmus.premiere.service.CreditCardService;
 import org.hcmus.premiere.service.KeycloakService;
 import org.hcmus.premiere.service.UserService;
 import org.keycloak.KeycloakPrincipal;
@@ -28,15 +27,15 @@ import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 
 @Service
 @RequiredArgsConstructor
@@ -47,6 +46,8 @@ public class KeycloakServiceImpl implements KeycloakService {
   private final RestTemplate restTemplate;
 
   private final UserService userService;
+
+  private final CreditCardService creditCardService;
 
   @Override
   public UserRepresentation getCurrentUser() {
@@ -79,11 +80,28 @@ public class KeycloakServiceImpl implements KeycloakService {
   }
 
   @Override
-  public void createUser(RegisterAccountDto registerAccountDto) {
+  public void createCustomer(RegisterAccountDto registerAccountDto) {
+    if(!registerAccountDto.getRole().equals(PremiereRole.CUSTOMER.name())) {
+      throw new IllegalArgumentException("Account's role must be CUSTOMER");
+    }
+    createUser(registerAccountDto);
+  }
+
+  @Override
+  public void createEmployee(RegisterAccountDto registerAccountDto) {
+    if(!registerAccountDto.getRole().equals(PremiereRole.EMPLOYEE.name())) {
+      throw new IllegalArgumentException("Account's role must be EMPLOYEE");
+    }
+    createUser(registerAccountDto);
+  }
+
+  private void createUser(RegisterAccountDto registerAccountDto) {
     User user = userService.saveUser(registerAccountDto);
+    if(registerAccountDto.getRole().equals(PremiereRole.CUSTOMER.name())) {
+      creditCardService.saveCreditCard(user);
+    }
 
     UserRepresentation userRepresentation = new UserRepresentation();
-
     userRepresentation.setUsername(registerAccountDto.getUsername());
     userRepresentation.setFirstName(user.getFirstName());
     userRepresentation.setLastName(user.getLastName());
@@ -92,9 +110,7 @@ public class KeycloakServiceImpl implements KeycloakService {
     userRepresentation.singleAttribute("userId", String.valueOf(user.getId()));
 
     Response response = realmResource.users().create(userRepresentation);
-
     String userId = getCreatedId(response);
-
     UserResource userResource = realmResource.users().get(userId);
 
     CredentialRepresentation credentialRepresentation = new CredentialRepresentation();
@@ -138,7 +154,7 @@ public class KeycloakServiceImpl implements KeycloakService {
 
     try {
       ResponseEntity<String> response = restTemplate.postForEntity(
-          "http://localhost:8180/realms/premiere-realm/protocol/openid-connect/token", request,
+          Constants.KEYCLOACK_TOKEN_URL, request,
           String.class);
       return response.getStatusCode() == HttpStatus.OK;
     } catch (Exception e) {

@@ -1,11 +1,13 @@
 package org.hcmus.premiere.controller;
 
+import java.nio.file.AccessDeniedException;
 import java.util.Map;
 import java.util.HashMap;
 import lombok.extern.slf4j.Slf4j;
 import org.hcmus.premiere.model.exception.AbstractExistedException;
 import org.hcmus.premiere.model.exception.AbstractNotFoundException;
 import org.hcmus.premiere.model.exception.WrongPasswordException;
+import org.keycloak.adapters.springsecurity.KeycloakAuthenticationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -41,6 +43,15 @@ public class ExceptionController {
     response.put(ERROR_MESSAGE, e.getMessage() + " " + e.getIdentify());
 
     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+  }
+
+  @ExceptionHandler(IllegalArgumentException.class)
+  public ResponseEntity<Map<String, String>> handleIllegalArgumentException(IllegalArgumentException e) {
+    log.error(e.getMessage(), e);
+    Map<String, String> response = new HashMap<>();
+    response.put(ERROR_MESSAGE, e.getMessage());
+
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
   }
 
   @ExceptionHandler(Throwable.class)

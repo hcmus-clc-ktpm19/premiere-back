@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -55,10 +54,17 @@ public class AuthController {
     return ResponseEntity.ok().build();
   }
 
-  @PostMapping("/register")
-  @RolesAllowed("EMPLOYEE")
-  public ResponseEntity<?> register(@RequestBody @Valid RegisterAccountDto registerAccountDto) {
-    keycloakService.createUser(registerAccountDto);
+  @PostMapping("/register-customer")
+  @RolesAllowed({"EMPLOYEE", "PREMIERE_ADMIN"})
+  public ResponseEntity<?> registerCustomer(@RequestBody @Valid RegisterAccountDto registerAccountDto) {
+    keycloakService.createCustomer(registerAccountDto);
+    return ResponseEntity.status(201).body("Register successfully");
+  }
+
+  @PostMapping("/register-employee")
+  @RolesAllowed("PREMIERE_ADMIN")
+  public ResponseEntity<?> registerEmployee(@RequestBody @Valid RegisterAccountDto registerAccountDto) {
+    keycloakService.createEmployee(registerAccountDto);
     return ResponseEntity.status(201).body("Register successfully");
   }
 
