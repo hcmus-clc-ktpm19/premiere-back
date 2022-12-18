@@ -1,6 +1,13 @@
 package org.hcmus.premiere.model.dto;
 
 import java.io.Serializable;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
-public record ErrorDto(String message, String i18nPlaceHolder) implements Serializable {
+@Data
+@AllArgsConstructor
+public class ErrorDto implements Serializable {
+
+  private String message;
+  private String i18nPlaceHolder;
 }

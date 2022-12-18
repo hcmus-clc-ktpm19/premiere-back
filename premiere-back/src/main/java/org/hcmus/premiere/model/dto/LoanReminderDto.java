@@ -3,13 +3,22 @@ package org.hcmus.premiere.model.dto;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import lombok.Data;
+import org.hcmus.premiere.model.entity.LoanReminder;
 import org.hcmus.premiere.model.enums.LoanStatus;
 
 /**
- * A DTO for the {@link org.hcmus.premiere.model.entity.LoanReminder} entity
+ * A DTO for the {@link LoanReminder} entity
  */
-public record LoanReminderDto(Long id, Long version, BigDecimal loanBalance, LoanStatus status,
-                              LocalDateTime time, String loanRemark, Long senderCreditCardId,
-                              Long receiverCreditCardId) implements Serializable {
+@Data
+public class LoanReminderDto implements Serializable {
 
+  private Long id;
+  private Long version;
+  private BigDecimal transferAmount;
+  private LoanStatus status;
+  private LocalDateTime time;
+  private String loanRemark;
+  private Long senderCreditCardId;
+  private Long receiverCreditCardId;
 }

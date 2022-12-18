@@ -1,7 +1,6 @@
 package org.hcmus.premiere.model.entity;
 
 import java.math.BigDecimal;
-import java.sql.Types;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import javax.persistence.Basic;
@@ -15,7 +14,6 @@ import javax.persistence.Table;
 import lombok.Data;
 import org.hcmus.premiere.model.enums.LoanStatus;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.Type;
 
 @Entity
 @Table(name = "loan_reminder", schema = "premiere")
@@ -29,7 +27,7 @@ public class LoanReminder extends PremiereAbstractEntity {
   @Basic
   @Column(name = "status", nullable = false, columnDefinition = "LOAN_STATUS")
   @Enumerated(EnumType.STRING)
-  private LoanStatus status;
+  private LoanStatus status = LoanStatus.PENDING;
 
   @Basic
   @Column(name = "time", nullable = false, columnDefinition = "TIMESTAMP")
