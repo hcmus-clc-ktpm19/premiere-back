@@ -21,6 +21,9 @@ public class PremiereConfiguration {
   @Value("${sendinblue.api-key}")
   private String SENDINBLUE_API_KEY;
 
+  @Value("${keycloak.client-key-password}")
+  private String KEYCLOAK_SECRET_KEY;
+
   @Bean
   public Keycloak keycloak() {
     return KeycloakBuilder
@@ -29,7 +32,7 @@ public class PremiereConfiguration {
         .serverUrl(keycloakSpringBootProperties.getAuthServerUrl())
         .grantType(OAuth2Constants.CLIENT_CREDENTIALS)
         .clientId(keycloakSpringBootProperties.getResource())
-        .clientSecret(keycloakSpringBootProperties.getCredentials().get("secret").toString())
+        .clientSecret(KEYCLOAK_SECRET_KEY)
         .username("admin")
         .password("admin")
         .build();

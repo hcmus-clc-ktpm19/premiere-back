@@ -22,8 +22,6 @@ keycloak:
   auth-server-url: http://localhost:8180
   resource: premiere-client
   cors: true
-  credentials:
-    secret: HvdzEq0XOcO2DQJnQEyXpCToUojGlfEj
 
 server:
   error:
