@@ -7,6 +7,7 @@ import org.keycloak.admin.client.KeycloakBuilder;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestTemplate;
 
 @Configuration
 @RequiredArgsConstructor
@@ -28,5 +29,10 @@ public class PremiereConfiguration {
   @Bean
   public RealmResource realmResource() {
     return keycloak().realm(keycloakSpringBootProperties.getRealm());
+  }
+
+  @Bean
+  public RestTemplate restTemplate() {
+    return new RestTemplate();
   }
 }
