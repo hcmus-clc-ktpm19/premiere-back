@@ -14,6 +14,4 @@ public interface CreditCardService {
   CreditCard findCreditCardByUserId(Long id);
 
   CreditCard saveCreditCard(User user);
-
-
 }

@@ -8,9 +8,9 @@ import com.bastiaanjansen.otp.TOTP;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.Properties;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.hcmus.premiere.model.entity.OTP;
 import org.hcmus.premiere.model.exception.OTPNotFoundException;
 import org.hcmus.premiere.repository.OTPRepository;
@@ -20,8 +20,9 @@ import sendinblue.auth.ApiKeyAuth;
 import sibApi.TransactionalEmailsApi;
 import sibModel.SendSmtpEmail;
 
-@RequiredArgsConstructor
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class OTPServiceImpl implements OTPService {
 
   private final ApiKeyAuth apiKeyAuth;
@@ -70,7 +71,7 @@ public class OTPServiceImpl implements OTPService {
       otpEntity.setEmail(toEmail);
       otpRepository.save(otpEntity);
     } catch (Exception e) {
-      System.err.println("Exception when calling TransactionalEmailsApi#sendTransacEmail");
+      log.error("Exception when calling TransactionalEmailsApi#sendTransacEmail");
       e.printStackTrace();
     }
   }
