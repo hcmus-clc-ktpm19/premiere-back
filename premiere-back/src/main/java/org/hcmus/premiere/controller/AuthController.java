@@ -1,5 +1,7 @@
 package org.hcmus.premiere.controller;
 
+import java.util.HashMap;
+import java.util.Map;
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +20,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -55,11 +56,24 @@ public class AuthController {
     return ResponseEntity.ok().build();
   }
 
-  @PostMapping("/register")
-  @RolesAllowed("EMPLOYEE")
-  public ResponseEntity<?> register(@RequestBody @Valid RegisterAccountDto registerAccountDto) {
-    keycloakService.createUser(registerAccountDto);
-    return ResponseEntity.status(201).body("Register successfully");
+  @PostMapping("/register-customer")
+  @RolesAllowed({"EMPLOYEE", "PREMIERE_ADMIN"})
+  public ResponseEntity<Map<String, String>> registerCustomer(@RequestBody @Valid RegisterAccountDto registerAccountDto) {
+    keycloakService.createCustomer(registerAccountDto);
+    Map<String, String> response = new HashMap<>();
+    response.put("code", "201");
+    response.put("message", "Register successfully");
+    return ResponseEntity.status(201).body(response);
+  }
+
+  @PostMapping("/register-employee")
+  @RolesAllowed("PREMIERE_ADMIN")
+  public ResponseEntity<Map<String, String>> registerEmployee(@RequestBody @Valid RegisterAccountDto registerAccountDto) {
+    keycloakService.createEmployee(registerAccountDto);
+    Map<String, String> response = new HashMap<>();
+    response.put("code", "201");
+    response.put("message", "Register successfully");
+    return ResponseEntity.status(201).body(response);
   }
 
   @PostMapping("/request-otp")

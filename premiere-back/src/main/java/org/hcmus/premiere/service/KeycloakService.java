@@ -12,10 +12,13 @@ public interface KeycloakService {
 
   RoleRepresentation getCurrentUserRole();
 
-  void createUser(RegisterAccountDto registerAccountDto);
+  void createCustomer(RegisterAccountDto registerAccountDto);
+
+  void createEmployee(RegisterAccountDto registerAccountDto);
 
   void changePassword(PasswordDto passwordDto);
 
   Boolean isPasswordCorrect(String username, String password);
+
   void resetPassword(PasswordDto passwordDto);
 }

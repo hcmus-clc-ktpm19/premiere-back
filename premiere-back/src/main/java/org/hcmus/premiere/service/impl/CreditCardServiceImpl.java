@@ -1,11 +1,14 @@
 package org.hcmus.premiere.service.impl;
 
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
+import org.hcmus.premiere.common.Constants;
 import org.hcmus.premiere.model.entity.CreditCard;
 import org.hcmus.premiere.model.entity.User;
 import org.hcmus.premiere.model.exception.CreditCardNotFoundException;
 import org.hcmus.premiere.repository.CreditCardRepository;
 import org.hcmus.premiere.service.CreditCardService;
+import org.hcmus.premiere.util.CreditCardNumberGenerator;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,6 +18,8 @@ public class CreditCardServiceImpl implements CreditCardService {
   private final CreditCardRepository creditCardRepository;
 
   private final UserServiceImpl userService;
+
+  private CreditCardNumberGenerator creditCardNumberGenerator;
 
   @Override
   public CreditCard findCreditCardById(Long id) {
@@ -42,4 +47,14 @@ public class CreditCardServiceImpl implements CreditCardService {
         .orElseThrow(() -> new CreditCardNotFoundException("Credit card with userId not found",
             id.toString(), CreditCardNotFoundException.CREDIT_CARD_NOT_FOUND));
   }
+
+  @Override
+  public CreditCard saveCreditCard(User user) {
+      CreditCard creditCard = new CreditCard();
+      creditCard.setCardNumber(creditCardNumberGenerator.generate(Constants.CREDIT_CARD_NUMBER_BIN, Constants.CREDIT_CARD_NUMBER_LENGTH));
+      creditCard.setBalance(Constants.CREDIT_CARD_INITIAL_BALANCE);
+      creditCard.setUser(user);
+      creditCard.setOpenDay(LocalDateTime.now());
+      return creditCardRepository.saveAndFlush(creditCard);
+    }
 }
