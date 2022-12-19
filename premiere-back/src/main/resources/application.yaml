@@ -1,4 +1,7 @@
 spring:
+  config:
+    import: secret.yaml
+
   jpa:
     hibernate:
       ddl-auto: update
@@ -6,6 +9,8 @@ spring:
     properties:
       hibernate:
         format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
 
   datasource:
     url: jdbc:postgresql://localhost:5432/PREMIERE?stringtype=unspecified
@@ -16,8 +21,6 @@ keycloak:
   realm: premiere-realm
   auth-server-url: http://localhost:8180
   resource: premiere-client
-  public-client: true
-  bearer-only: true
   cors: true
 
 server:

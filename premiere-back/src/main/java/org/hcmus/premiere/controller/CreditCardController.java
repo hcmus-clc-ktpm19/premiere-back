@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/v1/credit_card")
+@RequestMapping("/api/v1/credit-card")
 public class CreditCardController extends AbstractApplicationController {
 
   private CreditCardService creditCardService;
