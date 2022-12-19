@@ -1,5 +1,6 @@
 package org.hcmus.premiere.service.impl;
 
+import static org.hcmus.premiere.model.exception.BankNotFoundException.BANK_NOT_FOUND;
 import static org.hcmus.premiere.model.exception.BankNotFoundException.BANK_NOT_FOUND_MESSAGE;
 
 import lombok.RequiredArgsConstructor;
@@ -18,13 +19,13 @@ public class BankServiceImpl implements BankService {
   public Bank findBankById(Long id) {
     return bankRepository
         .findById(id)
-        .orElseThrow(() -> new BankNotFoundException(BANK_NOT_FOUND_MESSAGE, id.toString()));
+        .orElseThrow(() -> new BankNotFoundException(BANK_NOT_FOUND_MESSAGE, id.toString(), BANK_NOT_FOUND));
   }
 
   @Override
   public Bank findBankByName(String bankName) {
     return bankRepository
         .findByBankName(bankName)
-        .orElseThrow(() -> new BankNotFoundException(BANK_NOT_FOUND_MESSAGE, bankName));
+        .orElseThrow(() -> new BankNotFoundException(BANK_NOT_FOUND_MESSAGE, bankName, BANK_NOT_FOUND));
   }
 }

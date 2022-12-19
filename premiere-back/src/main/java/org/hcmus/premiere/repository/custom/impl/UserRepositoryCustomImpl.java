@@ -20,7 +20,7 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom {
   public Optional<User> findUserByCreditCardNumber(String creditCardNumber) {
     return Optional.ofNullable(new JPAQuery<User>(entityManager)
         .from(QUser.user)
-        .leftJoin(QUser.user.creditCards, QCreditCard.creditCard)
+        .leftJoin(QUser.user.creditCard, QCreditCard.creditCard)
         .fetchJoin()
         .where(QCreditCard.creditCard.cardNumber.eq(creditCardNumber))
         .fetchOne());
