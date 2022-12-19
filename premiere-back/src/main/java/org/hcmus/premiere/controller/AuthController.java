@@ -1,5 +1,7 @@
 package org.hcmus.premiere.controller;
 
+import java.util.HashMap;
+import java.util.Map;
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -56,16 +58,22 @@ public class AuthController {
 
   @PostMapping("/register-customer")
   @RolesAllowed({"EMPLOYEE", "PREMIERE_ADMIN"})
-  public ResponseEntity<?> registerCustomer(@RequestBody @Valid RegisterAccountDto registerAccountDto) {
+  public ResponseEntity<Map<String, String>> registerCustomer(@RequestBody @Valid RegisterAccountDto registerAccountDto) {
     keycloakService.createCustomer(registerAccountDto);
-    return ResponseEntity.status(201).body("Register successfully");
+    Map<String, String> response = new HashMap<>();
+    response.put("code", "201");
+    response.put("message", "Register successfully");
+    return ResponseEntity.status(201).body(response);
   }
 
   @PostMapping("/register-employee")
   @RolesAllowed("PREMIERE_ADMIN")
-  public ResponseEntity<?> registerEmployee(@RequestBody @Valid RegisterAccountDto registerAccountDto) {
+  public ResponseEntity<Map<String, String>> registerEmployee(@RequestBody @Valid RegisterAccountDto registerAccountDto) {
     keycloakService.createEmployee(registerAccountDto);
-    return ResponseEntity.status(201).body("Register successfully");
+    Map<String, String> response = new HashMap<>();
+    response.put("code", "201");
+    response.put("message", "Register successfully");
+    return ResponseEntity.status(201).body(response);
   }
 
   @PostMapping("/request-otp")
