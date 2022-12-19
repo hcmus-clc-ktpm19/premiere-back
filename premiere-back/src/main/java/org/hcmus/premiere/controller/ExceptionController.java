@@ -3,6 +3,7 @@ package org.hcmus.premiere.controller;
 import java.util.Map;
 import java.util.HashMap;
 import lombok.extern.slf4j.Slf4j;
+import org.hcmus.premiere.model.dto.ErrorDto;
 import org.hcmus.premiere.model.exception.AbstractExistedException;
 import org.hcmus.premiere.model.exception.AbstractNotFoundException;
 import org.hcmus.premiere.model.exception.WrongPasswordException;
@@ -17,12 +18,12 @@ public class ExceptionController {
   private static final String ERROR_MESSAGE = "Error: ";
 
   @ExceptionHandler(AbstractNotFoundException.class)
-  public ResponseEntity<Map<String, String>> handleRuntimeException(AbstractNotFoundException e) {
-    log.error(e.getMessage(), e);
-    Map<String, String> response = new HashMap<>();
-    response.put(ERROR_MESSAGE, e.getMessage() + " " + e.getIdentify());
+  public ResponseEntity<ErrorDto> handleNotFoundException(AbstractNotFoundException e) {
+    ErrorDto errorDto = new ErrorDto(e.getMessage(), e.getI18nPlaceHolder());
 
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    return ResponseEntity
+        .status(HttpStatus.ACCEPTED)
+        .body(errorDto);
   }
 
   @ExceptionHandler(AbstractExistedException.class)

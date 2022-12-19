@@ -7,7 +7,9 @@ public class UserNotFoundException extends AbstractNotFoundException {
 
   public static final String USER_NOT_FOUND_MESSAGE = "User not found";
 
-  public UserNotFoundException(String message, String id) {
-    super(message, id);
+  public static final String USER_NOT_FOUND = "AUTH.USER.NOT_FOUND";
+
+  public UserNotFoundException(String message, String id, String i18nPlaceHolder) {
+    super(message, id, i18nPlaceHolder);
   }
 }

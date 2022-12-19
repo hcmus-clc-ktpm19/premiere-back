@@ -4,8 +4,10 @@ public class OTPNotFoundException extends AbstractNotFoundException {
 
   public static final String OTP_NOT_FOUND_MESSAGE = "OTP not found";
 
-  public OTPNotFoundException(String message, String id) {
-    super(message, id);
+  public static final String OTP_NOT_FOUND = "OTP.NOT_FOUND";
+
+  public OTPNotFoundException(String message, String id, String i18nPlaceHolder) {
+    super(message, id, i18nPlaceHolder);
   }
 
 }

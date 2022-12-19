@@ -20,14 +20,18 @@ public class CreditCardServiceImpl implements CreditCardService {
   public CreditCard findCreditCardById(Long id) {
     return creditCardRepository
         .findById(id)
-        .orElseThrow(() -> new CreditCardNotFoundException("Credit card with id not found", id.toString()));
+        .orElseThrow(
+            () -> new CreditCardNotFoundException("Credit card with id not found", id.toString(),
+                CreditCardNotFoundException.CREDIT_CARD_NOT_FOUND));
   }
 
   @Override
   public CreditCard findCreditCardByNumber(String number) {
     return creditCardRepository
         .findCreditCardByCardNumber(number)
-        .orElseThrow(() -> new CreditCardNotFoundException("Credit card with number not found", number));
+        .orElseThrow(
+            () -> new CreditCardNotFoundException("Credit card with number not found", number,
+                CreditCardNotFoundException.CREDIT_CARD_NOT_FOUND));
   }
 
   @Override
@@ -35,11 +39,7 @@ public class CreditCardServiceImpl implements CreditCardService {
     User user = userService.findUserById(id);
     return creditCardRepository
         .findCreditCardByUser(user)
-        .orElseThrow(() -> new CreditCardNotFoundException("Credit card with userId not found", id.toString()));
+        .orElseThrow(() -> new CreditCardNotFoundException("Credit card with userId not found",
+            id.toString(), CreditCardNotFoundException.CREDIT_CARD_NOT_FOUND));
   }
-
-
-
-
-
 }
