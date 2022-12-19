@@ -1,6 +1,7 @@
 package org.hcmus.premiere.service.impl;
 
 import static org.hcmus.premiere.model.exception.ReceiverExistedException.RECEIVER_EXISTED_MESSAGE;
+import static org.hcmus.premiere.model.exception.ReceiverNotFoundException.RECEIVER_NOT_FOUND;
 import static org.hcmus.premiere.model.exception.ReceiverNotFoundException.RECEIVER_NOT_FOUND_MESSAGE;
 
 import java.util.List;
@@ -38,21 +39,21 @@ public class ReceiverServiceImpl implements ReceiverService {
     return receiverRepository
         .findById(id)
         .orElseThrow(
-            () -> new ReceiverNotFoundException(RECEIVER_NOT_FOUND_MESSAGE, id.toString()));
+            () -> new ReceiverNotFoundException(RECEIVER_NOT_FOUND_MESSAGE, id.toString(), RECEIVER_NOT_FOUND));
   }
 
   @Override
   public Receiver findReceiverByCardNumber(String cardNumber) {
     return receiverRepository
         .findByCardNumber(cardNumber)
-        .orElseThrow(() -> new ReceiverNotFoundException(RECEIVER_NOT_FOUND_MESSAGE, cardNumber));
+        .orElseThrow(() -> new ReceiverNotFoundException(RECEIVER_NOT_FOUND_MESSAGE, cardNumber, RECEIVER_NOT_FOUND));
   }
 
   @Override
   public Receiver findReceiverByNickname(String nickname) {
     return receiverRepository
         .findByNickname(nickname)
-        .orElseThrow(() -> new ReceiverNotFoundException(RECEIVER_NOT_FOUND_MESSAGE, nickname));
+        .orElseThrow(() -> new ReceiverNotFoundException(RECEIVER_NOT_FOUND_MESSAGE, nickname, RECEIVER_NOT_FOUND));
   }
 
   @Override
@@ -92,7 +93,7 @@ public class ReceiverServiceImpl implements ReceiverService {
   @Override
   public void deleteReceiver(String cardNumber) {
     Receiver receiver = receiverRepository.findByCardNumber(cardNumber)
-        .orElseThrow(() -> new ReceiverNotFoundException(RECEIVER_NOT_FOUND_MESSAGE, cardNumber));
+        .orElseThrow(() -> new ReceiverNotFoundException(RECEIVER_NOT_FOUND_MESSAGE, cardNumber, RECEIVER_NOT_FOUND));
     receiverRepository.deleteById(receiver.getId());
   }
 }

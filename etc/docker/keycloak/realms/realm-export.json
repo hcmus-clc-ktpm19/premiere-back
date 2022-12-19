@@ -1,4 +1,93 @@
 {
+  "users": [
+    {
+      "username": "admin",
+      "enabled": true,
+      "email": "admin@test.com",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "admin",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "offline_access",
+        "uma_authorization",
+        "PREMIERE_ADMIN",
+        "default-roles-premiere"
+      ],
+      "clientRoles": {
+        "realm-management": [
+          "manage-users"
+        ],
+        "account": [
+          "manage-account",
+          "manage-account-links",
+          "view-profile"
+        ]
+      },
+      "attributes": {
+        "userId": "1"
+      }
+    },
+    {
+      "username": "employee",
+      "enabled": true,
+      "email": "employee@test.com",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "employee",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "EMPLOYEE",
+        "offline_access",
+        "uma_authorization",
+        "default-roles-premiere"
+      ],
+      "clientRoles": {
+        "account": [
+          "manage-account",
+          "manage-account-links",
+          "view-profile"
+        ]
+      },
+      "attributes": {
+        "userId": "2"
+      }
+    },
+    {
+      "username": "customer",
+      "enabled": true,
+      "email": "customer@test.com",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "customer",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "offline_access",
+        "CUSTOMER",
+        "uma_authorization",
+        "default-roles-premiere"
+      ],
+      "clientRoles": {
+        "account": [
+          "manage-account",
+          "manage-account-links",
+          "view-profile"
+        ]
+      },
+      "attributes": {
+        "userId": "3"
+      }
+    }
+  ],
   "id": "6c7a49c6-c4d6-4e88-a602-6ad06d02ee67",
   "realm": "premiere-realm",
   "displayName": "premiere-realm",
