@@ -115,34 +115,3 @@ ALTER TABLE "transaction"
     ADD CONSTRAINT "transaction_fk1" FOREIGN KEY ("sender_bank_id") REFERENCES "bank" ("id");
 ALTER TABLE "transaction"
     ADD CONSTRAINT "transaction_fk2" FOREIGN KEY ("receiver_bank_id") REFERENCES "bank" ("id");
-
-INSERT INTO "user"
-VALUES (1, 'Nam', 'Nguyen Duc', '01/01/2001', 'MALE', 'keke@gmail.com', '0987654321', 'pan_number',
-        'address', 'avatar');
-INSERT INTO "user"
-VALUES (2, 'Giap', 'Hoang Huu', '01/01/2001', 'FEMALE', 'hehe@gmail.com', '0987654322',
-        'pan_number', 'address', 'avatar');
-INSERT INTO "user"
-VALUES (3, 'Nhat', 'Le Ngoc Minh', '01/01/2001', 'MALE', 'hihi@gmail.com', '0987654323',
-        'pan_number', 'address', 'avatar');
-
-
-INSERT INTO "bank"
-VALUES (1, 'Vietcombank');
-INSERT INTO "bank"
-VALUES (2, 'Vietinbank');
-INSERT INTO "bank"
-VALUES (3, 'Techcombank');
-
-INSERT INTO "credit_card"
-VALUES (1, 2, 100000, CURRENT_TIMESTAMP, '1234567890123456', 1);
-
-INSERT INTO "loan_reminder"
-VALUES (1, 100000, 1, 1, 'APPROVED', CURRENT_TIMESTAMP, 'hehe');
-
-INSERT INTO "receiver"
-VALUES (1, '1234567890123456', 'Nam', 'Nguyen Duc Nam', 1, 1);
-INSERT INTO "receiver"
-VALUES (2, '1234567890123457', 'Giap', 'Hoang Huu Giap', 2, 2);
-INSERT INTO "receiver"
-VALUES (3, '1234567890123456', 'Nhat', 'Le Ngoc Minh Nhat', 3, 3);
