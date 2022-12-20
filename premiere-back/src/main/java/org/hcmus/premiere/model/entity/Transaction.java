@@ -6,6 +6,8 @@ import java.util.Objects;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -24,6 +26,7 @@ public class Transaction extends PremiereAbstractEntity {
 
   @Basic
   @Column(name = "type", nullable = false, columnDefinition = "TRANSACTION_TYPE")
+  @Enumerated(EnumType.STRING)
   private TransactionType type;
 
   @Basic
@@ -56,6 +59,7 @@ public class Transaction extends PremiereAbstractEntity {
 
   @Basic
   @Column(name = "status", nullable = false, columnDefinition = "TRANSACTION_STATUS")
+  @Enumerated(EnumType.STRING)
   private TransactionStatus status;
 
   @ManyToOne
