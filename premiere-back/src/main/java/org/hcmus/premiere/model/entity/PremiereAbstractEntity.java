@@ -31,6 +31,7 @@ public abstract class PremiereAbstractEntity {
   @CreatedDate
   @Column(name = "created_at", updatable = false)
   protected LocalDateTime createdAt;
+
   @LastModifiedDate
   @Column(name = "updated_at")
   protected LocalDateTime updatedAt;

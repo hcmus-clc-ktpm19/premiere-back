@@ -20,7 +20,7 @@ VALUES (1, 100000, CURRENT_TIMESTAMP, '1234567890123457');
 INSERT INTO "transaction"(amount, time, type, transaction_remark, total_balance,
                           sender_credit_card_number, receiver_credit_card_number, sender_bank_id,
                           receiver_bank_id, fee, is_self_payment_fee, status)
-VALUES (200000, CURRENT_TIMESTAMP, 'MONEY_TRANSFER', 'HIHI', 202000, '1234567890123457',
+VALUES (200000, CURRENT_TIMESTAMP, 'LOAN', 'HIHI', 202000, '1234567890123457',
         '1234567890123456', 2, 2, 2000, TRUE, 'CHECKING');
 
 INSERT INTO "transaction"(amount, time, type, transaction_remark, total_balance,

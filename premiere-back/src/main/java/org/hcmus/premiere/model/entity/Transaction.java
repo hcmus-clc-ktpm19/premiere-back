@@ -1,7 +1,6 @@
 package org.hcmus.premiere.model.entity;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.Objects;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -28,10 +27,6 @@ public class Transaction extends PremiereAbstractEntity {
   @Column(name = "type", nullable = false, columnDefinition = "TRANSACTION_TYPE")
   @Enumerated(EnumType.STRING)
   private TransactionType type;
-
-  @Basic
-  @Column(name = "time", nullable = false, columnDefinition = "TIMESTAMP")
-  private LocalDateTime time;
 
   @Basic
   @Column(name = "transaction_remark", nullable = false, columnDefinition = "VARCHAR(255)")
@@ -83,14 +78,14 @@ public class Transaction extends PremiereAbstractEntity {
         && Objects.equals(receiverCreditCardNumber, that.receiverCreditCardNumber)
         && Objects.equals(that.fee, fee) && isSelfPaymentFee == that.isSelfPaymentFee
         && Objects.equals(version, that.version) && Objects.equals(type, that.type)
-        && Objects.equals(time, that.time) && Objects.equals(transactionRemark,
+        && Objects.equals(transactionRemark,
         that.transactionRemark) && Objects.equals(totalBalance, that.totalBalance)
         && Objects.equals(status, that.status);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, amount, type, time, transactionRemark, totalBalance,
+    return Objects.hash(id, amount, type, transactionRemark, totalBalance,
         receiverCreditCardNumber, fee, isSelfPaymentFee, status,
         version);
   }

@@ -1,16 +1,28 @@
 package org.hcmus.premiere.util.mapper;
 
+import java.util.List;
 import org.hcmus.premiere.model.dto.CreditCardDto;
 import org.hcmus.premiere.model.dto.OTPDto;
+import org.hcmus.premiere.model.dto.PaginationMetaDataDto;
+import org.hcmus.premiere.model.dto.PremierePaginationReponseDto;
 import org.hcmus.premiere.model.dto.ReceiverDto;
+import org.hcmus.premiere.model.dto.TransactionCriteriaDto;
+import org.hcmus.premiere.model.dto.TransactionDto;
 import org.hcmus.premiere.model.entity.CreditCard;
 import org.hcmus.premiere.model.entity.OTP;
 import org.hcmus.premiere.model.entity.Receiver;
+import org.hcmus.premiere.service.TransactionService;
 import org.springframework.stereotype.Component;
 
 
 @Component
 public class ApplicationMapper {
+
+  private final TransactionService transactionService;
+
+  public ApplicationMapper(TransactionService transactionService) {
+    this.transactionService = transactionService;
+  }
 
   public CreditCardDto toCreditCardDto(CreditCard creditCard) {
     if (creditCard == null) {
@@ -48,5 +60,18 @@ public class ApplicationMapper {
       otpDto.setCreatedAt(otp.getCreatedAt());
       return otpDto;
     }
+  }
+
+  public PremierePaginationReponseDto<TransactionDto> toDto(List<TransactionDto> transactionDtos,
+      TransactionCriteriaDto criteriaDto) {
+    PaginationMetaDataDto paginationMetaData = new PaginationMetaDataDto();
+    paginationMetaData.setCurrPage(criteriaDto.getPage());
+    paginationMetaData.setSizePerPage(criteriaDto.getSize());
+    paginationMetaData.setCurrPageTotalElements(transactionDtos.size());
+    paginationMetaData.setTotalPages(transactionService.getTotalPages(criteriaDto.getSize()));
+    paginationMetaData.setFirst(criteriaDto.getPage() == 0);
+    paginationMetaData.setLast(criteriaDto.getPage() == paginationMetaData.getTotalPages());
+
+    return new PremierePaginationReponseDto<>(transactionDtos, paginationMetaData);
   }
 }
