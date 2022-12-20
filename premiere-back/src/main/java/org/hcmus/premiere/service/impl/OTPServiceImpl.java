@@ -1,6 +1,7 @@
 package org.hcmus.premiere.service.impl;
 
 import static org.hcmus.premiere.model.exception.OTPNotFoundException.OTP_NOT_FOUND;
+import static org.hcmus.premiere.model.exception.OTPNotFoundException.OTP_NOT_FOUND_MESSAGE;
 
 import com.bastiaanjansen.otp.HMACAlgorithm;
 import com.bastiaanjansen.otp.SecretGenerator;
@@ -78,14 +79,19 @@ public class OTPServiceImpl implements OTPService {
 
   @Override
   public Boolean verifyOTP(String otp, String email) {
-    // find the lastest otp by email
+    // find the latest otp by email
     OTP otpResult = otpRepository.findTopByEmailOrderByCreatedAtDesc(email)
         .orElseThrow(
-            () -> new OTPNotFoundException(OTPNotFoundException.OTP_NOT_FOUND_MESSAGE + "for ", email, OTP_NOT_FOUND));
+            () -> new OTPNotFoundException(OTP_NOT_FOUND_MESSAGE + " for ", email, OTP_NOT_FOUND));
     LocalDateTime expiredTime = otpResult.getCreatedAt().plusMinutes(5);
     if (LocalDateTime.now().isAfter(expiredTime)) {
       return false;
     }
-    return otpResult.getOtp().equals(otp);
+    // if OTP is verified, delete it
+    if (otpResult.getOtp().equals(otp)) {
+      otpRepository.delete(otpResult);
+      return true;
+    }
+    return false;
   }
 }
