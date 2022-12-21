@@ -7,7 +7,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface TransactionService {
 
-  long getTotalPages(int size);
+  long getTotalPages(TransactionType transactionType, Long customerId, int size);
+
+  long getTotalElements(TransactionType transactionType, Long customerId);
 
   @PreAuthorize("@SecurityUtils.isCustomer() or @SecurityUtils.isStaff()")
   List<Transaction> getTransactionsByCustomerId(

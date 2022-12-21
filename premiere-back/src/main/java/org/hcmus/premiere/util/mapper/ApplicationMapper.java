@@ -2,8 +2,9 @@ package org.hcmus.premiere.util.mapper;
 
 import java.util.List;
 import org.hcmus.premiere.model.dto.CreditCardDto;
+import org.hcmus.premiere.model.dto.MetaDataDto;
 import org.hcmus.premiere.model.dto.OTPDto;
-import org.hcmus.premiere.model.dto.PaginationMetaDataDto;
+import org.hcmus.premiere.model.dto.PaginationDto;
 import org.hcmus.premiere.model.dto.PremierePaginationReponseDto;
 import org.hcmus.premiere.model.dto.ReceiverDto;
 import org.hcmus.premiere.model.dto.TransactionCriteriaDto;
@@ -11,18 +12,11 @@ import org.hcmus.premiere.model.dto.TransactionDto;
 import org.hcmus.premiere.model.entity.CreditCard;
 import org.hcmus.premiere.model.entity.OTP;
 import org.hcmus.premiere.model.entity.Receiver;
-import org.hcmus.premiere.service.TransactionService;
 import org.springframework.stereotype.Component;
 
 
 @Component
 public class ApplicationMapper {
-
-  private final TransactionService transactionService;
-
-  public ApplicationMapper(TransactionService transactionService) {
-    this.transactionService = transactionService;
-  }
 
   public CreditCardDto toCreditCardDto(CreditCard creditCard) {
     if (creditCard == null) {
@@ -64,14 +58,16 @@ public class ApplicationMapper {
 
   public PremierePaginationReponseDto<TransactionDto> toDto(List<TransactionDto> transactionDtos,
       TransactionCriteriaDto criteriaDto) {
-    PaginationMetaDataDto paginationMetaData = new PaginationMetaDataDto();
-    paginationMetaData.setCurrPage(criteriaDto.getPage());
-    paginationMetaData.setSizePerPage(criteriaDto.getSize());
-    paginationMetaData.setCurrPageTotalElements(transactionDtos.size());
-    paginationMetaData.setTotalPages(transactionService.getTotalPages(criteriaDto.getSize()));
-    paginationMetaData.setFirst(criteriaDto.getPage() == 0);
-    paginationMetaData.setLast(criteriaDto.getPage() == paginationMetaData.getTotalPages());
+    PaginationDto paginationDto = new PaginationDto();
+    paginationDto.setCurrPage(criteriaDto.getPage());
+    paginationDto.setSizePerPage(criteriaDto.getSize());
+    paginationDto.setCurrPageTotalElements(transactionDtos.size());
+    paginationDto.setFirst(criteriaDto.getPage() == 0);
+    paginationDto.setLast(criteriaDto.getPage() == paginationDto.getTotalPages());
 
-    return new PremierePaginationReponseDto<>(transactionDtos, paginationMetaData);
+    MetaDataDto metaDataDto = new MetaDataDto();
+    metaDataDto.setPagination(paginationDto);
+
+    return new PremierePaginationReponseDto<>(transactionDtos, metaDataDto);
   }
 }

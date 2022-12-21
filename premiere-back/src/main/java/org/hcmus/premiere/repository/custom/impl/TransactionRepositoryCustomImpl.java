@@ -18,12 +18,27 @@ public class TransactionRepositoryCustomImpl implements TransactionRepositoryCus
   private EntityManager entityManager;
 
   @Override
+  public long count(TransactionType transactionType, Long customerId) {
+    return getTransactionsByCustomerIdQuery(transactionType, customerId)
+        .select(QTransaction.transaction.count())
+        .fetchFirst();
+  }
+
+  @Override
   public List<Transaction> getTransactionsByCustomerId(long page, long size,
       TransactionType transactionType, boolean isAsc, Long customerId) {
-    BooleanExpression whereClause =
-        QTransaction.transaction.senderCreditCardNumber.eq(QCreditCard.creditCard.cardNumber).or(
-            QTransaction.transaction.receiverCreditCardNumber.eq(
-                QCreditCard.creditCard.cardNumber));
+    return getTransactionsByCustomerIdQuery(transactionType, customerId)
+        .orderBy(isAsc ? QTransaction.transaction.createdAt.asc() : QTransaction.transaction.createdAt.desc())
+        .limit(size)
+        .offset(page * size)
+        .fetch();
+  }
+
+  private JPAQuery<Transaction> getTransactionsByCustomerIdQuery(TransactionType transactionType, Long customerId) {
+    BooleanExpression whereClause = QUser.user.id.eq(customerId);
+    whereClause = whereClause.and(
+        QTransaction.transaction.senderCreditCardNumber.eq(QCreditCard.creditCard.cardNumber)
+            .or(QTransaction.transaction.receiverCreditCardNumber.eq(QCreditCard.creditCard.cardNumber)));
 
     if (transactionType != null) {
       whereClause = whereClause.and(QTransaction.transaction.type.eq(transactionType));
@@ -32,11 +47,6 @@ public class TransactionRepositoryCustomImpl implements TransactionRepositoryCus
     return new JPAQuery<Transaction>(entityManager)
         .from(QTransaction.transaction, QCreditCard.creditCard)
         .innerJoin(QCreditCard.creditCard.user, QUser.user)
-        .on(QUser.user.id.eq(customerId))
-        .where(whereClause)
-        .orderBy(isAsc ? QTransaction.transaction.createdAt.asc() : QTransaction.transaction.createdAt.desc())
-        .limit(size)
-        .offset(page * size)
-        .fetch();
+        .where(whereClause);
   }
 }

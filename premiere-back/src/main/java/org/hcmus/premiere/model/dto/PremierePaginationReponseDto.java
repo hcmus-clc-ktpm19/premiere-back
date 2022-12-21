@@ -9,5 +9,5 @@ import lombok.Data;
 public class PremierePaginationReponseDto<T> {
 
   private List<T> payload;
-  private PaginationMetaDataDto paginationMetaData;
+  private MetaDataDto meta;
 }

@@ -37,6 +37,12 @@ public class TransactionController extends AbstractApplicationController {
         .map(transactionMapper::toDto)
         .toList();
 
-    return applicationMapper.toDto(transactionDtos, criteriaDto);
+    PremierePaginationReponseDto<TransactionDto> res = applicationMapper.toDto(transactionDtos, criteriaDto);
+    res.getMeta().getPagination().setTotalPages(
+        transactionService.getTotalPages(criteriaDto.getTransactionType(), userId,
+            criteriaDto.getSize()));
+    res.getMeta().getPagination().setTotalElements(transactionService.getTotalElements(criteriaDto.getTransactionType(), userId));
+
+    return res;
   }
 }

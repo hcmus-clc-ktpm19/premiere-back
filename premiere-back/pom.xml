@@ -197,13 +197,16 @@
         </executions>
         <configuration>
           <jsonLibrary>jackson2</jsonLibrary>
-          <classes>
-            <class>org.hcmus.premiere.model.dto.UserDto</class>
-            <class>org.hcmus.premiere.model.dto.CreditCardDto</class>
-            <class>org.hcmus.premiere.model.dto.LoanReminderDto</class>
-            <class>org.hcmus.premiere.model.dto.CreateLoanReminderDto</class>
-            <class>org.hcmus.premiere.model.dto.ErrorDto</class>
-          </classes>
+          <classPatterns>
+            <classPattern>org.hcmus.premiere.model.dto.*</classPattern>
+            <classPattern>org.hcmus.premiere.model.enums.*</classPattern>
+          </classPatterns>
+          <excludeClasses>
+            <class>java.io.Serializable</class>
+          </excludeClasses>
+          <optionalAnnotations>
+            <annotation>org.springframework.lang.Nullable</annotation>
+          </optionalAnnotations>
           <outputKind>module</outputKind>
           <outputFile>../../premiere-front/src/app/models/model.d.ts</outputFile>
         </configuration>
