@@ -23,7 +23,9 @@ public class LoanReminderDto implements Serializable {
   private Long receiverCreditCardId;
   private String senderCreditCardNumber;
   private String senderName;
+  private Long senderId;
   private String receiverCreditCardNumber;
   private String receiverName;
+  private Long receiverId;
   private String cancelReason;
 }

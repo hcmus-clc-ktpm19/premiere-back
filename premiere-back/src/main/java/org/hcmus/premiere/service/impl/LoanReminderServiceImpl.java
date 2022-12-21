@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.hcmus.premiere.model.dto.LoanReminderDto;
+import org.hcmus.premiere.model.dto.LoanReminderMessageDto;
 import org.hcmus.premiere.model.entity.CreditCard;
 import org.hcmus.premiere.model.entity.LoanReminder;
 import org.hcmus.premiere.model.entity.PremiereAbstractEntity;
@@ -48,7 +49,7 @@ public class LoanReminderServiceImpl implements LoanReminderService {
 
   @Override
   public Long cancelLoanReminder(LoanReminderDto loanReminderDto) {
-    // update loan reminder status and cancel reason
+    // update loan reminder status to CANCELLED and cancel reason
     LoanReminder loanReminder = loanReminderRepository
         .findById(loanReminderDto.getId())
         .orElseThrow(() ->
@@ -57,15 +58,11 @@ public class LoanReminderServiceImpl implements LoanReminderService {
     loanReminder.setStatus(LoanStatus.CANCELLED);
     loanReminder.setCancelReason(loanReminderDto.getCancelReason());
     loanReminderRepository.saveAndFlush(loanReminder);
-
-    // send message to queue
-    StringBuilder message = new StringBuilder();
-    message.append("Loan reminder with id ")
-        .append(loanReminder.getId())
-        .append(" has been cancelled")
-        .append(" with reason: ")
-        .append(loanReminderDto.getCancelReason());
-    rabbitTemplate.convertAndSend("loan-reminder-queue", message);
     return loanReminder.getId();
+  }
+
+  @Override
+  public void pushLoanReminderMessage(LoanReminderMessageDto loanReminderMessageDto) {
+    rabbitTemplate.convertAndSend("loan-reminder-queue", loanReminderMessageDto);
   }
 }

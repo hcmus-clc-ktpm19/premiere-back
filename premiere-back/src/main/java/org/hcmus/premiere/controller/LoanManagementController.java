@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hcmus.premiere.model.dto.CreateLoanReminderDto;
 import org.hcmus.premiere.model.dto.LoanReminderDto;
+import org.hcmus.premiere.model.dto.LoanReminderMessageDto;
 import org.hcmus.premiere.model.dto.UserDto;
 import org.hcmus.premiere.model.entity.LoanReminder;
 import org.hcmus.premiere.service.LoanReminderService;
@@ -58,5 +59,9 @@ public class LoanManagementController extends AbstractApplicationController {
     return loanReminderService.saveLoanReminder(loanReminder);
   }
 
+  @PostMapping("/loan-reminder/message")
+  public void pushLoanReminderMessage(@RequestBody LoanReminderMessageDto loanReminderMessageDto) {
+    loanReminderService.pushLoanReminderMessage(loanReminderMessageDto);
+  }
 
 }
