@@ -12,6 +12,8 @@ VALUES ('Nhat', 'Le Ngoc Minh', '01/01/2001', 'MALE', 'hihi@gmail.com', '0987654
 
 
 INSERT INTO "bank"(bank_name)
+VALUES ('Premierebank');
+INSERT INTO "bank"(bank_name)
 VALUES ('Vietcombank');
 INSERT INTO "bank"(bank_name)
 VALUES ('Vietinbank');
@@ -21,8 +23,14 @@ VALUES ('Techcombank');
 INSERT INTO "credit_card"(user_id, balance, open_day, card_number)
 VALUES (2, 100000, CURRENT_TIMESTAMP, '1234567890123456');
 
+INSERT INTO "credit_card"(user_id, balance, open_day, card_number)
+VALUES (1, 11111111111111, CURRENT_TIMESTAMP, '1234567890123457');
+
 INSERT INTO "loan_reminder"(loan_balance, sender_credit_card_id, receiver_credit_card_id, status, time, loan_remark)
 VALUES (100000, 1, 1, 'APPROVED', CURRENT_TIMESTAMP, 'hehe');
+
+INSERT INTO "loan_reminder"(loan_balance, sender_credit_card_id, receiver_credit_card_id, status, time, loan_remark)
+VALUES (120000, 2, 1, 'PENDING', CURRENT_TIMESTAMP, 'tra tien cho toi');
 
 INSERT INTO "receiver"(card_number, nickname, full_name, user_id, bank_id)
 VALUES ('1234567890123456', 'Nam', 'Nguyen Duc Nam', 1, 1);

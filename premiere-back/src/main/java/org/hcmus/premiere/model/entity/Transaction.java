@@ -6,6 +6,8 @@ import java.util.Objects;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -24,6 +26,7 @@ public class Transaction extends PremiereAbstractEntity {
 
   @Basic
   @Column(name = "type", nullable = false, columnDefinition = "TRANSACTION_TYPE")
+  @Enumerated(EnumType.STRING)
   private TransactionType type;
 
   @Basic
@@ -35,8 +38,12 @@ public class Transaction extends PremiereAbstractEntity {
   private String transactionRemark;
 
   @Basic
-  @Column(name = "total_balance", nullable = false, columnDefinition = "NUMERIC")
-  private BigDecimal totalBalance;
+  @Column(name = "sender_balance", nullable = false, columnDefinition = "NUMERIC")
+  private BigDecimal senderBalance;
+
+  @Basic
+  @Column(name = "receiver_balance", nullable = false, columnDefinition = "NUMERIC")
+  private BigDecimal receiverBalance;
 
   @Basic
   @Column(name = "sender_credit_card_number", nullable = false, columnDefinition = "VARCHAR(255)")
@@ -56,6 +63,7 @@ public class Transaction extends PremiereAbstractEntity {
 
   @Basic
   @Column(name = "status", nullable = false, columnDefinition = "TRANSACTION_STATUS")
+  @Enumerated(EnumType.STRING)
   private TransactionStatus status;
 
   @ManyToOne
@@ -80,13 +88,13 @@ public class Transaction extends PremiereAbstractEntity {
         && Objects.equals(that.fee, fee) && isSelfPaymentFee == that.isSelfPaymentFee
         && Objects.equals(version, that.version) && Objects.equals(type, that.type)
         && Objects.equals(time, that.time) && Objects.equals(transactionRemark,
-        that.transactionRemark) && Objects.equals(totalBalance, that.totalBalance)
+        that.transactionRemark) && Objects.equals(senderBalance, that.senderBalance)
         && Objects.equals(status, that.status);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, amount, type, time, transactionRemark, totalBalance,
+    return Objects.hash(id, amount, type, time, transactionRemark, senderBalance,
         receiverCreditCardNumber, fee, isSelfPaymentFee, status,
         version);
   }

@@ -44,7 +44,7 @@ public class SecurityConfiguration extends KeycloakWebSecurityConfigurerAdapter 
     super.configure(http);
     http.cors().and().csrf().disable();
     http.authorizeRequests()
-        .antMatchers("/api/v1/credit-card/**").hasAnyRole(PremiereRole.CUSTOMER.name(), PremiereRole.EMPLOYEE.name(), PremiereRole.PREMIERE_ADMIN.name())
+        .antMatchers("/api/v1/credit-card/**","/api/v1/transaction/**").hasAnyRole(PremiereRole.CUSTOMER.name(), PremiereRole.EMPLOYEE.name(), PremiereRole.PREMIERE_ADMIN.name())
         .antMatchers("/api/v1/receivers/**").hasRole(PremiereRole.CUSTOMER.name())
         .anyRequest()
         .permitAll();

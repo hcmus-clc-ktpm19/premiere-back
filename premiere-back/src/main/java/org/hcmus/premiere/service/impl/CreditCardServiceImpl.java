@@ -10,9 +10,11 @@ import org.hcmus.premiere.repository.CreditCardRepository;
 import org.hcmus.premiere.service.CreditCardService;
 import org.hcmus.premiere.util.CreditCardNumberGenerator;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
+@Transactional
 public class CreditCardServiceImpl implements CreditCardService {
 
   private final CreditCardRepository creditCardRepository;
@@ -50,11 +52,16 @@ public class CreditCardServiceImpl implements CreditCardService {
 
   @Override
   public CreditCard saveCreditCard(User user) {
-      CreditCard creditCard = new CreditCard();
-      creditCard.setCardNumber(creditCardNumberGenerator.generate(Constants.CREDIT_CARD_NUMBER_BIN, Constants.CREDIT_CARD_NUMBER_LENGTH));
-      creditCard.setBalance(Constants.CREDIT_CARD_INITIAL_BALANCE);
-      creditCard.setUser(user);
-      creditCard.setOpenDay(LocalDateTime.now());
-      return creditCardRepository.saveAndFlush(creditCard);
-    }
+    CreditCard creditCard = new CreditCard();
+    creditCard.setCardNumber(creditCardNumberGenerator.generate(Constants.CREDIT_CARD_NUMBER_BIN, Constants.CREDIT_CARD_NUMBER_LENGTH));
+    creditCard.setBalance(Constants.CREDIT_CARD_INITIAL_BALANCE);
+    creditCard.setUser(user);
+    creditCard.setOpenDay(LocalDateTime.now());
+    return creditCardRepository.saveAndFlush(creditCard);
+  }
+
+  @Override
+  public CreditCard updateCreditCard(CreditCard creditCard) {
+    return creditCardRepository.saveAndFlush(creditCard);
+  }
 }

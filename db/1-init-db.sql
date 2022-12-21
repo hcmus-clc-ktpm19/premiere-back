@@ -4,7 +4,7 @@ SET SEARCH_PATH TO premiere;
 CREATE TYPE GENDER AS ENUM ('MALE', 'FEMALE', 'OTHER');
 CREATE TYPE LOAN_STATUS AS ENUM ('APPROVED', 'REJECTED', 'PENDING');
 CREATE TYPE TRANSACTION_TYPE AS ENUM ('PURCHASE', 'REDEMPTION', 'LOAN');
-CREATE TYPE TRANSACTION_STATUS AS ENUM ('CHECKING', 'COMPLETED');
+CREATE TYPE TRANSACTION_STATUS AS ENUM ('CHECKING', 'COMPLETED', 'FAILED');
 
 CREATE TABLE "user"
 (
@@ -83,7 +83,8 @@ CREATE TABLE "transaction"
     "type"                        TRANSACTION_TYPE   NOT NULL,
     "time"                        TIMESTAMP          NOT NULL,
     "transaction_remark"          VARCHAR(255)       NOT NULL,
-    "total_balance"               NUMERIC            NOT NULL,
+    "sender_balance"              NUMERIC            NOT NULL,
+    "receiver_balance"            NUMERIC            NOT NULL,
     "sender_credit_card_number"   VARCHAR(255)       NOT NULL,
     "receiver_credit_card_number" VARCHAR(255)       NOT NULL,
     "sender_bank_id"              INTEGER            NOT NULL,

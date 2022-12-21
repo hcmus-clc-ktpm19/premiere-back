@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public enum TransactionType {
-  LOAN("LOAN");
-
+  LOAN("LOAN"),
+  MONEY_TRANSFER("MONEY_TRANSFER");
   final String value;
 }
