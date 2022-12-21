@@ -1,9 +1,11 @@
 package org.hcmus.premiere.service.impl;
 
+import java.util.Comparator;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.hcmus.premiere.model.entity.CreditCard;
 import org.hcmus.premiere.model.entity.LoanReminder;
+import org.hcmus.premiere.model.entity.PremiereAbstractEntity;
 import org.hcmus.premiere.repository.LoanReminderRepository;
 import org.hcmus.premiere.service.CreditCardService;
 import org.hcmus.premiere.service.LoanReminderService;
@@ -29,10 +31,10 @@ public class LoanReminderServiceImpl implements LoanReminderService {
     CreditCard userCreditCard = creditCardService.findCreditCardByNumber(userCreditCardNumber);
     List<LoanReminder> senderLoanReminders = loanReminderRepository.findAllBySenderCreditCard(userCreditCard);
     List<LoanReminder> receiverLoanReminders = loanReminderRepository.findAllByReceiverCreditCard(userCreditCard);
-    System.out.println(senderLoanReminders);
     return List.of(senderLoanReminders, receiverLoanReminders)
         .stream()
         .flatMap(List::stream)
+        .sorted(Comparator.comparing(PremiereAbstractEntity::getId))
         .toList();
   }
 }

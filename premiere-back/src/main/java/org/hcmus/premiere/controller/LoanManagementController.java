@@ -5,6 +5,7 @@ import static org.hcmus.premiere.model.consts.PremiereApiUrls.PREMIERE_API_V1;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.hcmus.premiere.model.dto.CreateLoanReminderDto;
 import org.hcmus.premiere.model.dto.LoanReminderDto;
 import org.hcmus.premiere.model.dto.UserDto;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RestController
 @RequestMapping(PREMIERE_API_V1 + "/loan-management")
 @RequiredArgsConstructor
@@ -35,12 +37,13 @@ public class LoanManagementController extends AbstractApplicationController {
 
   @GetMapping("/loan-reminder/{userCreditCardNumber}")
   public ResponseEntity<List<LoanReminderDto>> getLoanRemindersByUserCreditCardNumber(@PathVariable String userCreditCardNumber) {
-    return ResponseEntity.ok(
-        loanReminderService
-            .getLoanRemindersByUserCreditCardNumber(userCreditCardNumber)
-            .stream()
-            .map(applicationMapper::toLoanReminderDto)
-            .toList());
+    List<LoanReminderDto> loanReminderDtos = loanReminderService
+        .getLoanRemindersByUserCreditCardNumber(userCreditCardNumber)
+        .stream()
+        .map(applicationMapper::toLoanReminderDto)
+        .toList();
+    log.info("Loan reminders: {}", loanReminderDtos);
+    return ResponseEntity.ok(loanReminderDtos);
   }
 
   @PostMapping
