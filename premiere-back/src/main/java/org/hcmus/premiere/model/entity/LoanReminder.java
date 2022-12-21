@@ -12,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.Data;
+import lombok.ToString;
 import org.hcmus.premiere.model.enums.LoanStatus;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -40,10 +41,12 @@ public class LoanReminder extends PremiereAbstractEntity {
 
   @ManyToOne
   @JoinColumn(name = "sender_credit_card_id", referencedColumnName = "id", nullable = false)
+  @ToString.Exclude
   private CreditCard senderCreditCard;
 
   @ManyToOne
   @JoinColumn(name = "receiver_credit_card_id", referencedColumnName = "id", nullable = false)
+  @ToString.Exclude
   private CreditCard receiverCreditCard;
 
   @Override

@@ -1,6 +1,5 @@
 package org.hcmus.premiere.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Objects;
 import javax.persistence.Basic;
 import javax.persistence.Column;
