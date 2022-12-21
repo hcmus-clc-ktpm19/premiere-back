@@ -2,7 +2,7 @@ package org.hcmus.premiere.model.enums;
 
 public enum LoanStatus {
 
-  APPROVED("APPROVED"), PENDING("PENDING"), REJECTED("REJECTED");
+  APPROVED("APPROVED"), PENDING("PENDING"), REJECTED("REJECTED"), CANCELLED("CANCELLED");
 
   private final String value;
 

@@ -63,10 +63,13 @@ public class ApplicationMapper {
       loanReminderDto.setStatus(loanReminder.getStatus());
       loanReminderDto.setTime(loanReminder.getTime());
       loanReminderDto.setLoanRemark(loanReminder.getLoanRemark());
+      loanReminderDto.setSenderCreditCardId(loanReminder.getSenderCreditCard().getId());
+      loanReminderDto.setReceiverCreditCardId(loanReminder.getReceiverCreditCard().getId());
       loanReminderDto.setSenderCreditCardNumber(loanReminder.getSenderCreditCard().getCardNumber());
       loanReminderDto.setSenderName(loanReminder.getSenderCreditCard().getUser().getLastName() + " " + loanReminder.getSenderCreditCard().getUser().getFirstName());
       loanReminderDto.setReceiverCreditCardNumber(loanReminder.getReceiverCreditCard().getCardNumber());
       loanReminderDto.setReceiverName(loanReminder.getReceiverCreditCard().getUser().getLastName() + " " + loanReminder.getReceiverCreditCard().getUser().getFirstName());
+      loanReminderDto.setCancelReason(loanReminder.getCancelReason());
       return loanReminderDto;
     }
   }
