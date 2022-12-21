@@ -26,5 +26,6 @@ public class TransactionRequestDto {
   private String remark;
   private String senderBankName;
   private String receiverBankName;
+  private String otp;
 }
 
