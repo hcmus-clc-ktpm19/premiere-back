@@ -15,6 +15,7 @@ import org.hcmus.premiere.model.exception.LoanReminderNotFoundException;
 import org.hcmus.premiere.repository.LoanReminderRepository;
 import org.hcmus.premiere.service.CreditCardService;
 import org.hcmus.premiere.service.LoanReminderService;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +26,7 @@ public class LoanReminderServiceImpl implements LoanReminderService {
 
   private final LoanReminderRepository loanReminderRepository;
   private final CreditCardService creditCardService;
+  private final RabbitTemplate rabbitTemplate;
 
   @Override
   public Long saveLoanReminder(LoanReminder loanReminder) {
@@ -46,6 +48,7 @@ public class LoanReminderServiceImpl implements LoanReminderService {
 
   @Override
   public Long cancelLoanReminder(LoanReminderDto loanReminderDto) {
+    // update loan reminder status and cancel reason
     LoanReminder loanReminder = loanReminderRepository
         .findById(loanReminderDto.getId())
         .orElseThrow(() ->
@@ -54,6 +57,15 @@ public class LoanReminderServiceImpl implements LoanReminderService {
     loanReminder.setStatus(LoanStatus.CANCELLED);
     loanReminder.setCancelReason(loanReminderDto.getCancelReason());
     loanReminderRepository.saveAndFlush(loanReminder);
+
+    // send message to queue
+    StringBuilder message = new StringBuilder();
+    message.append("Loan reminder with id ")
+        .append(loanReminder.getId())
+        .append(" has been cancelled")
+        .append(" with reason: ")
+        .append(loanReminderDto.getCancelReason());
+    rabbitTemplate.convertAndSend("loan-reminder-queue", message);
     return loanReminder.getId();
   }
 }

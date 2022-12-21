@@ -11,17 +11,27 @@ spring:
         format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
-
   datasource:
     url: jdbc:postgresql://localhost:5432/PREMIERE?stringtype=unspecified
     username: admin
     password: admin
+
+  rabbitmq:
+    stomp-port: 61613
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
 
 keycloak:
   realm: premiere-realm
   auth-server-url: http://localhost:8180
   resource: premiere-client
   cors: true
+
+queue:
+  loan-reminder-queue: loan-reminder-queue
 
 server:
   error:
