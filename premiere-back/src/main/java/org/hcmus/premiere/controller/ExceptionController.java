@@ -1,13 +1,9 @@
 package org.hcmus.premiere.controller;
 
 import java.sql.SQLException;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.hcmus.premiere.model.dto.ErrorDto;
 import org.hcmus.premiere.model.exception.AbstractExistedException;

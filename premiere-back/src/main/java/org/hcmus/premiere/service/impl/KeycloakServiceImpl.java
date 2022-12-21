@@ -154,7 +154,7 @@ public class KeycloakServiceImpl implements KeycloakService {
 
     try {
       ResponseEntity<String> response = restTemplate.postForEntity(
-          Constants.KEYCLOACK_TOKEN_URL, request,
+          Constants.KEYCLOAK_TOKEN_URL, request,
           String.class);
       return response.getStatusCode() == HttpStatus.OK;
     } catch (Exception e) {
