@@ -30,6 +30,7 @@ keycloak:
   resource: premiere-client
   cors: true
 
+
 queue:
   loan-reminder-queue: loan-reminder-queue
 

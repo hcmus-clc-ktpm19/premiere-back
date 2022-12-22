@@ -27,7 +27,7 @@ public class LoanReminderServiceImpl implements LoanReminderService {
 
   private final LoanReminderRepository loanReminderRepository;
   private final CreditCardService creditCardService;
-  private final RabbitTemplate rabbitTemplate;
+
 
   @Override
   public Long saveLoanReminder(LoanReminder loanReminder) {
@@ -61,8 +61,4 @@ public class LoanReminderServiceImpl implements LoanReminderService {
     return loanReminder.getId();
   }
 
-  @Override
-  public void pushLoanReminderMessage(LoanReminderMessageDto loanReminderMessageDto) {
-    rabbitTemplate.convertAndSend("loan-reminder-queue", loanReminderMessageDto);
-  }
 }

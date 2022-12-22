@@ -10,5 +10,5 @@ public interface LoanReminderService {
   Long saveLoanReminder(LoanReminder loanReminder);
   List<LoanReminder> getLoanRemindersByUserCreditCardNumber(String userCreditCardNumber);
   Long cancelLoanReminder(LoanReminderDto loanReminderDto);
-  void pushLoanReminderMessage(LoanReminderMessageDto loanReminderMessageDto);
+
 }

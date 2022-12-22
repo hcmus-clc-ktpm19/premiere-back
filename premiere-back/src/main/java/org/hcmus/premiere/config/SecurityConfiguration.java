@@ -43,12 +43,14 @@ public class SecurityConfiguration extends KeycloakWebSecurityConfigurerAdapter 
   protected void configure(HttpSecurity http) throws Exception {
     super.configure(http);
     http.cors().and().csrf().disable();
+    http.antMatcher("/ws**");
     http.authorizeRequests()
         .antMatchers("/api/v1/credit-card/**").hasAnyRole(PremiereRole.CUSTOMER.name(), PremiereRole.EMPLOYEE.name(), PremiereRole.PREMIERE_ADMIN.name())
         .antMatchers("/api/v1/receivers/**").hasRole(PremiereRole.CUSTOMER.name())
         .anyRequest()
         .permitAll();
   }
+
 
   @Bean
   public CorsConfigurationSource corsConfigurationSource() {

@@ -59,9 +59,5 @@ public class LoanManagementController extends AbstractApplicationController {
     return loanReminderService.saveLoanReminder(loanReminder);
   }
 
-  @PostMapping("/loan-reminder/message")
-  public void pushLoanReminderMessage(@RequestBody LoanReminderMessageDto loanReminderMessageDto) {
-    loanReminderService.pushLoanReminderMessage(loanReminderMessageDto);
-  }
 
 }
