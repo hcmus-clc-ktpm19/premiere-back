@@ -207,8 +207,10 @@
           <optionalAnnotations>
             <annotation>org.springframework.lang.Nullable</annotation>
           </optionalAnnotations>
+          <mapEnum>asEnum</mapEnum>
           <outputKind>module</outputKind>
-          <outputFile>../../premiere-front/src/app/models/model.d.ts</outputFile>
+          <outputFileType>implementationFile</outputFileType>
+          <outputFile>../../premiere-front/src/app/models/model.ts</outputFile>
         </configuration>
       </plugin>
     </plugins>
