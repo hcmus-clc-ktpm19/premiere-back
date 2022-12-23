@@ -1,4 +1,4 @@
-package org.hcmus.premiere.model.consts;
+package org.hcmus.premiere.common.consts;
 
 public class PremiereApiUrls {
 

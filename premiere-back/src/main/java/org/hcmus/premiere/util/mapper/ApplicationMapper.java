@@ -1,9 +1,15 @@
 package org.hcmus.premiere.util.mapper;
 
+import java.util.List;
 import org.hcmus.premiere.model.dto.CreditCardDto;
 import org.hcmus.premiere.model.dto.LoanReminderDto;
+import org.hcmus.premiere.model.dto.MetaDataDto;
 import org.hcmus.premiere.model.dto.OTPDto;
+import org.hcmus.premiere.model.dto.PaginationDto;
+import org.hcmus.premiere.model.dto.PremierePaginationReponseDto;
 import org.hcmus.premiere.model.dto.ReceiverDto;
+import org.hcmus.premiere.model.dto.TransactionCriteriaDto;
+import org.hcmus.premiere.model.dto.TransactionDto;
 import org.hcmus.premiere.model.entity.CreditCard;
 import org.hcmus.premiere.model.entity.LoanReminder;
 import org.hcmus.premiere.model.entity.OTP;
@@ -69,5 +75,20 @@ public class ApplicationMapper {
       loanReminderDto.setReceiverName(loanReminder.getReceiverCreditCard().getUser().getLastName() + " " + loanReminder.getReceiverCreditCard().getUser().getFirstName());
       return loanReminderDto;
     }
+  }
+
+  public PremierePaginationReponseDto<TransactionDto> toDto(List<TransactionDto> transactionDtos,
+      TransactionCriteriaDto criteriaDto) {
+    PaginationDto paginationDto = new PaginationDto();
+    paginationDto.setCurrPage(criteriaDto.getPage());
+    paginationDto.setSizePerPage(criteriaDto.getSize());
+    paginationDto.setCurrPageTotalElements(transactionDtos.size());
+    paginationDto.setFirst(criteriaDto.getPage() == 0);
+    paginationDto.setLast(criteriaDto.getPage() == paginationDto.getTotalPages());
+
+    MetaDataDto metaDataDto = new MetaDataDto();
+    metaDataDto.setPagination(paginationDto);
+
+    return new PremierePaginationReponseDto<>(transactionDtos, metaDataDto);
   }
 }

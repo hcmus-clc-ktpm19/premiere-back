@@ -1,4 +1,4 @@
-package org.hcmus.premiere.common;
+package org.hcmus.premiere.common.consts;
 
 import java.math.BigDecimal;
 

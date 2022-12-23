@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
-import org.hcmus.premiere.common.Constants;
+import org.hcmus.premiere.common.consts.Constants;
 import org.hcmus.premiere.model.dto.PasswordDto;
 import org.hcmus.premiere.model.dto.RegisterAccountDto;
 import org.hcmus.premiere.model.entity.User;

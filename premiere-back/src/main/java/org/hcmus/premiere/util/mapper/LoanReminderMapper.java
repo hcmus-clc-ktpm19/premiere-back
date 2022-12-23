@@ -19,10 +19,16 @@ public abstract class LoanReminderMapper {
   @Autowired
   protected CreditCardService creditCardService;
 
+  @Mapping(target = "loanBalance", source = "transferAmount")
   @Mapping(target = "senderCreditCard", expression = "java(creditCardService.findCreditCardById(loanReminderDto.getSenderCreditCardId()))")
   @Mapping(target = "receiverCreditCard", expression = "java(creditCardService.findCreditCardById(loanReminderDto.getReceiverCreditCardId()))")
   @Mapping(target = "time", ignore = true)
   public abstract LoanReminder toEntity(LoanReminderDto loanReminderDto);
+
+  @Mapping(target = "senderCreditCard", expression = "java(creditCardService.findCreditCardByNumber(createLoanReminderDto.getDebtorCreditCardNumber()))")
+  @Mapping(target = "receiverCreditCard", expression = "java(creditCardService.findCreditCardByNumber(createLoanReminderDto.getCreditorCreditCardNumber()))")
+  @Mapping(target = "loanBalance", source = "transferAmount")
+  public abstract LoanReminder toEntity(CreateLoanReminderDto createLoanReminderDto);
 
   @InheritInverseConfiguration(name = "toEntity")
   public abstract LoanReminderDto toDto(LoanReminder loanReminder);
@@ -33,10 +39,4 @@ public abstract class LoanReminderMapper {
   @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
   public abstract LoanReminder partialUpdate(
       LoanReminderDto loanReminderDto, @MappingTarget LoanReminder loanReminder);
-
-//  @InheritConfiguration(name = "toEntity")
-  @Mapping(target = "senderCreditCard", expression = "java(creditCardService.findCreditCardByNumber(createLoanReminderDto.getDebtorCreditCardNumber()))")
-  @Mapping(target = "receiverCreditCard", expression = "java(creditCardService.findCreditCardByNumber(createLoanReminderDto.getCreditorCreditCardNumber()))")
-  @Mapping(target = "loanBalance", source = "transferAmount")
-  public abstract LoanReminder toEntity(CreateLoanReminderDto createLoanReminderDto);
 }
