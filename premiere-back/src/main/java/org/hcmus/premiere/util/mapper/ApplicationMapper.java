@@ -2,6 +2,7 @@ package org.hcmus.premiere.util.mapper;
 
 import java.util.List;
 import org.hcmus.premiere.model.dto.CreditCardDto;
+import org.hcmus.premiere.model.dto.LoanReminderDto;
 import org.hcmus.premiere.model.dto.MetaDataDto;
 import org.hcmus.premiere.model.dto.OTPDto;
 import org.hcmus.premiere.model.dto.PaginationDto;
@@ -10,6 +11,7 @@ import org.hcmus.premiere.model.dto.ReceiverDto;
 import org.hcmus.premiere.model.dto.TransactionCriteriaDto;
 import org.hcmus.premiere.model.dto.TransactionDto;
 import org.hcmus.premiere.model.entity.CreditCard;
+import org.hcmus.premiere.model.entity.LoanReminder;
 import org.hcmus.premiere.model.entity.OTP;
 import org.hcmus.premiere.model.entity.Receiver;
 import org.springframework.stereotype.Component;
@@ -53,6 +55,25 @@ public class ApplicationMapper {
       otpDto.setEmail(otp.getEmail());
       otpDto.setCreatedAt(otp.getCreatedAt());
       return otpDto;
+    }
+  }
+
+  public LoanReminderDto toLoanReminderDto(LoanReminder loanReminder){
+    if (loanReminder == null) {
+      return null;
+    } else {
+      LoanReminderDto loanReminderDto = new LoanReminderDto();
+      loanReminderDto.setId(loanReminder.getId());
+      loanReminderDto.setVersion(loanReminder.getVersion());
+      loanReminderDto.setTransferAmount(loanReminder.getLoanBalance());
+      loanReminderDto.setStatus(loanReminder.getStatus());
+      loanReminderDto.setTime(loanReminder.getTime());
+      loanReminderDto.setLoanRemark(loanReminder.getLoanRemark());
+      loanReminderDto.setSenderCreditCardNumber(loanReminder.getSenderCreditCard().getCardNumber());
+      loanReminderDto.setSenderName(loanReminder.getSenderCreditCard().getUser().getLastName() + " " + loanReminder.getSenderCreditCard().getUser().getFirstName());
+      loanReminderDto.setReceiverCreditCardNumber(loanReminder.getReceiverCreditCard().getCardNumber());
+      loanReminderDto.setReceiverName(loanReminder.getReceiverCreditCard().getUser().getLastName() + " " + loanReminder.getReceiverCreditCard().getUser().getFirstName());
+      return loanReminderDto;
     }
   }
 

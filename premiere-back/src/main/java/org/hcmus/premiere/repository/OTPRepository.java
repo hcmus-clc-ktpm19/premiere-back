@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface OTPRepository extends JpaRepository<OTP, Long> {
   List<OTP> findByEmail(String email);
-  // find the lastest otp by email
+  // find the latest otp by email
   Optional<OTP> findTopByEmailOrderByCreatedAtDesc(String email);
 }

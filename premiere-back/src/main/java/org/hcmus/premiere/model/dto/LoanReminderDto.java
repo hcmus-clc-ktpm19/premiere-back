@@ -19,8 +19,8 @@ public class LoanReminderDto implements Serializable {
   private LoanStatus status;
   private LocalDateTime time;
   private String loanRemark;
-  private Long senderCreditCardId;
-  private Long receiverCreditCardId;
-  private LocalDateTime createdAt;
-  private LocalDateTime updatedAt;
+  private String senderCreditCardNumber;
+  private String senderName;
+  private String receiverCreditCardNumber;
+  private String receiverName;
 }
