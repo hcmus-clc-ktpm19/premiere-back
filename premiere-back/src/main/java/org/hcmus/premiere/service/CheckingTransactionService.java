@@ -8,4 +8,6 @@ public interface CheckingTransactionService {
   CheckingTransaction getCheckingTransactionById(Long id);
   Long sendOTP(TransactionRequestDto transactionRequestDto);
 
+  void updateCheckingTransactionStatus(CheckingTransaction checkingTransaction);
+
 }

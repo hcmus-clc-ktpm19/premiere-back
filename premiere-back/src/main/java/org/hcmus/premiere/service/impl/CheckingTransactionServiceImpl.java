@@ -4,9 +4,8 @@ import static org.hcmus.premiere.model.exception.CheckingTransactionNotFoundExce
 import static org.hcmus.premiere.model.exception.CheckingTransactionNotFoundException.CHECKING_TRANSACTION_NOT_FOUND_MESSAGE;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
-import org.hcmus.premiere.common.Constants;
+import org.hcmus.premiere.common.consts.Constants;
 import org.hcmus.premiere.model.dto.TransactionRequestDto;
 import org.hcmus.premiere.model.entity.Bank;
 import org.hcmus.premiere.model.entity.CheckingTransaction;
@@ -69,10 +68,15 @@ public class CheckingTransactionServiceImpl implements CheckingTransactionServic
       checkingTransaction.setReceiverBank(bankService.findBankByName(transactionRequestDto.getReceiverBankName()));
     }
 
-    checkingTransaction.setTime(LocalDateTime.now());
     checkingTransaction.setStatus(TransactionStatus.CHECKING);
     checkingTransactionRepository.saveAndFlush(checkingTransaction);
     return checkingTransaction.getId();
+  }
+
+  @Override
+  public void updateCheckingTransactionStatus(CheckingTransaction checkingTransaction) {
+    checkingTransaction.setStatus(TransactionStatus.COMPLETED);
+    checkingTransactionRepository.saveAndFlush(checkingTransaction);
   }
 
 

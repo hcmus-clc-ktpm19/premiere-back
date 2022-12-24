@@ -3,7 +3,7 @@ package org.hcmus.premiere.service.impl;
 import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.hcmus.premiere.common.Constants;
+import org.hcmus.premiere.common.consts.Constants;
 import org.hcmus.premiere.model.dto.TransactionRequestDto;
 import org.hcmus.premiere.model.entity.CreditCard;
 import org.hcmus.premiere.service.BankService;
@@ -23,6 +23,10 @@ public class ValidationServiceImpl implements ValidationService {
 
   @Override
   public Boolean validateTransactionRequest(TransactionRequestDto transactionRequestDto) {
+    if(StringUtils.equals(transactionRequestDto.getSenderCardNumber(), transactionRequestDto.getReceiverCardNumber())) {
+      throw new IllegalArgumentException(Constants.SENDER_AND_RECEIVER_ARE_SAME);
+    }
+
     BigDecimal amount = new BigDecimal(transactionRequestDto.getAmount());
     if (amount.compareTo(Constants.MINIMUM_AMOUNT_TO_WITHDRAW) < 0) {
       throw new IllegalArgumentException(Constants.THE_TRANSFER_AMOUNT_IS_NOT_VALID);

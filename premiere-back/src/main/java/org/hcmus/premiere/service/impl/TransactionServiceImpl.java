@@ -1,22 +1,18 @@
 package org.hcmus.premiere.service.impl;
 
-import java.time.LocalDateTime;
+import java.util.List;
 import lombok.AllArgsConstructor;
-import org.hcmus.premiere.common.Constants;
+import org.hcmus.premiere.common.consts.Constants;
 import org.hcmus.premiere.model.dto.TransferMoneyRequestDto;
 import org.hcmus.premiere.model.entity.CheckingTransaction;
 import org.hcmus.premiere.model.entity.CreditCard;
 import org.hcmus.premiere.model.entity.Transaction;
 import org.hcmus.premiere.model.enums.TransactionStatus;
+import org.hcmus.premiere.model.enums.TransactionType;
 import org.hcmus.premiere.repository.TransactionRepository;
 import org.hcmus.premiere.service.CheckingTransactionService;
 import org.hcmus.premiere.service.CreditCardService;
 import org.hcmus.premiere.service.OTPService;
-import java.util.List;
-import lombok.RequiredArgsConstructor;
-import org.hcmus.premiere.model.entity.Transaction;
-import org.hcmus.premiere.model.enums.TransactionType;
-import org.hcmus.premiere.repository.TransactionRepository;
 import org.hcmus.premiere.service.TransactionService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +34,10 @@ public class TransactionServiceImpl implements TransactionService {
   public void transfer(TransferMoneyRequestDto transferMoneyRequestDto) {
     CheckingTransaction checkingTransaction = checkingTransactionService.getCheckingTransactionById(transferMoneyRequestDto.getCheckingTransactionId());
 
+    if(checkingTransaction.getStatus() == TransactionStatus.COMPLETED) {
+      throw new IllegalArgumentException(Constants.TRANSACTION_ALREADY_COMPLETED);
+    }
+
     if(!verifyOTP(transferMoneyRequestDto.getOtp(), checkingTransaction.getSenderCreditCardNumber())) {
       throw new IllegalArgumentException(Constants.OTP_IS_NOT_VALID);
     }
@@ -52,7 +52,6 @@ public class TransactionServiceImpl implements TransactionService {
     transaction.setTransactionRemark(checkingTransaction.getTransactionRemark());
     transaction.setSenderBank(checkingTransaction.getSenderBank());
     transaction.setReceiverBank(checkingTransaction.getReceiverBank());
-    transaction.setTime(checkingTransaction.getTime());
     transaction.setStatus(checkingTransaction.getStatus());
 
     if (checkingTransaction.isInternal()) {
@@ -60,6 +59,7 @@ public class TransactionServiceImpl implements TransactionService {
     } else {
       externalTransfer(transaction);
     }
+    checkingTransactionService.updateCheckingTransactionStatus(checkingTransaction);
   }
 
   private void internalTransfer(Transaction transaction) {
@@ -77,10 +77,9 @@ public class TransactionServiceImpl implements TransactionService {
       }
       creditCardService.updateCreditCard(senderCard);
       creditCardService.updateCreditCard(receiverCard);
-      transaction.setTime(LocalDateTime.now());
       transaction.setStatus(TransactionStatus.COMPLETED);
+
     } catch (Exception e) {
-      transaction.setTime(LocalDateTime.now());
       transaction.setStatus(TransactionStatus.FAILED);
     } finally {
       transactionRepository.save(transaction);
@@ -95,9 +94,6 @@ public class TransactionServiceImpl implements TransactionService {
     CreditCard senderCard = creditCardService.findCreditCardByNumber(senderCardNumber);
     return otpService.verifyOTP(otp, senderCard.getUser().getEmail());
   }
-
-
-  private final TransactionRepository transactionRepository;
 
   @Override
   public long getTotalPages(TransactionType transactionType, Long customerId, int size) {

@@ -30,10 +30,6 @@ public class CheckingTransaction extends PremiereAbstractEntity {
   private TransactionType type;
 
   @Basic
-  @Column(name = "time", columnDefinition = "TIMESTAMP")
-  private LocalDateTime time;
-
-  @Basic
   @Column(name = "transaction_remark", columnDefinition = "VARCHAR(255)")
   private String transactionRemark;
 
@@ -91,14 +87,14 @@ public class CheckingTransaction extends PremiereAbstractEntity {
         && Objects.equals(receiverCreditCardNumber, that.receiverCreditCardNumber)
         && Objects.equals(that.fee, fee) && isSelfPaymentFee == that.isSelfPaymentFee
         && Objects.equals(version, that.version) && Objects.equals(type, that.type)
-        && Objects.equals(time, that.time) && Objects.equals(transactionRemark,
+        && Objects.equals(transactionRemark,
         that.transactionRemark) && Objects.equals(senderBalance, that.senderBalance)
         && Objects.equals(status, that.status);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, amount, type, time, transactionRemark, senderBalance,
+    return Objects.hash(id, amount, type, transactionRemark, senderBalance,
         receiverCreditCardNumber, fee, isSelfPaymentFee, status,
         version);
   }

@@ -18,5 +18,7 @@ public class Constants {
     public static final String ACCOUNT_CURRENT_BALANCE_IS_NOT_AVAILABLE_TO_WITHDRAW = "The sender's account balance is not enough for the transaction";
     public static final String BANK_NAME_IS_NOT_VALID = "The name of the bank is invalid";
     public static final String OTP_IS_NOT_VALID = "The OTP is not valid";
+    public static final String SENDER_AND_RECEIVER_ARE_SAME = "Both the sender and the receiver must be unique";
+    public static final String TRANSACTION_ALREADY_COMPLETED = "Transaction has been completed";
 
     }
