@@ -5,13 +5,12 @@ import static org.hcmus.premiere.model.exception.UserNotFoundException.USER_NOT_
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.hcmus.premiere.model.dto.RegisterAccountDto;
 import org.hcmus.premiere.model.entity.User;
-import org.apache.commons.lang3.StringUtils;
 import org.hcmus.premiere.model.enums.Gender;
-import org.hcmus.premiere.model.enums.PremiereRole;
-import org.hcmus.premiere.model.exception.UserNotFoundException;
 import org.hcmus.premiere.model.exception.CreditCardNotFoundException;
+import org.hcmus.premiere.model.exception.UserNotFoundException;
 import org.hcmus.premiere.repository.UserRepository;
 import org.hcmus.premiere.service.UserService;
 import org.springframework.stereotype.Service;

@@ -2,6 +2,11 @@ package org.hcmus.premiere.config;
 
 import static java.util.Arrays.asList;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.Security;
+import javax.crypto.Cipher;
+import javax.crypto.NoSuchPaddingException;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.hcmus.premiere.model.enums.PremiereRole;
 import org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver;
 import org.keycloak.adapters.springsecurity.KeycloakConfiguration;
@@ -25,6 +30,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableGlobalMethodSecurity(jsr250Enabled = true, prePostEnabled = true, securedEnabled = true)
 @Import(KeycloakSpringBootConfigResolver.class)
 public class SecurityConfiguration extends KeycloakWebSecurityConfigurerAdapter {
+
+  private static final String ALGORITHM = "RSA";
 
   @Autowired
   public void configureGlobal(AuthenticationManagerBuilder auth) {
@@ -60,5 +67,11 @@ public class SecurityConfiguration extends KeycloakWebSecurityConfigurerAdapter 
     final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", configuration);
     return source;
+  }
+
+  @Bean
+  public Cipher cipher() throws NoSuchPaddingException, NoSuchAlgorithmException {
+    Security.addProvider(new BouncyCastleProvider());
+    return Cipher.getInstance(ALGORITHM + "/ECB/OAEPWITHSHA-256ANDMGF1PADDING");
   }
 }
