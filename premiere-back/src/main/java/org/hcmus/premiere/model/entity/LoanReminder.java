@@ -39,6 +39,10 @@ public class LoanReminder extends PremiereAbstractEntity {
   @Column(name = "loan_remark", nullable = false, columnDefinition = "VARCHAR(255)")
   private String loanRemark;
 
+  @Basic
+  @Column(name = "cancel_reason", columnDefinition = "VARCHAR(255)")
+  private String cancelReason;
+
   @ManyToOne
   @JoinColumn(name = "sender_credit_card_id", referencedColumnName = "id", nullable = false)
   @ToString.Exclude
