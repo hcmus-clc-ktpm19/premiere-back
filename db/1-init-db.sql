@@ -4,7 +4,7 @@ SET SEARCH_PATH TO premiere;
 CREATE TYPE GENDER AS ENUM ('MALE', 'FEMALE', 'OTHER');
 CREATE TYPE LOAN_STATUS AS ENUM ('APPROVED', 'REJECTED', 'PENDING');
 CREATE TYPE TRANSACTION_TYPE AS ENUM ('PURCHASE', 'REDEMPTION', 'LOAN');
-CREATE TYPE TRANSACTION_STATUS AS ENUM ('CHECKING', 'COMPLETED');
+CREATE TYPE TRANSACTION_STATUS AS ENUM ('CHECKING', 'COMPLETED', 'FAILED');
 
 CREATE TABLE "user"
 (
@@ -81,9 +81,9 @@ CREATE TABLE "transaction"
     "id"                          SERIAL             NOT NULL,
     "amount"                      NUMERIC            NOT NULL,
     "type"                        TRANSACTION_TYPE   NOT NULL,
-    "time"                        TIMESTAMP          NOT NULL,
     "transaction_remark"          VARCHAR(255)       NOT NULL,
-    "total_balance"               NUMERIC            NOT NULL,
+    "sender_balance"              NUMERIC            NOT NULL,
+    "receiver_balance"            NUMERIC            NOT NULL,
     "sender_credit_card_number"   VARCHAR(255)       NOT NULL,
     "receiver_credit_card_number" VARCHAR(255)       NOT NULL,
     "sender_bank_id"              INTEGER            NOT NULL,
@@ -97,6 +97,27 @@ CREATE TABLE "transaction"
       OIDS= FALSE
     );
 
+CREATE TABLE "checking_transaction"
+(
+    "id"                          SERIAL NOT NULL,
+    "amount"                      NUMERIC,
+    "type"                        TRANSACTION_TYPE,
+    "transaction_remark"          VARCHAR(255),
+    "sender_balance"              NUMERIC,
+    "receiver_balance"            NUMERIC,
+    "sender_credit_card_number"   VARCHAR(255),
+    "receiver_credit_card_number" VARCHAR(255),
+    "sender_bank_id"              INTEGER,
+    "receiver_bank_id"            INTEGER,
+    "fee"                         NUMERIC,
+    "is_self_payment_fee"         BOOLEAN,
+    "is_internal"                 BOOLEAN,
+    "status"                      TRANSACTION_STATUS,
+    "version"                     INT DEFAULT 0,
+    CONSTRAINT "checking_transaction_pk" PRIMARY KEY ("id")
+) WITH (
+      OIDS= FALSE
+    );
 
 ALTER TABLE "credit_card"
     ADD CONSTRAINT "credit_card_fk0" FOREIGN KEY ("user_id") REFERENCES "user" ("id");
@@ -115,3 +136,9 @@ ALTER TABLE "transaction"
     ADD CONSTRAINT "transaction_fk1" FOREIGN KEY ("sender_bank_id") REFERENCES "bank" ("id");
 ALTER TABLE "transaction"
     ADD CONSTRAINT "transaction_fk2" FOREIGN KEY ("receiver_bank_id") REFERENCES "bank" ("id");
+
+ALTER TABLE "checking_transaction"
+    ADD CONSTRAINT "checking_transaction_fk1" FOREIGN KEY ("sender_bank_id") REFERENCES "bank" ("id");
+
+ALTER TABLE "checking_transaction"
+    ADD CONSTRAINT "checking_transaction_fk2" FOREIGN KEY ("receiver_bank_id") REFERENCES "bank" ("id");
