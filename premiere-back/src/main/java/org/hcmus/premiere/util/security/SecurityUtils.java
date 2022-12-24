@@ -25,4 +25,12 @@ public class SecurityUtils {
   public static boolean containsRoles(PremiereRole... roles) {
     return Arrays.stream(roles).anyMatch(SecurityUtils::hasRole);
   }
+
+  public static boolean isCustomer() {
+    return hasRole(PremiereRole.CUSTOMER);
+  }
+
+  public static boolean isStaff() {
+    return containsRoles(PremiereRole.EMPLOYEE, PremiereRole.PREMIERE_ADMIN);
+  }
 }

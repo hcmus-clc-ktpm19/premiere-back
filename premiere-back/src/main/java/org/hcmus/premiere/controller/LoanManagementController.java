@@ -1,6 +1,6 @@
 package org.hcmus.premiere.controller;
 
-import static org.hcmus.premiere.model.consts.PremiereApiUrls.PREMIERE_API_V1;
+import static org.hcmus.premiere.common.consts.PremiereApiUrls.PREMIERE_API_V1;
 
 import java.util.List;
 import javax.validation.Valid;

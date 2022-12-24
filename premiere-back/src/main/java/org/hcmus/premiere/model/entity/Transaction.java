@@ -1,7 +1,6 @@
 package org.hcmus.premiere.model.entity;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.Objects;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -28,10 +27,6 @@ public class Transaction extends PremiereAbstractEntity {
   @Column(name = "type", nullable = false, columnDefinition = "TRANSACTION_TYPE")
   @Enumerated(EnumType.STRING)
   private TransactionType type;
-
-  @Basic
-  @Column(name = "time", nullable = false, columnDefinition = "TIMESTAMP")
-  private LocalDateTime time;
 
   @Basic
   @Column(name = "transaction_remark", nullable = false, columnDefinition = "VARCHAR(255)")

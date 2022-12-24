@@ -2,7 +2,7 @@ package org.hcmus.premiere.service.impl;
 
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
-import org.hcmus.premiere.common.Constants;
+import org.hcmus.premiere.common.consts.Constants;
 import org.hcmus.premiere.model.entity.CreditCard;
 import org.hcmus.premiere.model.entity.User;
 import org.hcmus.premiere.model.exception.CreditCardNotFoundException;
