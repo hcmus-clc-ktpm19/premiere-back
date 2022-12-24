@@ -50,9 +50,4 @@ public class ValidationServiceImpl implements ValidationService {
     return true;
   }
 
-  @Override
-  public Boolean validateOtpTransactionRequest(TransactionRequestDto transactionRequestDto) {
-    return StringUtils.isEmpty(transactionRequestDto.getOtp());
-  }
-
 }

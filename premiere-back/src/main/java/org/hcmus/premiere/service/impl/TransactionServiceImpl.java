@@ -1,29 +1,23 @@
 package org.hcmus.premiere.service.impl;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import org.hcmus.premiere.common.Constants;
-import org.hcmus.premiere.model.dto.TransactionRequestDto;
-import org.hcmus.premiere.model.entity.Bank;
+import org.hcmus.premiere.model.dto.TransferMoneyRequestDto;
+import org.hcmus.premiere.model.entity.CheckingTransaction;
 import org.hcmus.premiere.model.entity.CreditCard;
 import org.hcmus.premiere.model.entity.Transaction;
 import org.hcmus.premiere.model.enums.TransactionStatus;
-import org.hcmus.premiere.model.enums.TransactionType;
-import org.hcmus.premiere.model.exception.BankNotFoundException;
-import org.hcmus.premiere.model.exception.CreditCardNotFoundException;
 import org.hcmus.premiere.repository.TransactionRepository;
-import org.hcmus.premiere.service.BankService;
+import org.hcmus.premiere.service.CheckingTransactionService;
 import org.hcmus.premiere.service.CreditCardService;
 import org.hcmus.premiere.service.OTPService;
 import org.hcmus.premiere.service.TransactionService;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
 @Service
-@Transactional(rollbackFor = {CreditCardNotFoundException.class, BankNotFoundException.class ,IllegalArgumentException.class, DataIntegrityViolationException.class, MethodArgumentNotValidException.class})
+@Transactional
 @AllArgsConstructor
 public class TransactionServiceImpl implements TransactionService {
 
@@ -31,51 +25,34 @@ public class TransactionServiceImpl implements TransactionService {
 
   private final CreditCardService creditCardService;
 
-  private final BankService bankService;
-
   private final OTPService otpService;
 
-//  @Override
-//  public Transaction createTransaction(TransactionRequestDto transactionRequestDto){
-//    Transaction transaction = new Transaction();
-//    transaction.setSenderCreditCardNumber(transactionRequestDto.getSenderCardNumber());
-//    transaction.setAmount(amount);
-//    transaction.setType(TransactionType.valueOf(transactionRequestDto.getType()));
-//    transaction.setSelfPaymentFee(transactionRequestDto.getIsSelfPaymentFee());
-//    transaction.setFee(amount.multiply(Constants.TRANSACTION_FEE));
-//    transaction.setTransactionRemark(transactionRequestDto.getRemark());
-//    transaction.setSenderBank(premiereBank);
-//    transaction.setTime(LocalDateTime.now());
-//    transaction.setStatus(TransactionStatus.CHECKING);
-//  }
+  private final CheckingTransactionService checkingTransactionService;
 
   @Override
-  public void transfer(TransactionRequestDto transactionRequestDto) {
-    if(!verifyOTP(transactionRequestDto.getOtp(),transactionRequestDto.getSenderCardNumber())) {
+  public void transfer(TransferMoneyRequestDto transferMoneyRequestDto) {
+    CheckingTransaction checkingTransaction = checkingTransactionService.getCheckingTransactionById(transferMoneyRequestDto.getCheckingTransactionId());
+
+    if(!verifyOTP(transferMoneyRequestDto.getOtp(), checkingTransaction.getSenderCreditCardNumber())) {
       throw new IllegalArgumentException(Constants.OTP_IS_NOT_VALID);
     }
 
-    BigDecimal amount = new BigDecimal(transactionRequestDto.getAmount());
-    Bank premiereBank = bankService.findBankByName(Constants.PREMIERE_BANK_NAME);
-
     Transaction transaction = new Transaction();
-    transaction.setSenderCreditCardNumber(transactionRequestDto.getSenderCardNumber());
-    transaction.setAmount(amount);
-    transaction.setType(TransactionType.valueOf(transactionRequestDto.getType()));
-    transaction.setSelfPaymentFee(transactionRequestDto.getIsSelfPaymentFee());
-    transaction.setFee(amount.multiply(Constants.TRANSACTION_FEE));
-    transaction.setTransactionRemark(transactionRequestDto.getRemark());
-    transaction.setSenderBank(premiereBank);
-    transaction.setTime(LocalDateTime.now());
-    transaction.setStatus(TransactionStatus.CHECKING);
+    transaction.setSenderCreditCardNumber(checkingTransaction.getSenderCreditCardNumber());
+    transaction.setReceiverCreditCardNumber(checkingTransaction.getReceiverCreditCardNumber());
+    transaction.setAmount(checkingTransaction.getAmount());
+    transaction.setType(checkingTransaction.getType());
+    transaction.setSelfPaymentFee(checkingTransaction.isSelfPaymentFee());
+    transaction.setFee(checkingTransaction.getFee());
+    transaction.setTransactionRemark(checkingTransaction.getTransactionRemark());
+    transaction.setSenderBank(checkingTransaction.getSenderBank());
+    transaction.setReceiverBank(checkingTransaction.getReceiverBank());
+    transaction.setTime(checkingTransaction.getTime());
+    transaction.setStatus(checkingTransaction.getStatus());
 
-    if (transactionRequestDto.getIsInternal()) {
-      transaction.setReceiverCreditCardNumber(transactionRequestDto.getReceiverCardNumber());
-      transaction.setReceiverBank(premiereBank);
+    if (checkingTransaction.isInternal()) {
       internalTransfer(transaction);
     } else {
-      Bank receiverBank = bankService.findBankByName(transactionRequestDto.getReceiverBankName());
-      transaction.setReceiverBank(receiverBank);
       externalTransfer(transaction);
     }
   }
@@ -107,14 +84,6 @@ public class TransactionServiceImpl implements TransactionService {
 
   private void externalTransfer(Transaction transaction) {
     // TODO: External transfer
-  }
-
-
-
-  @Override
-  public void sendOTP(String senderCardNumber){
-    CreditCard senderCard = creditCardService.findCreditCardByNumber(senderCardNumber);
-    otpService.sendOTPEmail(senderCard.getUser().getEmail());
   }
 
   private boolean verifyOTP(String otp, String senderCardNumber){

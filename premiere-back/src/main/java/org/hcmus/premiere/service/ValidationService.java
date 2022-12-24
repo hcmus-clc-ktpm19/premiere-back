@@ -4,6 +4,5 @@ import org.hcmus.premiere.model.dto.TransactionRequestDto;
 
 public interface ValidationService {
   Boolean validateTransactionRequest(TransactionRequestDto transactionRequestDto);
-  Boolean validateOtpTransactionRequest(TransactionRequestDto transactionRequestDto);
 
 }
