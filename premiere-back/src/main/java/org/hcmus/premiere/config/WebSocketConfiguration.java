@@ -27,6 +27,9 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
   @Value("${queue.loan-reminder-queue}")
   private String loanReminderQueue;
 
+  @Value("${front-end.origin}")
+  private String frontEndOrigin;
+
   private final RabbitProperties rabbitProperties;
 
   @Bean
@@ -58,7 +61,7 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
 
   @Override
   public void registerStompEndpoints(StompEndpointRegistry registry) {
-    registry.addEndpoint("/ws").setAllowedOrigins("http://localhost:3000");
-    registry.addEndpoint("/ws").setAllowedOrigins("http://localhost:3000").withSockJS();
+    registry.addEndpoint("/ws").setAllowedOrigins(frontEndOrigin);
+    registry.addEndpoint("/ws").setAllowedOrigins(frontEndOrigin).withSockJS();
   }
 }

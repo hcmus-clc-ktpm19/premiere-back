@@ -1,6 +1,6 @@
 package org.hcmus.premiere.controller;
 
-import static org.hcmus.premiere.model.consts.PremiereApiUrls.PREMIERE_API_V1;
+import static org.hcmus.premiere.common.consts.PremiereApiUrls.PREMIERE_API_V1;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
