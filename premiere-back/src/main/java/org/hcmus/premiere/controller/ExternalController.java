@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(PremiereApiUrls.PREMIERE_API_V1 + "/external")
+@RequestMapping(PremiereApiUrls.PREMIERE_API_V2_EXTERNAL)
 @RequiredArgsConstructor
 public class ExternalController extends AbstractApplicationController {
 
