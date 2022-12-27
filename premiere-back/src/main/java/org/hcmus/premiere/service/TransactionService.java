@@ -4,8 +4,10 @@ import java.util.List;
 import org.hcmus.premiere.model.entity.Transaction;
 import org.hcmus.premiere.model.enums.TransactionType;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.hcmus.premiere.model.dto.TransferMoneyRequestDto;
 
 public interface TransactionService {
+  void transfer(TransferMoneyRequestDto transferMoneyRequestDto);
 
   long getTotalPages(TransactionType transactionType, Long customerId, int size);
 

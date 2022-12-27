@@ -38,7 +38,24 @@ services:
       - KEYCLOAK_ADMIN_USER=admin
       - KEYCLOAK_ADMIN_PASSWORD=admin
 
+  rabbitmq:
+    hostname: localhost
+    container_name: rabbitmq-container
+    image: rabbitmq:3.9.26-management-alpine
+    restart: always
+    ports:
+      - "5672:5672"
+      - "5673:5673"
+      - "15672:15672"
+      - "61613:61613"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    volumes:
+      - rabbitmq:/var/lib/rabbitmq
+
 volumes:
   postgres:
   postgresql_data:
     driver: local
+  rabbitmq:

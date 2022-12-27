@@ -50,6 +50,7 @@ public class InternalSecurityConfiguration extends KeycloakWebSecurityConfigurer
         .sessionManagement()
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and()
+        .antMatcher("/ws**")
         .antMatcher(PremiereApiUrls.PREMIERE_API_V1 + "/**")
         .authorizeRequests()
         .antMatchers(PremiereApiUrls.PREMIERE_API_V1 + "/credit-card/**")

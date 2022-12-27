@@ -4,7 +4,8 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public enum TransactionStatus {
-  CHECKING("CHECKING"), COMPLETED("COMPLETED");
-
+  CHECKING("CHECKING"),
+  COMPLETED("COMPLETED"),
+  FAILED("FAILED");
   final String value;
 }
