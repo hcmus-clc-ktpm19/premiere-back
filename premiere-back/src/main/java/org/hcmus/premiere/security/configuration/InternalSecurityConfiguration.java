@@ -1,8 +1,10 @@
-package org.hcmus.premiere.config;
+package org.hcmus.premiere.security.configuration;
 
-import static java.util.Arrays.asList;
+import static org.hcmus.premiere.model.enums.PremiereRole.CUSTOMER;
+import static org.hcmus.premiere.model.enums.PremiereRole.EMPLOYEE;
+import static org.hcmus.premiere.model.enums.PremiereRole.PREMIERE_ADMIN;
 
-import org.hcmus.premiere.model.enums.PremiereRole;
+import org.hcmus.premiere.common.consts.PremiereApiUrls;
 import org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver;
 import org.keycloak.adapters.springsecurity.KeycloakConfiguration;
 import org.keycloak.adapters.springsecurity.authentication.KeycloakAuthenticationProvider;
@@ -10,21 +12,19 @@ import org.keycloak.adapters.springsecurity.config.KeycloakWebSecurityConfigurer
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.authority.mapping.SimpleAuthorityMapper;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @KeycloakConfiguration
-@EnableGlobalMethodSecurity(jsr250Enabled = true, prePostEnabled = true, securedEnabled = true)
 @Import(KeycloakSpringBootConfigResolver.class)
-public class SecurityConfiguration extends KeycloakWebSecurityConfigurerAdapter {
+@Order(1)
+public class InternalSecurityConfiguration extends KeycloakWebSecurityConfigurerAdapter {
 
   @Autowired
   public void configureGlobal(AuthenticationManagerBuilder auth) {
@@ -42,25 +42,21 @@ public class SecurityConfiguration extends KeycloakWebSecurityConfigurerAdapter 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     super.configure(http);
-    http.cors().and().csrf().disable();
-    http.antMatcher("/ws**");
-    http.authorizeRequests()
-        .antMatchers("/api/v1/credit-card/**","/api/v1/transaction/**").hasAnyRole(PremiereRole.CUSTOMER.name(), PremiereRole.EMPLOYEE.name(), PremiereRole.PREMIERE_ADMIN.name())
-        .antMatchers("/api/v1/receivers/**").hasRole(PremiereRole.CUSTOMER.name())
+
+    http.cors()
+        .and()
+        .csrf()
+        .disable()
+        .sessionManagement()
+        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        .and()
+        .antMatcher("/ws**")
+        .antMatcher(PremiereApiUrls.PREMIERE_API_V1 + "/**")
+        .authorizeRequests()
+        .antMatchers(PremiereApiUrls.PREMIERE_API_V1 + "/credit-card/**")
+        .hasAnyRole(CUSTOMER.value, EMPLOYEE.value, PREMIERE_ADMIN.value)
+        .antMatchers(PremiereApiUrls.PREMIERE_API_V1 + "/receivers/**").hasRole(CUSTOMER.value)
         .anyRequest()
-        .permitAll();
-  }
-
-
-  @Bean
-  public CorsConfigurationSource corsConfigurationSource() {
-    final CorsConfiguration configuration = new CorsConfiguration();
-    configuration.setAllowedOrigins(asList("*"));
-    configuration.setAllowedMethods(asList("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH"));
-    configuration.setAllowCredentials(false);
-    configuration.setAllowedHeaders(asList("Authorization", "Cache-Control", "Content-Type"));
-    final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    source.registerCorsConfiguration("/**", configuration);
-    return source;
+        .authenticated(); // used to be .permitAll()
   }
 }

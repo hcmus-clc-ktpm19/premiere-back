@@ -18,6 +18,7 @@
     <java.version>17</java.version>
     <org.mapstruct.version>1.5.3.Final</org.mapstruct.version>
     <com.querydsl.version>5.0.0</com.querydsl.version>
+    <org.keycloak.version>19.0.0</org.keycloak.version>
   </properties>
   <dependencies>
     <dependency>
@@ -58,14 +59,15 @@
       <artifactId>keycloak-spring-boot-starter</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.keycloak</groupId>
+      <artifactId>keycloak-admin-client</artifactId>
+      <version>${org.keycloak.version}</version>
+    </dependency>
+
+    <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
       <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.keycloak</groupId>
-      <artifactId>keycloak-admin-client</artifactId>
-      <version>19.0.0</version>
     </dependency>
 
     <dependency>
@@ -116,6 +118,7 @@
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
     </dependency>
+
     <dependency>
       <groupId>org.json</groupId>
       <artifactId>json</artifactId>
