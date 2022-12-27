@@ -1,22 +1,18 @@
 package org.hcmus.premiere.util.security;
 
 import java.io.Serializable;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
-import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.security.spec.X509EncodedKeySpec;
 import java.util.Arrays;
-import java.util.Base64;
-import java.util.Objects;
+import java.util.List;
 import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
+import lombok.RequiredArgsConstructor;
+import org.apache.commons.codec.digest.HmacAlgorithms;
+import org.apache.commons.codec.digest.HmacUtils;
 import org.apache.commons.lang3.SerializationUtils;
 import org.hcmus.premiere.model.enums.PremiereRole;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.env.Environment;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -24,29 +20,27 @@ import org.springframework.stereotype.Component;
 @Component("SecurityUtils")
 public class SecurityUtils {
 
-  private final Cipher cipher;
+  private final EncryptionUtils asymmetricEncryptionUtils;
 
-  private final PublicKey publicKey;
+  private final EncryptionUtils symmetricEncryptionUtils;
 
-  private final PrivateKey privateKey;
+  private final HmacUtils hmacUtils;
 
   private static final String PREFIX = "ROLE_";
 
-  public SecurityUtils(Environment env, Cipher cipher)
-      throws NoSuchAlgorithmException, InvalidKeySpecException {
-    this.cipher = cipher;
-    KeyFactory keyFactory = KeyFactory.getInstance(
-        Objects.requireNonNull(env.getProperty("spring.security.rsa.algorithm")));
+  public SecurityUtils(Environment env,
+      @Qualifier("AsymmetricEncryptionUtils") EncryptionUtils asymmetricEncryptionUtils,
+      @Qualifier("SymmetricEncryptionUtils") EncryptionUtils symmetricEncryptionUtils) {
+    this.asymmetricEncryptionUtils = asymmetricEncryptionUtils;
+    this.symmetricEncryptionUtils = symmetricEncryptionUtils;
+    hmacUtils = new HmacUtils(HmacAlgorithms.HMAC_MD5, env.getProperty("system-auth.secret-key"));
+  }
 
-    byte[] publicBytes = Base64.getDecoder()
-        .decode(env.getProperty("spring.security.rsa.public-key"));
-    X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(publicBytes);
-    this.publicKey = keyFactory.generatePublic(pubKeySpec);
+  @RequiredArgsConstructor
+  public enum Algorithm {
+    RSA("RSA");
 
-    byte[] privateBytes = Base64.getDecoder()
-        .decode(env.getProperty("spring.security.rsa.private-key"));
-    PKCS8EncodedKeySpec priKeySpec = new PKCS8EncodedKeySpec(privateBytes);
-    this.privateKey = keyFactory.generatePrivate(priKeySpec);
+    final String value;
   }
 
   public static boolean hasRole(PremiereRole role) {
@@ -70,20 +64,31 @@ public class SecurityUtils {
     return containsRoles(PremiereRole.EMPLOYEE, PremiereRole.PREMIERE_ADMIN);
   }
 
-  public String encrypt(Object object)
-      throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException{
-    cipher.init(Cipher.ENCRYPT_MODE, publicKey);
-
-    byte[] objectInBytes = SerializationUtils.serialize((Serializable) object);
-    byte[] encryptedObjectInBytes = cipher.doFinal(objectInBytes);
-    return Base64.getEncoder().encodeToString(encryptedObjectInBytes);
+  public static List<PremiereRole> getStaffRoles() {
+    return List.of(PremiereRole.EMPLOYEE, PremiereRole.PREMIERE_ADMIN);
   }
 
-  public String decrypt(String cipherObject) throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
-    cipher.init(Cipher.DECRYPT_MODE, privateKey);
+  public String encrypt(Object o, boolean isAsymmetric)
+      throws IllegalBlockSizeException, BadPaddingException, InvalidKeyException, InvalidAlgorithmParameterException {
+    return isAsymmetric ? asymmetricEncryptionUtils.encrypt(o) : encrypt(o);
+  }
 
-    byte[] cipherObjectInBytes = Base64.getDecoder().decode(cipherObject);
-    byte[] decryptedObjectInBytes = cipher.doFinal(cipherObjectInBytes);
-    return SerializationUtils.deserialize(decryptedObjectInBytes);
+  public String encrypt(Object object)
+      throws IllegalBlockSizeException, BadPaddingException, InvalidKeyException, InvalidAlgorithmParameterException {
+    return symmetricEncryptionUtils.encrypt(object);
+  }
+
+  public Object decrypt(String cipherObject, boolean isAsymmetric)
+      throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
+    return isAsymmetric ? asymmetricEncryptionUtils.decrypt(cipherObject) : decrypt(cipherObject);
+  }
+
+  public Object decrypt(String cipherObject)
+      throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
+    return symmetricEncryptionUtils.decrypt(cipherObject);
+  }
+
+  public String hash(Object o) {
+    return hmacUtils.hmacHex(SerializationUtils.serialize((Serializable) o));
   }
 }
