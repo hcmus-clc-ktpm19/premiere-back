@@ -6,6 +6,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.hcmus.premiere.common.consts.Constants;
 import org.hcmus.premiere.model.dto.TransactionRequestDto;
 import org.hcmus.premiere.model.entity.CreditCard;
+import org.hcmus.premiere.model.entity.LoanReminder;
+import org.hcmus.premiere.model.enums.LoanStatus;
 import org.hcmus.premiere.service.BankService;
 import org.hcmus.premiere.service.CreditCardService;
 import org.hcmus.premiere.service.ValidationService;
@@ -53,5 +55,30 @@ public class ValidationServiceImpl implements ValidationService {
     }
     return true;
   }
+
+  @Override
+  public Boolean validateLoanReminderRequest(LoanReminder loanReminder) {
+    if(loanReminder.getStatus() != LoanStatus.PENDING) {
+      throw new IllegalArgumentException(Constants.LOAN_REMINDER_STATUS_IS_NOT_PENDING);
+    }
+
+    if (loanReminder.getSenderCreditCard() == null || loanReminder.getReceiverCreditCard() == null
+        || loanReminder.getSenderCreditCard() == loanReminder.getReceiverCreditCard()) {
+      throw new IllegalArgumentException(Constants.SENDER_AND_RECEIVER_ARE_SAME);
+    }
+
+    if (loanReminder.getLoanBalance().compareTo(Constants.MINIMUM_AMOUNT_TO_WITHDRAW) < 0) {
+      throw new IllegalArgumentException(Constants.THE_TRANSFER_AMOUNT_IS_NOT_VALID);
+    }
+
+    if (loanReminder.getReceiverCreditCard().getBalance().subtract(loanReminder.getLoanBalance()
+            .add(loanReminder.getLoanBalance().multiply(Constants.TRANSACTION_FEE)))
+        .compareTo(BigDecimal.ZERO) < 0) {
+      throw new IllegalArgumentException(
+          Constants.ACCOUNT_CURRENT_BALANCE_IS_NOT_AVAILABLE_TO_WITHDRAW);
+    }
+    return true;
+  }
+
 
 }

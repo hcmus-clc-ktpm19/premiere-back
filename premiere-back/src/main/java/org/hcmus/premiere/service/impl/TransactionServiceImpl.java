@@ -32,7 +32,7 @@ public class TransactionServiceImpl implements TransactionService {
 
   @Override
   public void transfer(TransferMoneyRequestDto transferMoneyRequestDto) {
-    CheckingTransaction checkingTransaction = checkingTransactionService.getCheckingTransactionById(transferMoneyRequestDto.getCheckingTransactionId());
+    CheckingTransaction checkingTransaction = checkingTransactionService.getCheckingTransactionById(transferMoneyRequestDto.getRequestID());
 
     if(checkingTransaction.getStatus() == TransactionStatus.COMPLETED) {
       throw new IllegalArgumentException(Constants.TRANSACTION_ALREADY_COMPLETED);
@@ -62,7 +62,7 @@ public class TransactionServiceImpl implements TransactionService {
     checkingTransactionService.updateCheckingTransactionStatus(checkingTransaction);
   }
 
-  private void internalTransfer(Transaction transaction) {
+  public void internalTransfer(Transaction transaction) {
     try {
       CreditCard senderCard = creditCardService.findCreditCardByNumber(transaction.getSenderCreditCardNumber());
       CreditCard receiverCard = creditCardService.findCreditCardByNumber(transaction.getReceiverCreditCardNumber());
@@ -86,7 +86,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
   }
 
-  private void externalTransfer(Transaction transaction) {
+  public void externalTransfer(Transaction transaction) {
     // TODO: External transfer
   }
 
