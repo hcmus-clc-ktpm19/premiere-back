@@ -10,12 +10,10 @@ import org.hcmus.premiere.model.entity.CreditCard;
  * A DTO for the {@link CreditCard} entity
  */
 @Data
-public class CreditCardDto implements
-    Serializable {
+public class CreditCardDto extends PremiereAbstractEntityDto implements Serializable {
 
-  private Long id;
-  private Long version;
   private BigDecimal balance;
   private LocalDateTime openDay;
   private String cardNumber;
+  private Long userId;
 }

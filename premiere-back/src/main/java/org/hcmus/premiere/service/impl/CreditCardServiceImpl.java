@@ -1,6 +1,8 @@
 package org.hcmus.premiere.service.impl;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import org.hcmus.premiere.common.consts.Constants;
 import org.hcmus.premiere.model.entity.CreditCard;
@@ -48,6 +50,16 @@ public class CreditCardServiceImpl implements CreditCardService {
         .findCreditCardByUser(user)
         .orElseThrow(() -> new CreditCardNotFoundException("Credit card with userId not found",
             id.toString(), CreditCardNotFoundException.CREDIT_CARD_NOT_FOUND));
+  }
+
+  @Override
+  public List<CreditCard> getCreditCardsIgnoreBalance() {
+    return creditCardRepository.getCreditCardsIgnoreBalance();
+  }
+
+  @Override
+  public List<Object> getCreditCardsFromByExternalBankId(Long externalBankId) {
+    return Collections.emptyList();
   }
 
   @Override

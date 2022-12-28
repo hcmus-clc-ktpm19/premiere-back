@@ -4,7 +4,7 @@ import java.util.List;
 import org.hcmus.premiere.model.entity.Transaction;
 import org.hcmus.premiere.model.enums.TransactionType;
 
-public interface TransactionRepositoryCustom {
+public interface CustomTransactionRepository {
 
   long count(TransactionType transactionType, Long customerId);
 
