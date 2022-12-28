@@ -1,6 +1,13 @@
 package org.hcmus.premiere.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
+import javax.ws.rs.client.ClientBuilder;
 import lombok.RequiredArgsConstructor;
+import org.jboss.resteasy.client.jaxrs.ResteasyClient;
+import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 import org.keycloak.OAuth2Constants;
 import org.keycloak.adapters.springboot.KeycloakSpringBootProperties;
 import org.keycloak.admin.client.Keycloak;
@@ -53,5 +60,24 @@ public class PremiereConfiguration {
     ApiKeyAuth apiKey = (ApiKeyAuth) defaultClient.getAuthentication("api-key");
     apiKey.setApiKey(SENDINBLUE_API_KEY);
     return apiKey;
+  }
+
+  @Bean
+  public ObjectMapper objectMapper() {
+    return new ObjectMapper()
+        .registerModule(new ParameterNamesModule())
+        .registerModule(new Jdk8Module())
+        .registerModule(new JavaTimeModule());
+  }
+
+  @Bean
+  public ResteasyClient resteasyClient() {
+    return (ResteasyClient) ClientBuilder.newClient();
+  }
+
+  @Bean
+  public ResteasyWebTarget resteasyWebTarget() {
+    ResteasyClient client = resteasyClient();
+    return client.target("http://localhost:8080");
   }
 }

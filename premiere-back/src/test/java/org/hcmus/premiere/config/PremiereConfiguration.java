@@ -23,6 +23,7 @@ import sendinblue.auth.ApiKeyAuth;
 @Configuration
 @RequiredArgsConstructor
 public class PremiereConfiguration {
+
   private final KeycloakSpringBootProperties keycloakSpringBootProperties;
 
   @Value("${sendinblue.api-key}")

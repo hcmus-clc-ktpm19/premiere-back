@@ -20,16 +20,30 @@ class CreditCardServiceImplTest {
   @Autowired
   private ResteasyWebTarget resteasyWebTarget;
 
+  @Autowired
+  private CreditCardService creditCardService;
+
   @Test
-  void getCreditCardsFromByExternalBankId() {
+  void testGetCreditCardsFromByExternalBankByRestEasy() {
     CreditCardApiService proxy = resteasyWebTarget.proxy(CreditCardApiService.class);
 
     List<CreditCardDto> creditCardDtos =
-        proxy.getCreditCardsFromByExternalBankId()
+        proxy.getCreditCardsFromByExternalBankId(
+            "be481f356a5e9ded90acdc121d0a7345",
+            "2023-12-30T16:03:21.660444713",
+            "Asia/Bangkok"
+            )
             .stream()
             .map(creditCard -> objectMapper.convertValue(creditCard, CreditCardDto.class))
             .toList();
 
     Assertions.assertThat(creditCardDtos).isNotNull().isNotEmpty().allMatch(creditCardDto -> creditCardDto.getId() != null);
+  }
+
+  @Test
+  void testGetCreditCardsFromByExternalBankId() {
+    creditCardService.getCreditCardsFromByExternalBankId(1L);
+
+    Assertions.assertThat(creditCardService.getCreditCardsFromByExternalBankId(1L)).isNotNull().isNotEmpty();
   }
 }

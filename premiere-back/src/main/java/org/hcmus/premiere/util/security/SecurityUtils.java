@@ -24,6 +24,8 @@ public class SecurityUtils {
 
   private final EncryptionUtils symmetricEncryptionUtils;
 
+  private final Environment env;
+
   private final HmacUtils hmacUtils;
 
   private static final String PREFIX = "ROLE_";
@@ -33,7 +35,8 @@ public class SecurityUtils {
       @Qualifier("SymmetricEncryptionUtils") EncryptionUtils symmetricEncryptionUtils) {
     this.asymmetricEncryptionUtils = asymmetricEncryptionUtils;
     this.symmetricEncryptionUtils = symmetricEncryptionUtils;
-    hmacUtils = new HmacUtils(HmacAlgorithms.HMAC_MD5, env.getProperty("system-auth.secret-key"));
+    this.hmacUtils = new HmacUtils(HmacAlgorithms.HMAC_MD5, env.getProperty("system-auth.secret-key"));
+    this.env = env;
   }
 
   @RequiredArgsConstructor
@@ -90,5 +93,9 @@ public class SecurityUtils {
 
   public String hash(Object o) {
     return hmacUtils.hmacHex(SerializationUtils.serialize((Serializable) o));
+  }
+
+  public String getSecretKey() {
+    return env.getProperty("system-auth.secret-key");
   }
 }
