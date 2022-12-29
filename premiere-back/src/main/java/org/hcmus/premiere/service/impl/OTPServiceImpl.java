@@ -44,7 +44,7 @@ public class OTPServiceImpl implements OTPService {
   }
 
   @Override
-  public void sendOTPEmail(String toEmail) {
+  public OTP sendOTPEmail(String toEmail) {
     // generate time-based OTP
     TOTP totp = generateTOTP();
     String otp = totp.now();
@@ -70,10 +70,11 @@ public class OTPServiceImpl implements OTPService {
       OTP otpEntity = new OTP();
       otpEntity.setOtp(otp);
       otpEntity.setEmail(toEmail);
-      otpRepository.save(otpEntity);
+      return otpRepository.saveAndFlush(otpEntity);
     } catch (Exception e) {
       log.error("Exception when calling TransactionalEmailsApi#sendTransacEmail");
       e.printStackTrace();
+      return null;
     }
   }
 
@@ -89,6 +90,28 @@ public class OTPServiceImpl implements OTPService {
     }
     // if OTP is verified, delete it
     if (otpResult.getOtp().equals(otp)) {
+      otpRepository.delete(otpResult);
+      return true;
+    }
+    return false;
+  }
+  @Override
+  public void sendOTPEmailRequestId(String toEmail, Long requestId) {
+    OTP otpEntity = sendOTPEmail(toEmail);
+    otpEntity.setRequestId(requestId);
+    otpRepository.saveAndFlush(otpEntity);
+  }
+
+  @Override
+  public Boolean verifyOTPRequestId(String otp, String email, Long requestId) {
+    OTP otpResult = otpRepository.findTopByEmailOrderByCreatedAtDesc(email)
+        .orElseThrow(
+            () -> new OTPNotFoundException(OTP_NOT_FOUND_MESSAGE + " for ", email, OTP_NOT_FOUND));
+    LocalDateTime expiredTime = otpResult.getCreatedAt().plusMinutes(5);
+    if (LocalDateTime.now().isAfter(expiredTime)) {
+      return false;
+    }
+    if (otpResult.getOtp().equals(otp) && otpResult.getRequestId().equals(requestId)) {
       otpRepository.delete(otpResult);
       return true;
     }

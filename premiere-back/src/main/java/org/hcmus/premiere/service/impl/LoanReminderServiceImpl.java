@@ -85,7 +85,7 @@ public class LoanReminderServiceImpl implements LoanReminderService {
   public void payLoanReminder(TransferMoneyRequestDto transferMoneyRequestDto) {
     LoanReminder loanReminder = getLoanReminderById(transferMoneyRequestDto.getRequestID());
 
-    if(!otpService.verifyOTP(transferMoneyRequestDto.getOtp(), loanReminder.getReceiverCreditCard().getUser().getEmail())) {
+    if(!otpService.verifyOTPRequestId(transferMoneyRequestDto.getOtp(), loanReminder.getReceiverCreditCard().getUser().getEmail(), loanReminder.getId())) {
       throw new IllegalArgumentException(Constants.OTP_IS_NOT_VALID);
     }
 

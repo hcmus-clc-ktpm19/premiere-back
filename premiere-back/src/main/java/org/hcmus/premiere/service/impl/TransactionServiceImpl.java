@@ -38,7 +38,7 @@ public class TransactionServiceImpl implements TransactionService {
       throw new IllegalArgumentException(Constants.TRANSACTION_ALREADY_COMPLETED);
     }
 
-    if(!verifyOTP(transferMoneyRequestDto.getOtp(), checkingTransaction.getSenderCreditCardNumber())) {
+    if(!verifyOTP(transferMoneyRequestDto.getOtp(), checkingTransaction)) {
       throw new IllegalArgumentException(Constants.OTP_IS_NOT_VALID);
     }
 
@@ -90,9 +90,9 @@ public class TransactionServiceImpl implements TransactionService {
     // TODO: External transfer
   }
 
-  private boolean verifyOTP(String otp, String senderCardNumber){
-    CreditCard senderCard = creditCardService.findCreditCardByNumber(senderCardNumber);
-    return otpService.verifyOTP(otp, senderCard.getUser().getEmail());
+  private boolean verifyOTP(String otp, CheckingTransaction checkingTransaction){
+    CreditCard senderCard = creditCardService.findCreditCardByNumber(checkingTransaction.getSenderCreditCardNumber());
+    return otpService.verifyOTPRequestId(otp, senderCard.getUser().getEmail(), checkingTransaction.getId());
   }
 
   @Override

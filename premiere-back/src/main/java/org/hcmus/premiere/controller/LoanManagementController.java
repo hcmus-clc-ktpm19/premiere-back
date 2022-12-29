@@ -71,7 +71,7 @@ public class LoanManagementController extends AbstractApplicationController {
   public ResponseEntity<?> validateLoanReminder(@PathVariable Long id) {
     LoanReminder loanReminder = loanReminderService.getLoanReminderById(id);
     if(validationService.validateLoanReminderRequest(loanReminder)) {
-      otpService.sendOTPEmail(loanReminder.getReceiverCreditCard().getUser().getEmail());
+      otpService.sendOTPEmailRequestId(loanReminder.getReceiverCreditCard().getUser().getEmail(), loanReminder.getId());
       return ResponseEntity.ok(Constants.TRANSFER_VALIDATE_SUCCESSFUL);
     } else {
       return ResponseEntity.badRequest().build();
