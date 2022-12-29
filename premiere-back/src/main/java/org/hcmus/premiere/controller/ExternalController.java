@@ -8,6 +8,7 @@ import org.hcmus.premiere.model.dto.UserDto;
 import org.hcmus.premiere.service.CreditCardService;
 import org.hcmus.premiere.service.UserService;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -38,8 +39,8 @@ public class ExternalController extends AbstractApplicationController {
         .toList();
   }
 
-  @GetMapping("/test")
-  public String test() {
-    return "test";
+  @GetMapping("/banks/credit-cards/{creditCardNumber}")
+  public CreditCardDto getCreditCardByNumberForExternalBank(@PathVariable String creditCardNumber) {
+    return creditCardMapper.toDto(creditCardService.getCreditCardByNumberIgnoreBalance(creditCardNumber));
   }
 }

@@ -1,17 +1,19 @@
 package org.hcmus.premiere.service.impl;
 
+import static org.hcmus.premiere.common.consts.PremiereApiUrls.PREMIERE_API_V2_EXTERNAL;
+import static org.hcmus.premiere.model.exception.CreditCardNotFoundException.*;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 import org.hcmus.premiere.common.consts.Constants;
-import org.hcmus.premiere.common.consts.PremiereApiUrls;
 import org.hcmus.premiere.model.dto.CreditCardDto;
 import org.hcmus.premiere.model.entity.CreditCard;
 import org.hcmus.premiere.model.entity.User;
 import org.hcmus.premiere.model.exception.CreditCardNotFoundException;
 import org.hcmus.premiere.repository.CreditCardRepository;
-import org.hcmus.premiere.service.CreditCardApiService;
+import org.hcmus.premiere.resource.ExternalBankResource;
 import org.hcmus.premiere.service.CreditCardService;
 import org.hcmus.premiere.util.CreditCardNumberGenerator;
 import org.hcmus.premiere.util.security.SecurityUtils;
@@ -33,7 +35,7 @@ public class CreditCardServiceImpl implements CreditCardService {
 
   private final SecurityUtils securityUtils;
 
-  private final CreditCardApiService proxy;
+  private final ExternalBankResource resource;
 
   public CreditCardServiceImpl(
       CreditCardRepository creditCardRepository,
@@ -47,16 +49,17 @@ public class CreditCardServiceImpl implements CreditCardService {
     this.creditCardNumberGenerator = creditCardNumberGenerator;
     this.objectMapper = objectMapper;
     this.securityUtils = securityUtils;
-    this.proxy = resteasyWebTarget.proxy(CreditCardApiService.class);
+    this.resource = resteasyWebTarget.proxy(ExternalBankResource.class);
   }
 
   @Override
   public CreditCard findCreditCardById(Long id) {
     return creditCardRepository
         .findById(id)
-        .orElseThrow(
-            () -> new CreditCardNotFoundException("Credit card with id not found", id.toString(),
-                CreditCardNotFoundException.CREDIT_CARD_NOT_FOUND));
+        .orElseThrow(() -> new CreditCardNotFoundException(
+            "Credit card with id not found",
+            id.toString(),
+            CREDIT_CARD_NOT_FOUND));
   }
 
   @Override
@@ -65,7 +68,7 @@ public class CreditCardServiceImpl implements CreditCardService {
         .findCreditCardByCardNumber(number)
         .orElseThrow(
             () -> new CreditCardNotFoundException("Credit card with number not found", number,
-                CreditCardNotFoundException.CREDIT_CARD_NOT_FOUND));
+                CREDIT_CARD_NOT_FOUND));
   }
 
   @Override
@@ -74,7 +77,18 @@ public class CreditCardServiceImpl implements CreditCardService {
     return creditCardRepository
         .findCreditCardByUser(user)
         .orElseThrow(() -> new CreditCardNotFoundException("Credit card with userId not found",
-            id.toString(), CreditCardNotFoundException.CREDIT_CARD_NOT_FOUND));
+            id.toString(), CREDIT_CARD_NOT_FOUND));
+  }
+
+  @Override
+  public CreditCard getCreditCardByNumberIgnoreBalance(String cardNumber) {
+    return creditCardRepository
+        .getCreditCardByNumberIgnoreBalance(cardNumber)
+        .orElseThrow(() ->
+            new CreditCardNotFoundException(
+                "Credit card with number not found",
+                cardNumber,
+                CREDIT_CARD_NOT_FOUND));
   }
 
   @Override
@@ -83,15 +97,15 @@ public class CreditCardServiceImpl implements CreditCardService {
   }
 
   @Override
-  public List<CreditCardDto> getCreditCardsFromByExternalBankId(Long externalBankId) {
-    String servletPath = PremiereApiUrls.PREMIERE_API_V2_EXTERNAL + "/banks/credit-cards";
+  public List<CreditCardDto> getCreditCardsFromExternalById(Long externalBankId) {
+    String servletPath = PREMIERE_API_V2_EXTERNAL + "/banks/credit-cards";
     String credentialsTime = LocalDateTime.now(ZoneId.systemDefault()).toString();
     String zoneId = ZoneId.systemDefault().toString();
     String secretKey = securityUtils.getSecretKey();
 
     String authToken = securityUtils.hash(servletPath + credentialsTime + zoneId + secretKey);
 
-    return proxy.getCreditCardsFromByExternalBankId(
+    return resource.getCreditCardsFromByExternalBankId(
             authToken,
             credentialsTime,
             zoneId
@@ -99,6 +113,28 @@ public class CreditCardServiceImpl implements CreditCardService {
         .stream()
         .map(creditCard -> objectMapper.convertValue(creditCard, CreditCardDto.class))
         .toList();
+  }
+
+  @Override
+  public CreditCardDto getCreditCardByNumberAndExternalBankId(
+      Long externalBankId,
+      String cardNumber) {
+    String servletPath = PREMIERE_API_V2_EXTERNAL + "/banks/credit-cards/" + cardNumber;
+    String credentialsTime = LocalDateTime.now(ZoneId.systemDefault()).toString();
+    String zoneId = ZoneId.systemDefault().toString();
+    String secretKey = securityUtils.getSecretKey();
+
+    String authToken = securityUtils.hash(servletPath + credentialsTime + zoneId + secretKey);
+
+    return objectMapper.convertValue(
+        resource.getCreditCardByNumberAndExternalBankId(
+            authToken,
+            credentialsTime,
+            zoneId,
+            cardNumber
+        ),
+        CreditCardDto.class
+    );
   }
 
   @Override

@@ -38,6 +38,13 @@ public class CreditCardController extends AbstractApplicationController {
 
   @GetMapping("/external-bank/{externalBankId}")
   public List<CreditCardDto> getCreditCardsFromByExternalBankId(@PathVariable Long externalBankId) {
-    return creditCardService.getCreditCardsFromByExternalBankId(externalBankId);
+    return creditCardService.getCreditCardsFromExternalById(externalBankId);
+  }
+
+  @GetMapping("/external-bank/{externalBankName}/card-number/{cardNumber}")
+  public CreditCardDto getCreditCardByNumberAndExternalBankId(
+      @PathVariable Long externalBankName,
+      @PathVariable String cardNumber) {
+    return creditCardService.getCreditCardByNumberAndExternalBankId(externalBankName, cardNumber);
   }
 }

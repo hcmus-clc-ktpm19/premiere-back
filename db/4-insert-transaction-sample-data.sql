@@ -14,9 +14,6 @@ VALUES (200000, 'MONEY_TRANSFER', 'HIHI', 202000, 202000, '1234567890123456',
 
 ----------------------------------------------------------------------------------------------------
 
-INSERT INTO "credit_card"(user_id, balance, open_day, card_number)
-VALUES (1, 100000, CURRENT_TIMESTAMP, '1234567890123457');
-
 INSERT INTO "transaction"(amount, type, transaction_remark, sender_balance, receiver_balance,
                           sender_credit_card_number, receiver_credit_card_number, sender_bank_id,
                           receiver_bank_id, fee, is_self_payment_fee, status)

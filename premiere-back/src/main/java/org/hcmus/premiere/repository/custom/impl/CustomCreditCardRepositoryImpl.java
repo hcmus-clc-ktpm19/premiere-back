@@ -2,7 +2,9 @@ package org.hcmus.premiere.repository.custom.impl;
 
 import static org.hcmus.premiere.model.entity.QCreditCard.*;
 
+import com.querydsl.core.Tuple;
 import java.util.List;
+import java.util.Optional;
 import org.hcmus.premiere.model.entity.CreditCard;
 import org.hcmus.premiere.model.entity.QCreditCard;
 import org.hcmus.premiere.repository.custom.CustomCreditCardRepository;
@@ -38,5 +40,35 @@ public class CustomCreditCardRepositoryImpl extends PremiereAbstractCustomReposi
           return creditCard;
         })
         .toList();
+  }
+
+  @Override
+  public Optional<CreditCard> getCreditCardByNumberIgnoreBalance(String number) {
+    Tuple res = selectFrom(creditCard)
+        .select(
+            creditCard.id,
+            creditCard.version,
+            creditCard.createdAt,
+            creditCard.updatedAt,
+            creditCard.openDay,
+            creditCard.cardNumber,
+            creditCard.user
+        )
+        .where(creditCard.cardNumber.eq(number))
+        .fetchOne();
+
+    if (res == null) {
+      return Optional.empty();
+    } else {
+      CreditCard creditCard = new CreditCard();
+      creditCard.setId(res.get(QCreditCard.creditCard.id));
+      creditCard.setVersion(res.get(QCreditCard.creditCard.version));
+      creditCard.setOpenDay(res.get(QCreditCard.creditCard.openDay));
+      creditCard.setCardNumber(res.get(QCreditCard.creditCard.cardNumber));
+      creditCard.setUser(res.get(QCreditCard.creditCard.user));
+      creditCard.setCreatedAt(res.get(QCreditCard.creditCard.createdAt));
+      creditCard.setUpdatedAt(res.get(QCreditCard.creditCard.updatedAt));
+      return Optional.of(creditCard);
+    }
   }
 }

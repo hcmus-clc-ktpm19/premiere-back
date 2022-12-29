@@ -15,9 +15,13 @@ public interface CreditCardService {
 
   CreditCard findCreditCardByUserId(Long id);
 
+  CreditCard getCreditCardByNumberIgnoreBalance(String cardNumber);
+
   List<CreditCard> getCreditCardsIgnoreBalance();
 
-  List<CreditCardDto> getCreditCardsFromByExternalBankId(Long externalBankId);
+  List<CreditCardDto> getCreditCardsFromExternalById(Long externalBankId);
+
+  CreditCardDto getCreditCardByNumberAndExternalBankId(Long externalBankId, String cardNumber);
 
   CreditCard saveCreditCard(User user);
 
