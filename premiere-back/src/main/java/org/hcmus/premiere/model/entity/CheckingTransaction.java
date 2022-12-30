@@ -1,7 +1,6 @@
 package org.hcmus.premiere.model.entity;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.Objects;
 import javax.persistence.Basic;
 import javax.persistence.Column;
