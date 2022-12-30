@@ -27,14 +27,14 @@ INSERT INTO "credit_card"(user_id, balance, open_day, card_number)
 VALUES (1, 11111111111111, CURRENT_TIMESTAMP, '1234567890123457');
 
 INSERT INTO "loan_reminder"(loan_balance, sender_credit_card_id, receiver_credit_card_id, status, time, loan_remark)
-VALUES (100000, 1, 1, 'APPROVED', CURRENT_TIMESTAMP, 'hehe');
+VALUES (100000, 1, 2, 'APPROVED', CURRENT_TIMESTAMP, 'hehe');
 
 INSERT INTO "loan_reminder"(loan_balance, sender_credit_card_id, receiver_credit_card_id, status, time, loan_remark)
 VALUES (120000, 2, 1, 'PENDING', CURRENT_TIMESTAMP, 'tra tien cho toi');
 
 INSERT INTO "receiver"(card_number, nickname, full_name, user_id, bank_id)
-VALUES ('1234567890123456', 'Nam', 'Nguyen Duc Nam', 1, 1);
+VALUES ('1234567890123456', 'Nam', 'Nguyen Duc Nam', 2, 1);
 INSERT INTO "receiver"(card_number, nickname, full_name, user_id, bank_id)
-VALUES ('1234567890123457', 'Giap', 'Hoang Huu Giap', 2, 2);
+VALUES ('1234567890123457', 'Giap', 'Hoang Huu Giap', 1, 2);
 INSERT INTO "receiver"(card_number, nickname, full_name, user_id, bank_id)
-VALUES ('1234567890123456', 'Nhat', 'Le Ngoc Minh Nhat', 3, 3);
+VALUES ('1234567890123456', 'Nhat', 'Le Ngoc Minh Nhat', 1, 3);
