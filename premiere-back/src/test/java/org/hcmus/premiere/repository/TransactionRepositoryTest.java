@@ -16,7 +16,7 @@ class TransactionRepositoryTest {
 
   @Test
   void testGetAllTransactions() {
-    Assertions.assertThat(transactionRepository.findAll()).isEmpty();
+    Assertions.assertThat(transactionRepository.findAll()).isNotEmpty();
   }
 
   @Test

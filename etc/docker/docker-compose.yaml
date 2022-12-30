@@ -53,6 +53,7 @@ services:
       RABBITMQ_DEFAULT_PASS: guest
     volumes:
       - rabbitmq:/var/lib/rabbitmq
+      - ./rabbitmq/plugins/rabbit_enabled_plugins:/etc/rabbitmq/enabled_plugins
 
 volumes:
   postgres:
