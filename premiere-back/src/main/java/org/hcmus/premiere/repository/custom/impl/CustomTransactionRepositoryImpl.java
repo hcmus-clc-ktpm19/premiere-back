@@ -3,19 +3,17 @@ package org.hcmus.premiere.repository.custom.impl;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import org.hcmus.premiere.model.entity.QCreditCard;
 import org.hcmus.premiere.model.entity.QTransaction;
 import org.hcmus.premiere.model.entity.QUser;
 import org.hcmus.premiere.model.entity.Transaction;
 import org.hcmus.premiere.model.enums.TransactionType;
-import org.hcmus.premiere.repository.custom.TransactionRepositoryCustom;
+import org.hcmus.premiere.repository.custom.CustomTransactionRepository;
+import org.hcmus.premiere.repository.custom.PremiereAbstractCustomRepository;
+import org.springframework.stereotype.Repository;
 
-public class TransactionRepositoryCustomImpl implements TransactionRepositoryCustom {
-
-  @PersistenceContext
-  private EntityManager entityManager;
+@Repository
+public class CustomTransactionRepositoryImpl extends PremiereAbstractCustomRepository<Transaction> implements CustomTransactionRepository {
 
   @Override
   public long count(TransactionType transactionType, Long customerId) {

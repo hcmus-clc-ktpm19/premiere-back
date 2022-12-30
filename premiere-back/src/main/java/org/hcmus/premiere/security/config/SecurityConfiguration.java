@@ -1,4 +1,4 @@
-package org.hcmus.premiere.security.configuration;
+package org.hcmus.premiere.security.config;
 
 import static java.util.Arrays.asList;
 

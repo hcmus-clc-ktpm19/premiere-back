@@ -1,8 +1,9 @@
 package org.hcmus.premiere.controller;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
-import org.hcmus.premiere.model.dto.CreditCardDto;
 import lombok.extern.slf4j.Slf4j;
+import org.hcmus.premiere.model.dto.CreditCardDto;
 import org.hcmus.premiere.model.entity.CreditCard;
 import org.hcmus.premiere.service.CreditCardService;
 import org.springframework.http.ResponseEntity;
@@ -33,5 +34,17 @@ public class CreditCardController extends AbstractApplicationController {
     return ignoreBalance
         ? creditCardMapper.toDtoIgnoreBalance(creditCard)
         : creditCardMapper.toDto(creditCard);
+  }
+
+  @GetMapping("/external-bank/{externalBankId}")
+  public List<CreditCardDto> getCreditCardsFromByExternalBankId(@PathVariable Long externalBankId) {
+    return creditCardService.getCreditCardsFromExternalById(externalBankId);
+  }
+
+  @GetMapping("/external-bank/{externalBankName}/card-number/{cardNumber}")
+  public CreditCardDto getCreditCardByNumberAndExternalBankId(
+      @PathVariable Long externalBankName,
+      @PathVariable String cardNumber) {
+    return creditCardService.getCreditCardByNumberAndExternalBankId(externalBankName, cardNumber);
   }
 }

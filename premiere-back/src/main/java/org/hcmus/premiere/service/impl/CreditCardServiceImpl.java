@@ -1,19 +1,27 @@
 package org.hcmus.premiere.service.impl;
 
+import static org.hcmus.premiere.common.consts.PremiereApiUrls.PREMIERE_API_V2_EXTERNAL;
+import static org.hcmus.premiere.model.exception.CreditCardNotFoundException.*;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
-import lombok.AllArgsConstructor;
+import java.time.ZoneId;
+import java.util.List;
 import org.hcmus.premiere.common.consts.Constants;
+import org.hcmus.premiere.model.dto.CreditCardDto;
 import org.hcmus.premiere.model.entity.CreditCard;
 import org.hcmus.premiere.model.entity.User;
 import org.hcmus.premiere.model.exception.CreditCardNotFoundException;
 import org.hcmus.premiere.repository.CreditCardRepository;
+import org.hcmus.premiere.resource.ExternalBankResource;
 import org.hcmus.premiere.service.CreditCardService;
 import org.hcmus.premiere.util.CreditCardNumberGenerator;
+import org.hcmus.premiere.util.security.SecurityUtils;
+import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@AllArgsConstructor
 @Transactional
 public class CreditCardServiceImpl implements CreditCardService {
 
@@ -21,15 +29,37 @@ public class CreditCardServiceImpl implements CreditCardService {
 
   private final UserServiceImpl userService;
 
-  private CreditCardNumberGenerator creditCardNumberGenerator;
+  private final CreditCardNumberGenerator creditCardNumberGenerator;
+
+  private final ObjectMapper objectMapper;
+
+  private final SecurityUtils securityUtils;
+
+  private final ExternalBankResource resource;
+
+  public CreditCardServiceImpl(
+      CreditCardRepository creditCardRepository,
+      UserServiceImpl userService,
+      CreditCardNumberGenerator creditCardNumberGenerator,
+      ObjectMapper objectMapper,
+      ResteasyWebTarget resteasyWebTarget,
+      SecurityUtils securityUtils) {
+    this.creditCardRepository = creditCardRepository;
+    this.userService = userService;
+    this.creditCardNumberGenerator = creditCardNumberGenerator;
+    this.objectMapper = objectMapper;
+    this.securityUtils = securityUtils;
+    this.resource = resteasyWebTarget.proxy(ExternalBankResource.class);
+  }
 
   @Override
   public CreditCard findCreditCardById(Long id) {
     return creditCardRepository
         .findById(id)
-        .orElseThrow(
-            () -> new CreditCardNotFoundException("Credit card with id not found", id.toString(),
-                CreditCardNotFoundException.CREDIT_CARD_NOT_FOUND));
+        .orElseThrow(() -> new CreditCardNotFoundException(
+            "Credit card with id not found",
+            id.toString(),
+            CREDIT_CARD_NOT_FOUND));
   }
 
   @Override
@@ -38,7 +68,7 @@ public class CreditCardServiceImpl implements CreditCardService {
         .findCreditCardByCardNumber(number)
         .orElseThrow(
             () -> new CreditCardNotFoundException("Credit card with number not found", number,
-                CreditCardNotFoundException.CREDIT_CARD_NOT_FOUND));
+                CREDIT_CARD_NOT_FOUND));
   }
 
   @Override
@@ -47,7 +77,64 @@ public class CreditCardServiceImpl implements CreditCardService {
     return creditCardRepository
         .findCreditCardByUser(user)
         .orElseThrow(() -> new CreditCardNotFoundException("Credit card with userId not found",
-            id.toString(), CreditCardNotFoundException.CREDIT_CARD_NOT_FOUND));
+            id.toString(), CREDIT_CARD_NOT_FOUND));
+  }
+
+  @Override
+  public CreditCard getCreditCardByNumberIgnoreBalance(String cardNumber) {
+    return creditCardRepository
+        .getCreditCardByNumberIgnoreBalance(cardNumber)
+        .orElseThrow(() ->
+            new CreditCardNotFoundException(
+                "Credit card with number not found",
+                cardNumber,
+                CREDIT_CARD_NOT_FOUND));
+  }
+
+  @Override
+  public List<CreditCard> getCreditCardsIgnoreBalance() {
+    return creditCardRepository.getCreditCardsIgnoreBalance();
+  }
+
+  @Override
+  public List<CreditCardDto> getCreditCardsFromExternalById(Long externalBankId) {
+    String servletPath = PREMIERE_API_V2_EXTERNAL + "/banks/credit-cards";
+    String credentialsTime = LocalDateTime.now(ZoneId.systemDefault()).toString();
+    String zoneId = ZoneId.systemDefault().toString();
+    String secretKey = securityUtils.getSecretKey();
+
+    String authToken = securityUtils.hash(servletPath + credentialsTime + zoneId + secretKey);
+
+    return resource.getCreditCardsFromByExternalBankId(
+            authToken,
+            credentialsTime,
+            zoneId
+        )
+        .stream()
+        .map(creditCard -> objectMapper.convertValue(creditCard, CreditCardDto.class))
+        .toList();
+  }
+
+  @Override
+  public CreditCardDto getCreditCardByNumberAndExternalBankId(
+      Long externalBankId,
+      String cardNumber) {
+    String servletPath = PREMIERE_API_V2_EXTERNAL + "/banks/credit-cards/" + cardNumber;
+    String credentialsTime = LocalDateTime.now(ZoneId.systemDefault()).toString();
+    String zoneId = ZoneId.systemDefault().toString();
+    String secretKey = securityUtils.getSecretKey();
+
+    String authToken = securityUtils.hash(servletPath + credentialsTime + zoneId + secretKey);
+
+    return objectMapper.convertValue(
+        resource.getCreditCardByNumberAndExternalBankId(
+            authToken,
+            credentialsTime,
+            zoneId,
+            cardNumber
+        ),
+        CreditCardDto.class
+    );
   }
 
   @Override
