@@ -1,5 +1,6 @@
 package org.hcmus.premiere.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -15,10 +16,13 @@ public class TransactionDto implements Serializable {
 
   private Long id;
   private Long version;
+  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
   private LocalDateTime createdAt;
+  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
   private LocalDateTime updatedAt;
   private BigDecimal amount;
   private TransactionType type;
+  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
   private LocalDateTime time;
   private String transactionRemark;
   private BigDecimal totalBalance;
