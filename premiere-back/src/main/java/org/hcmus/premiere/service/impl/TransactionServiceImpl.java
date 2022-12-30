@@ -32,13 +32,13 @@ public class TransactionServiceImpl implements TransactionService {
 
   @Override
   public void transfer(TransferMoneyRequestDto transferMoneyRequestDto) {
-    CheckingTransaction checkingTransaction = checkingTransactionService.getCheckingTransactionById(transferMoneyRequestDto.getCheckingTransactionId());
+    CheckingTransaction checkingTransaction = checkingTransactionService.getCheckingTransactionById(transferMoneyRequestDto.getRequestID());
 
     if(checkingTransaction.getStatus() == TransactionStatus.COMPLETED) {
       throw new IllegalArgumentException(Constants.TRANSACTION_ALREADY_COMPLETED);
     }
 
-    if(!verifyOTP(transferMoneyRequestDto.getOtp(), checkingTransaction.getSenderCreditCardNumber())) {
+    if(!verifyOTP(transferMoneyRequestDto.getOtp(), checkingTransaction)) {
       throw new IllegalArgumentException(Constants.OTP_IS_NOT_VALID);
     }
 
@@ -62,7 +62,7 @@ public class TransactionServiceImpl implements TransactionService {
     checkingTransactionService.updateCheckingTransactionStatus(checkingTransaction);
   }
 
-  private void internalTransfer(Transaction transaction) {
+  public void internalTransfer(Transaction transaction) {
     try {
       CreditCard senderCard = creditCardService.findCreditCardByNumber(transaction.getSenderCreditCardNumber());
       CreditCard receiverCard = creditCardService.findCreditCardByNumber(transaction.getReceiverCreditCardNumber());
@@ -86,13 +86,13 @@ public class TransactionServiceImpl implements TransactionService {
     }
   }
 
-  private void externalTransfer(Transaction transaction) {
+  public void externalTransfer(Transaction transaction) {
     // TODO: External transfer
   }
 
-  private boolean verifyOTP(String otp, String senderCardNumber){
-    CreditCard senderCard = creditCardService.findCreditCardByNumber(senderCardNumber);
-    return otpService.verifyOTP(otp, senderCard.getUser().getEmail());
+  private boolean verifyOTP(String otp, CheckingTransaction checkingTransaction){
+    CreditCard senderCard = creditCardService.findCreditCardByNumber(checkingTransaction.getSenderCreditCardNumber());
+    return otpService.verifyOTPRequestId(otp, senderCard.getUser().getEmail(), checkingTransaction.getId());
   }
 
   @Override

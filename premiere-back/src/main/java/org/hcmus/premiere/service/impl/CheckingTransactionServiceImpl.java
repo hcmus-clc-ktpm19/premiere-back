@@ -42,9 +42,10 @@ public class CheckingTransactionServiceImpl implements CheckingTransactionServic
 
   @Override
   public Long sendOTP(TransactionRequestDto transactionRequestDto) {
+    Long requestId = createCheckingTransaction(transactionRequestDto);
     CreditCard senderCard = creditCardService.findCreditCardByNumber(transactionRequestDto.getSenderCardNumber());
-    otpService.sendOTPEmail(senderCard.getUser().getEmail());
-    return createCheckingTransaction(transactionRequestDto);
+    otpService.sendOTPEmailRequestId(senderCard.getUser().getEmail(), requestId);
+    return requestId;
   }
 
   private Long createCheckingTransaction(TransactionRequestDto transactionRequestDto) {

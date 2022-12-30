@@ -1,4 +1,4 @@
-package org.hcmus.premiere.security.configuration;
+package org.hcmus.premiere.security.config;
 
 import static org.hcmus.premiere.model.enums.PremiereRole.CUSTOMER;
 import static org.hcmus.premiere.model.enums.PremiereRole.EMPLOYEE;

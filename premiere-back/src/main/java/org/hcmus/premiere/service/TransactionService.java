@@ -9,6 +9,10 @@ import org.hcmus.premiere.model.dto.TransferMoneyRequestDto;
 public interface TransactionService {
   void transfer(TransferMoneyRequestDto transferMoneyRequestDto);
 
+  void internalTransfer(Transaction transaction);
+
+  void externalTransfer(Transaction transaction);
+
   long getTotalPages(TransactionType transactionType, Long customerId, int size);
 
   long getTotalElements(TransactionType transactionType, Long customerId);
