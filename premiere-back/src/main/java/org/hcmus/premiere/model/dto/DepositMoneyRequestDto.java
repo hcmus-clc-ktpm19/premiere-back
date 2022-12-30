@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 public class DepositMoneyRequestDto {
 
-  private String phone;
+  private String username;
   private String creditCardNumber;
   private BigDecimal amount;
 }

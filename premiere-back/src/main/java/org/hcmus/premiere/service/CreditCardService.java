@@ -28,5 +28,5 @@ public interface CreditCardService {
 
   CreditCard updateCreditCard(CreditCard creditCard);
 
-  Long depositMoney(String phone, String creditCardNumber, BigDecimal amount);
+  Long depositMoney(String username, String creditCardNumber, BigDecimal amount);
 }

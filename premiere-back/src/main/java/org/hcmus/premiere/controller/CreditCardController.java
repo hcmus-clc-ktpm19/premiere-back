@@ -10,7 +10,7 @@ import org.hcmus.premiere.service.CreditCardService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -51,10 +51,10 @@ public class CreditCardController extends AbstractApplicationController {
     return creditCardService.getCreditCardByNumberAndExternalBankId(externalBankName, cardNumber);
   }
 
-  @PostMapping("/deposit-money")
+  @PutMapping("/deposit-money")
   public Long depositMoney(@RequestBody DepositMoneyRequestDto depositMoneyRequestDto) {
     return creditCardService.depositMoney(
-        depositMoneyRequestDto.getPhone(),
+        depositMoneyRequestDto.getUsername(),
         depositMoneyRequestDto.getCreditCardNumber(),
         depositMoneyRequestDto.getAmount()
     );

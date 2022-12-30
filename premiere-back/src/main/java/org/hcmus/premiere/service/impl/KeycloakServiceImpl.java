@@ -9,12 +9,15 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.Response.StatusType;
 import lombok.RequiredArgsConstructor;
 import org.hcmus.premiere.common.consts.Constants;
 import org.hcmus.premiere.model.dto.PasswordDto;
 import org.hcmus.premiere.model.dto.RegisterAccountDto;
 import org.hcmus.premiere.model.entity.User;
 import org.hcmus.premiere.model.enums.PremiereRole;
+import org.hcmus.premiere.model.exception.UserNotFoundException;
 import org.hcmus.premiere.model.exception.WrongPasswordException;
 import org.hcmus.premiere.service.CreditCardService;
 import org.hcmus.premiere.service.KeycloakService;
@@ -26,6 +29,7 @@ import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -47,7 +51,16 @@ public class KeycloakServiceImpl implements KeycloakService {
 
   private final UserService userService;
 
-  private final CreditCardService creditCardService;
+  private CreditCardService creditCardService;
+
+  @Autowired
+  public void setCreditCardServiceImpl(CreditCardService creditCardService) {
+    this.creditCardService = creditCardService;
+  }
+
+  public CreditCardService getCreditCardService() {
+    return creditCardService;
+  }
 
   @Override
   public UserRepresentation getCurrentUser() {
@@ -77,6 +90,17 @@ public class KeycloakServiceImpl implements KeycloakService {
         .filter(roleRepresentation -> allRoleNames.contains(roleRepresentation.getName()))
         .findFirst()
         .orElse(null);
+  }
+
+  @Override
+  public Long getUserIdByUsername(String username) {
+    return Long.valueOf(realmResource
+        .users()
+        .search(username)
+        .stream()
+        .findFirst()
+        .orElseThrow(() -> new UserNotFoundException("User not found", username, "AUTH.USER.NOT_FOUND"))
+        .getAttributes().get("userId").get(0));
   }
 
   @Override
@@ -125,8 +149,8 @@ public class KeycloakServiceImpl implements KeycloakService {
 
   private String getCreatedId(Response response) {
     URI location = response.getLocation();
-    if (!response.getStatusInfo().equals(Response.Status.CREATED)) {
-      Response.StatusType statusInfo = response.getStatusInfo();
+    if (!response.getStatusInfo().equals(Status.CREATED)) {
+      StatusType statusInfo = response.getStatusInfo();
       throw new WebApplicationException("Create method returned status " +
           statusInfo.getReasonPhrase() + " (Code: " + statusInfo.getStatusCode() + "); expected status: Created (201)", response);
     }
