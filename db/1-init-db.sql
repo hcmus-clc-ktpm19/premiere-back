@@ -70,6 +70,7 @@ CREATE TABLE "loan_reminder"
     "status"                  LOAN_STATUS  NOT NULL,
     "time"                    TIMESTAMP    NOT NULL,
     "loan_remark"             VARCHAR(255) NOT NULL,
+    "cancel_reason"           VARCHAR(255),
     "version"                 INT          NOT NULL DEFAULT 0,
     CONSTRAINT "loan_reminder_pk" PRIMARY KEY ("id")
 ) WITH (

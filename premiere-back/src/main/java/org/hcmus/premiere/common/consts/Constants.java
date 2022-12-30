@@ -20,5 +20,7 @@ public class Constants {
     public static final String OTP_IS_NOT_VALID = "The OTP is not valid";
     public static final String SENDER_AND_RECEIVER_ARE_SAME = "Both the sender and the receiver must be unique";
     public static final String TRANSACTION_ALREADY_COMPLETED = "Transaction has been completed";
+    public static final String LOAN_REMINDER_STATUS_IS_NOT_PENDING = "The loan reminder status is not pending";
+
 
     }

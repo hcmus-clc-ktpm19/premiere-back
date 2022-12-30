@@ -15,9 +15,14 @@ public class OTP extends PremiereAbstractEntity {
   @Basic
   @Column(name = "otp", nullable = false, columnDefinition = "VARCHAR(255)")
   private String otp;
+
   @Basic
   @Column(name = "email", nullable = false, columnDefinition = "VARCHAR(255)")
   private String email;
+
+  @Basic
+  @Column(name = "request_id")
+  private Long requestId;
 
   @Override
   public boolean equals(Object o) {
