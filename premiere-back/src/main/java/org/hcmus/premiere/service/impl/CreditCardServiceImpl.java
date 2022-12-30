@@ -4,6 +4,7 @@ import static org.hcmus.premiere.common.consts.PremiereApiUrls.PREMIERE_API_V2_E
 import static org.hcmus.premiere.model.exception.CreditCardNotFoundException.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
@@ -150,5 +151,10 @@ public class CreditCardServiceImpl implements CreditCardService {
   @Override
   public CreditCard updateCreditCard(CreditCard creditCard) {
     return creditCardRepository.saveAndFlush(creditCard);
+  }
+
+  @Override
+  public Long depositMoney(String phone, String creditCardNumber, BigDecimal amount) {
+    return null;
   }
 }

@@ -1,5 +1,6 @@
 package org.hcmus.premiere.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import org.hcmus.premiere.model.dto.CreditCardDto;
 import org.hcmus.premiere.model.entity.CreditCard;
@@ -26,4 +27,6 @@ public interface CreditCardService {
   CreditCard saveCreditCard(User user);
 
   CreditCard updateCreditCard(CreditCard creditCard);
+
+  Long depositMoney(String phone, String creditCardNumber, BigDecimal amount);
 }
