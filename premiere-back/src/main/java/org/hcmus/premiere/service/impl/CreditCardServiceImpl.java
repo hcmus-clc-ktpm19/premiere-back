@@ -156,7 +156,10 @@ public class CreditCardServiceImpl implements CreditCardService {
   @Override
   public CreditCard saveCreditCard(User user) {
     CreditCard creditCard = new CreditCard();
-    creditCard.setCardNumber(creditCardNumberGenerator.generate(Constants.CREDIT_CARD_NUMBER_BIN, Constants.CREDIT_CARD_NUMBER_LENGTH));
+    creditCard.setCardNumber(
+        creditCardNumberGenerator.generate(Constants.CREDIT_CARD_NUMBER_BIN,
+        Constants.CREDIT_CARD_NUMBER_LENGTH)
+    );
     creditCard.setBalance(Constants.CREDIT_CARD_INITIAL_BALANCE);
     creditCard.setUser(user);
     creditCard.setOpenDay(LocalDateTime.now());
@@ -172,10 +175,10 @@ public class CreditCardServiceImpl implements CreditCardService {
   public Long depositMoney(String username, String creditCardNumber, BigDecimal amount) {
     CreditCard creditCard = null;
 
-    if (StringUtils.isNotBlank(creditCardNumber)) {
-      creditCard = findCreditCardByNumber(creditCardNumber);
-    } else if (StringUtils.isNotBlank(username)) {
+    if (StringUtils.isNotBlank(username)) {
       creditCard = findCreditCardByUserId(keycloakService.getUserIdByUsername(username));
+    } else if (StringUtils.isNotBlank(creditCardNumber)) {
+      creditCard = findCreditCardByNumber(creditCardNumber);
     }
 
     if (creditCard == null) {
