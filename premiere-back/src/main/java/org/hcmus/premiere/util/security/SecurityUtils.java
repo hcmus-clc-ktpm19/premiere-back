@@ -1,5 +1,9 @@
 package org.hcmus.premiere.util.security;
 
+import static org.hcmus.premiere.model.enums.PremiereRole.CUSTOMER;
+import static org.hcmus.premiere.model.enums.PremiereRole.EMPLOYEE;
+import static org.hcmus.premiere.model.enums.PremiereRole.PREMIERE_ADMIN;
+
 import java.io.Serializable;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -60,15 +64,15 @@ public class SecurityUtils {
   }
 
   public static boolean isCustomer() {
-    return hasRole(PremiereRole.CUSTOMER);
+    return hasRole(CUSTOMER);
   }
 
-  public static boolean isStaff() {
-    return containsRoles(PremiereRole.EMPLOYEE, PremiereRole.PREMIERE_ADMIN);
+  public static boolean isEmployeeOrAdmin() {
+    return containsRoles(EMPLOYEE, PREMIERE_ADMIN);
   }
 
   public static List<PremiereRole> getStaffRoles() {
-    return List.of(PremiereRole.EMPLOYEE, PremiereRole.PREMIERE_ADMIN);
+    return List.of(EMPLOYEE, PREMIERE_ADMIN);
   }
 
   public String encrypt(Object o, boolean isAsymmetric)

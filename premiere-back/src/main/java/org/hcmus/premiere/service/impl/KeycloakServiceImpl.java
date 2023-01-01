@@ -1,5 +1,7 @@
 package org.hcmus.premiere.service.impl;
 
+import static org.hcmus.premiere.model.enums.PremiereRole.CUSTOMER;
+import static org.hcmus.premiere.model.enums.PremiereRole.EMPLOYEE;
 import static org.hcmus.premiere.model.exception.WrongPasswordException.WRONG_PASSWORD_MESSAGE;
 
 import java.net.URI;
@@ -13,10 +15,11 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.Response.StatusType;
 import lombok.RequiredArgsConstructor;
 import org.hcmus.premiere.common.consts.Constants;
+import org.hcmus.premiere.model.dto.FullInfoUserDto;
 import org.hcmus.premiere.model.dto.PasswordDto;
-import org.hcmus.premiere.model.dto.RegisterAccountDto;
 import org.hcmus.premiere.model.entity.User;
 import org.hcmus.premiere.model.enums.PremiereRole;
+import org.hcmus.premiere.model.exception.IllegalRoleAssignException;
 import org.hcmus.premiere.model.exception.UserNotFoundException;
 import org.hcmus.premiere.model.exception.WrongPasswordException;
 import org.hcmus.premiere.service.CreditCardService;
@@ -99,71 +102,35 @@ public class KeycloakServiceImpl implements KeycloakService {
         .search(username)
         .stream()
         .findFirst()
-        .orElseThrow(() -> new UserNotFoundException("User not found", username, "AUTH.USER.NOT_FOUND"))
+        .orElseThrow(
+            () -> new UserNotFoundException("User not found", username, "AUTH.USER.NOT_FOUND"))
         .getAttributes().get("userId").get(0));
   }
 
   @Override
-  public void createCustomer(RegisterAccountDto registerAccountDto) {
-    if(!registerAccountDto.getRole().equals(PremiereRole.CUSTOMER.name())) {
-      throw new IllegalArgumentException("Account's role must be CUSTOMER");
+  public void createCustomer(FullInfoUserDto fullInfoUserDto) {
+    if (!CUSTOMER.value.equals(fullInfoUserDto.getRole())) {
+      throw new IllegalRoleAssignException(
+          "Account's role must be CUSTOMER",
+          IllegalRoleAssignException.ASSIGN_ILLEGAL_CUSTOMER_ROLE
+      );
     }
-    createUser(registerAccountDto);
+    createUser(fullInfoUserDto);
   }
 
   @Override
-  public void createEmployee(RegisterAccountDto registerAccountDto) {
-    if(!registerAccountDto.getRole().equals(PremiereRole.EMPLOYEE.name())) {
-      throw new IllegalArgumentException("Account's role must be EMPLOYEE");
+  public Long saveEmployee(FullInfoUserDto fullInfoUserDto) {
+    if (!EMPLOYEE.value.equals(fullInfoUserDto.getRole())) {
+      throw new IllegalRoleAssignException(
+          "Account's role must be EMPLOYEE",
+          IllegalRoleAssignException.ASSIGN_ILLEGAL_EMPLOYEE_ROLE
+      );
     }
-    createUser(registerAccountDto);
+    return fullInfoUserDto.getId() == null ? createUser(fullInfoUserDto) : updateUser(fullInfoUserDto);
   }
-
-  private void createUser(RegisterAccountDto registerAccountDto) {
-    User user = userService.saveUser(registerAccountDto);
-    if(registerAccountDto.getRole().equals(PremiereRole.CUSTOMER.name())) {
-      creditCardService.saveCreditCard(user);
-    }
-
-    UserRepresentation userRepresentation = new UserRepresentation();
-    userRepresentation.setUsername(registerAccountDto.getUsername());
-    userRepresentation.setFirstName(user.getFirstName());
-    userRepresentation.setLastName(user.getLastName());
-    userRepresentation.setEmail(user.getEmail());
-    userRepresentation.setEnabled(true);
-    userRepresentation.singleAttribute("userId", String.valueOf(user.getId()));
-
-    Response response = realmResource.users().create(userRepresentation);
-    String userId = getCreatedId(response);
-    UserResource userResource = realmResource.users().get(userId);
-
-    CredentialRepresentation credentialRepresentation = new CredentialRepresentation();
-    credentialRepresentation.setTemporary(false);
-    credentialRepresentation.setType(CredentialRepresentation.PASSWORD);
-    credentialRepresentation.setValue(registerAccountDto.getPassword());
-    userResource.resetPassword(credentialRepresentation);
-
-    RoleRepresentation roleRepresentation = realmResource.roles().get(registerAccountDto.getRole()).toRepresentation();
-    userResource.roles().realmLevel().add(Collections.singletonList(roleRepresentation));
-  }
-
-  private String getCreatedId(Response response) {
-    URI location = response.getLocation();
-    if (!response.getStatusInfo().equals(Status.CREATED)) {
-      StatusType statusInfo = response.getStatusInfo();
-      throw new WebApplicationException("Create method returned status " +
-          statusInfo.getReasonPhrase() + " (Code: " + statusInfo.getStatusCode() + "); expected status: Created (201)", response);
-    }
-    if (location == null) {
-      return null;
-    }
-    String path = location.getPath();
-    return path.substring(path.lastIndexOf('/') + 1);
-  }
-
 
   @Override
-  public Boolean isPasswordCorrect(String username, String password) {
+  public boolean isPasswordCorrect(String username, String password) {
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
     MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
@@ -221,5 +188,86 @@ public class KeycloakServiceImpl implements KeycloakService {
 
     // update user to keycloak
     realmResource.users().get(userRepresentation.getId()).update(userRepresentation);
+  }
+
+  private Long createUser(FullInfoUserDto fullInfoUserDto) {
+    User user = userService.saveUser(fullInfoUserDto);
+    if (CUSTOMER.value.equals(fullInfoUserDto.getRole())) {
+      creditCardService.saveCreditCard(user);
+    }
+
+    UserRepresentation userRepresentation = new UserRepresentation();
+    userRepresentation.setUsername(fullInfoUserDto.getUsername());
+    userRepresentation.setFirstName(user.getFirstName());
+    userRepresentation.setLastName(user.getLastName());
+    userRepresentation.setEmail(user.getEmail());
+    userRepresentation.setEnabled(true);
+    userRepresentation.singleAttribute("userId", String.valueOf(user.getId()));
+
+    Response response = realmResource.users().create(userRepresentation);
+    String userId = getCreatedId(response);
+    UserResource userResource = realmResource.users().get(userId);
+
+    CredentialRepresentation credentialRepresentation = new CredentialRepresentation();
+    credentialRepresentation.setTemporary(false);
+    credentialRepresentation.setType(CredentialRepresentation.PASSWORD);
+    credentialRepresentation.setValue(fullInfoUserDto.getPassword());
+    userResource.resetPassword(credentialRepresentation);
+
+    RoleRepresentation roleRepresentation = realmResource.roles().get(fullInfoUserDto.getRole())
+        .toRepresentation();
+    userResource.roles().realmLevel().add(Collections.singletonList(roleRepresentation));
+
+    return user.getId();
+  }
+
+  private String getCreatedId(Response response) {
+    URI location = response.getLocation();
+    if (!response.getStatusInfo().equals(Status.CREATED)) {
+      StatusType statusInfo = response.getStatusInfo();
+      throw new WebApplicationException("Create method returned status " +
+          statusInfo.getReasonPhrase() + " (Code: " + statusInfo.getStatusCode()
+          + "); expected status: Created (201)", response);
+    }
+    if (location == null) {
+      return null;
+    }
+    String path = location.getPath();
+    return path.substring(path.lastIndexOf('/') + 1);
+  }
+
+  private Long updateUser(FullInfoUserDto fullInfoUserDto) {
+    User user = userService.saveUser(fullInfoUserDto);
+
+    if (CUSTOMER.value.equals(fullInfoUserDto.getRole())) {
+      creditCardService.saveCreditCard(user);
+    }
+
+    UserRepresentation userRepresentation = new UserRepresentation();
+    userRepresentation.setUsername(fullInfoUserDto.getUsername());
+    userRepresentation.setFirstName(user.getFirstName());
+    userRepresentation.setLastName(user.getLastName());
+    userRepresentation.setEmail(user.getEmail());
+    userRepresentation.setEnabled(true);
+    userRepresentation.singleAttribute("userId", String.valueOf(user.getId()));
+    userRepresentation.setEnabled(fullInfoUserDto.isEnabled());
+
+    String userId = realmResource.users().search(fullInfoUserDto.getUsername()).get(0).getId();
+    UserResource userResource = realmResource.users().get(userId);
+    userResource.update(userRepresentation);
+
+    CredentialRepresentation credentialRepresentation = new CredentialRepresentation();
+    credentialRepresentation.setTemporary(false);
+    credentialRepresentation.setType(CredentialRepresentation.PASSWORD);
+    credentialRepresentation.setValue(fullInfoUserDto.getPassword());
+    userResource.resetPassword(credentialRepresentation);
+
+    RoleRepresentation roleRepresentation = realmResource
+        .roles()
+        .get(fullInfoUserDto.getRole())
+        .toRepresentation();
+    userResource.roles().realmLevel().add(Collections.singletonList(roleRepresentation));
+
+    return user.getId();
   }
 }

@@ -79,7 +79,7 @@ public class OTPServiceImpl implements OTPService {
   }
 
   @Override
-  public Boolean verifyOTP(String otp, String email) {
+  public boolean verifyOTP(String otp, String email) {
     // find the latest otp by email
     OTP otpResult = otpRepository.findTopByEmailOrderByCreatedAtDesc(email)
         .orElseThrow(
@@ -103,7 +103,7 @@ public class OTPServiceImpl implements OTPService {
   }
 
   @Override
-  public Boolean verifyOTPRequestId(String otp, String email, Long requestId) {
+  public boolean verifyOTPRequestId(String otp, String email, Long requestId) {
     OTP otpResult = otpRepository.findTopByEmailOrderByCreatedAtDesc(email)
         .orElseThrow(
             () -> new OTPNotFoundException(OTP_NOT_FOUND_MESSAGE + " for ", email, OTP_NOT_FOUND));
