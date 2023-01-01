@@ -27,6 +27,9 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
   @Value("${queue.loan-reminder-queue}")
   private String loanReminderQueue;
 
+  @Value("${queue.deposit-money-queue}")
+  private String depositMoneyQueue;
+
   @Value("${front-end.origin}")
   private String frontEndOrigin;
 
@@ -35,6 +38,11 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
   @Bean
   public Queue createLoanReminderQueue() {
     return new Queue(loanReminderQueue);
+  }
+
+  @Bean
+  public Queue createDepositMoneyQueue() {
+    return new Queue(depositMoneyQueue);
   }
 
   @Bean

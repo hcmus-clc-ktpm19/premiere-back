@@ -35,6 +35,7 @@ keycloak:
 
 queue:
   loan-reminder-queue: loan-reminder-queue
+  deposit-money-queue: deposit-money-queue
 
 front-end:
   origin: http://localhost:3000
