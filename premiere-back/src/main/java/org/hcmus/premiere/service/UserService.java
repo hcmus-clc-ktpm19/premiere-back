@@ -1,7 +1,7 @@
 package org.hcmus.premiere.service;
 
 import java.util.List;
-import org.hcmus.premiere.model.dto.RegisterAccountDto;
+import org.hcmus.premiere.model.dto.FullInfoUserDto;
 import org.hcmus.premiere.model.entity.User;
 
 public interface UserService {
@@ -12,5 +12,7 @@ public interface UserService {
 
   User findUserByCreditCardNumber(String creditCardNumber);
 
-  User saveUser(RegisterAccountDto registerAccountDto);
+  boolean isUserExist(Long id);
+
+  User saveUser(FullInfoUserDto fullInfoUserDto);
 }
