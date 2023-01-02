@@ -20,6 +20,8 @@ public class LoanReminderDto implements Serializable {
   private LoanStatus status;
   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
   private LocalDateTime time;
+  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+  private LocalDateTime updatedTime;
   private String loanRemark;
   private Long senderCreditCardId;
   private Long receiverCreditCardId;
