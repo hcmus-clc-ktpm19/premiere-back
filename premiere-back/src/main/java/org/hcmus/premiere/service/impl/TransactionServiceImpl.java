@@ -1,5 +1,6 @@
 package org.hcmus.premiere.service.impl;
 
+import java.time.LocalDate;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.hcmus.premiere.common.consts.Constants;
@@ -29,6 +30,11 @@ public class TransactionServiceImpl implements TransactionService {
   private final OTPService otpService;
 
   private final CheckingTransactionService checkingTransactionService;
+
+  @Override
+  public long count() {
+    return transactionRepository.count();
+  }
 
   @Override
   public void transfer(TransferMoneyRequestDto transferMoneyRequestDto) {
@@ -116,5 +122,25 @@ public class TransactionServiceImpl implements TransactionService {
         transactionType,
         isAsc,
         customerId);
+  }
+
+  @Override
+  public List<Transaction> getTransactionsByMonthAndInRangeOfDate(
+      long page, long size, Long bankId,
+      LocalDate fromDate, LocalDate toDate) {
+    if (fromDate.isAfter(toDate)) {
+      throw new IllegalArgumentException();
+    }
+
+    if (fromDate.datesUntil(toDate).count() > 31) {
+      throw new IllegalArgumentException();
+    }
+
+    return transactionRepository.getTransactionsByMonthAndInRangeOfDate(
+        page,
+        size,
+        bankId,
+        fromDate,
+        toDate);
   }
 }

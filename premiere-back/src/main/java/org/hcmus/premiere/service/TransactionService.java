@@ -1,5 +1,6 @@
 package org.hcmus.premiere.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import org.hcmus.premiere.model.entity.Transaction;
 import org.hcmus.premiere.model.enums.TransactionType;
@@ -7,6 +8,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.hcmus.premiere.model.dto.TransferMoneyRequestDto;
 
 public interface TransactionService {
+
+  long count();
+
   void transfer(TransferMoneyRequestDto transferMoneyRequestDto);
 
   void internalTransfer(Transaction transaction);
@@ -24,4 +28,9 @@ public interface TransactionService {
       TransactionType transactionType,
       boolean isAsc,
       Long customerId);
+
+  @PreAuthorize("hasRole('PREMIERE_ADMIN')")
+  List<Transaction> getTransactionsByMonthAndInRangeOfDate(
+      long page, long size, Long bankId,
+      LocalDate fromDate, LocalDate toDate);
 }

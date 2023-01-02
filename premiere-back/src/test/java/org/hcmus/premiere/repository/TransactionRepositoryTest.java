@@ -1,5 +1,6 @@
 package org.hcmus.premiere.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.hcmus.premiere.model.entity.Transaction;
@@ -30,6 +31,25 @@ class TransactionRepositoryTest {
         TransactionType.MONEY_TRANSFER,
         true,
         customerId);
+
+    // Then
+    Assertions.assertThat(transactions).isNotEmpty();
+  }
+
+  @Test
+  void testGetTransactionsByMonthAndInRangeOfDate() {
+    // Given
+    Long bankId = 2L;
+    LocalDate fromDate = LocalDate.of(2022, 12, 1);
+    LocalDate toDate = LocalDate.of(2022, 12, 31);
+
+    // When
+    List<Transaction> transactions = transactionRepository.getTransactionsByMonthAndInRangeOfDate(
+        0,
+        9,
+        bankId,
+        fromDate,
+        toDate);
 
     // Then
     Assertions.assertThat(transactions).isNotEmpty();

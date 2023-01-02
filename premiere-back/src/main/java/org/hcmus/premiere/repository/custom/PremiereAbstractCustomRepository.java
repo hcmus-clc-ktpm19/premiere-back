@@ -16,7 +16,7 @@ public abstract class PremiereAbstractCustomRepository<T extends PremiereAbstrac
     return new JPAQuery<T>(entityManager).select(select);
   }
 
-  public JPAQuery<T> selectFrom(EntityPath<T> entity) {
+  public JPAQuery<T> selectFrom(EntityPath<?>... entity) {
     return new JPAQuery<T>(entityManager).from(entity);
   }
 }

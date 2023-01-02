@@ -1,5 +1,7 @@
 package org.hcmus.premiere.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import java.time.LocalDate;
 import javax.validation.constraints.Min;
 import lombok.Data;
 import org.hcmus.premiere.model.enums.TransactionType;
@@ -18,4 +20,10 @@ public class TransactionCriteriaDto {
   private TransactionType transactionType;
   @Nullable
   private boolean isAsc;
+  @Nullable
+  @JsonFormat(pattern = "dd/MM/yyyy")
+  private LocalDate fromDate;
+  @Nullable
+  @JsonFormat(pattern = "dd/MM/yyyy")
+  private LocalDate toDate;
 }

@@ -82,4 +82,25 @@ public class TransactionController extends AbstractApplicationController{
 
     return res;
   }
+
+  @PostMapping("/{bankId}/get-transactions-statistics")
+  public PremierePaginationReponseDto<TransactionDto> getTransactionsByMonthAndInRangeOfDate(
+      @PathVariable Long bankId,
+      @Valid @RequestBody TransactionCriteriaDto criteriaDto) {
+    List<TransactionDto> transactionDtos = transactionService
+        .getTransactionsByMonthAndInRangeOfDate(
+            criteriaDto.getPage(),
+            criteriaDto.getSize(),
+            bankId,
+            criteriaDto.getFromDate(),
+            criteriaDto.getToDate())
+        .stream()
+        .map(transactionMapper::toDto)
+        .toList();
+
+    PremierePaginationReponseDto<TransactionDto> res = applicationMapper.toDto(transactionDtos, criteriaDto);
+    res.getMeta().getPagination().setTotalPages(transactionService.count() + (transactionService.count() % criteriaDto.getSize() == 0 ? 0 : 1));
+    res.getMeta().getPagination().setTotalElements(transactionService.count());
+    return res;
+  }
 }
