@@ -68,6 +68,7 @@ public class ApplicationMapper {
       loanReminderDto.setTransferAmount(loanReminder.getLoanBalance());
       loanReminderDto.setStatus(loanReminder.getStatus());
       loanReminderDto.setTime(loanReminder.getTime());
+      loanReminderDto.setUpdatedTime(loanReminder.getUpdatedAt());
       loanReminderDto.setLoanRemark(loanReminder.getLoanRemark());
       loanReminderDto.setSenderId(loanReminder.getSenderCreditCard().getUser().getId());
       loanReminderDto.setReceiverId(loanReminder.getReceiverCreditCard().getUser().getId());

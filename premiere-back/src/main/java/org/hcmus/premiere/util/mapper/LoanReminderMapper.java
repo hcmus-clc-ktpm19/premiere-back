@@ -23,8 +23,8 @@ public abstract class LoanReminderMapper {
   @Mapping(target = "time", ignore = true)
   public abstract LoanReminder toEntity(LoanReminderDto loanReminderDto);
 
-  @Mapping(target = "senderCreditCard", expression = "java(creditCardService.findCreditCardByNumber(createLoanReminderDto.getDebtorCreditCardNumber()))")
-  @Mapping(target = "receiverCreditCard", expression = "java(creditCardService.findCreditCardByNumber(createLoanReminderDto.getCreditorCreditCardNumber()))")
+  @Mapping(target = "senderCreditCard", expression = "java(creditCardService.findCreditCardByNumber(createLoanReminderDto.getCreditorCreditCardNumber()))")
+  @Mapping(target = "receiverCreditCard", expression = "java(creditCardService.findCreditCardByNumber(createLoanReminderDto.getDebtorCreditCardNumber()))")
   @Mapping(target = "loanBalance", source = "transferAmount")
   public abstract LoanReminder toEntity(CreateLoanReminderDto createLoanReminderDto);
 
