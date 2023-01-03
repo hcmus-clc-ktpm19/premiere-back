@@ -2,6 +2,7 @@ package org.hcmus.premiere.controller;
 
 import static org.hcmus.premiere.common.consts.PremiereApiUrls.PREMIERE_API_V1;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,8 @@ import org.hcmus.premiere.model.dto.TransferMoneyRequestDto;
 import org.hcmus.premiere.service.CheckingTransactionService;
 import org.hcmus.premiere.service.TransactionService;
 import org.hcmus.premiere.service.ValidationService;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -83,23 +86,25 @@ public class TransactionController extends AbstractApplicationController{
     return res;
   }
 
-  @PostMapping("/{bankId}/get-transactions-statistics")
-  public PremierePaginationReponseDto<TransactionDto> getTransactionsByMonthAndInRangeOfDate(
+  @PostMapping("/{bankId}/get-transactions/{fromDate}/{toDate}")
+  public PremierePaginationReponseDto<TransactionDto> getTransactionsInRangeOfDate(
       @PathVariable Long bankId,
+      @PathVariable @DateTimeFormat(iso = ISO.DATE) LocalDate fromDate,
+      @PathVariable @DateTimeFormat(iso = ISO.DATE) LocalDate toDate,
       @Valid @RequestBody TransactionCriteriaDto criteriaDto) {
     List<TransactionDto> transactionDtos = transactionService
         .getTransactionsByMonthAndInRangeOfDate(
             criteriaDto.getPage(),
             criteriaDto.getSize(),
             bankId,
-            criteriaDto.getFromDate(),
-            criteriaDto.getToDate())
+            fromDate,
+            toDate)
         .stream()
         .map(transactionMapper::toDto)
         .toList();
 
     PremierePaginationReponseDto<TransactionDto> res = applicationMapper.toDto(transactionDtos, criteriaDto);
-    res.getMeta().getPagination().setTotalPages(transactionService.count() + (transactionService.count() % criteriaDto.getSize() == 0 ? 0 : 1));
+    res.getMeta().getPagination().setTotalPages(transactionService.getTotalPages(criteriaDto.getSize()));
     res.getMeta().getPagination().setTotalElements(transactionService.count());
     return res;
   }

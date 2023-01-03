@@ -108,6 +108,13 @@ public class TransactionServiceImpl implements TransactionService {
     return totalPages + (count % size == 0 ? 0 : 1);
   }
 
+
+  @Override
+  public long getTotalPages(int size) {
+    long count = count();
+    return count + (count % size == 0 ? 0 : 1);
+  }
+
   @Override
   public long getTotalElements(TransactionType transactionType, Long customerId) {
     return transactionRepository.count(transactionType, customerId);

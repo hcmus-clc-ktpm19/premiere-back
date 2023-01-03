@@ -17,6 +17,8 @@ public interface TransactionService {
 
   void externalTransfer(Transaction transaction);
 
+  long getTotalPages(int size);
+
   long getTotalPages(TransactionType transactionType, Long customerId, int size);
 
   long getTotalElements(TransactionType transactionType, Long customerId);
