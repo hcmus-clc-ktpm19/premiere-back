@@ -52,3 +52,10 @@ system-auth:
     auth-header-name: X-Auth-Token
     time-header-name: X-Auth-Time
     locale-header-name: X-Auth-Locale
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    operations-sorter: method
+    url: /api-docs.yaml

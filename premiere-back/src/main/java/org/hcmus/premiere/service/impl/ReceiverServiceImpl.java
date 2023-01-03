@@ -1,5 +1,6 @@
 package org.hcmus.premiere.service.impl;
 
+import static org.hcmus.premiere.model.exception.ReceiverExistedException.RECEIVER_EXISTED_I18N_PLACEHOLDER;
 import static org.hcmus.premiere.model.exception.ReceiverExistedException.RECEIVER_EXISTED_MESSAGE;
 import static org.hcmus.premiere.model.exception.ReceiverNotFoundException.RECEIVER_NOT_FOUND;
 import static org.hcmus.premiere.model.exception.ReceiverNotFoundException.RECEIVER_NOT_FOUND_MESSAGE;
@@ -63,7 +64,7 @@ public class ReceiverServiceImpl implements ReceiverService {
         .ifPresent(
             receiver -> {
               throw new ReceiverExistedException(RECEIVER_EXISTED_MESSAGE,
-                  receiverDto.getCardNumber());
+                  receiverDto.getCardNumber(), RECEIVER_EXISTED_I18N_PLACEHOLDER);
             });
     CreditCard creditCard = creditCardService.findCreditCardByNumber(receiverDto.getCardNumber());
     User user = userService.findUserById(receiverDto.getUserId());

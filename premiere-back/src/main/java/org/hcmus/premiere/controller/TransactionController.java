@@ -9,7 +9,7 @@ import javax.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hcmus.premiere.common.consts.Constants;
-import org.hcmus.premiere.model.dto.PremierePaginationReponseDto;
+import org.hcmus.premiere.model.dto.PremierePaginationResponseDto;
 import org.hcmus.premiere.model.dto.TransactionCriteriaDto;
 import org.hcmus.premiere.model.dto.TransactionDto;
 import org.hcmus.premiere.model.dto.TransactionRequestDto;
@@ -60,7 +60,7 @@ public class TransactionController extends AbstractApplicationController{
   }
 
   @PostMapping("/users/{userId}/get-transactions")
-  public PremierePaginationReponseDto<TransactionDto> getTransactionsByCustomerId(
+  public PremierePaginationResponseDto<TransactionDto> getTransactionsByCustomerId(
       @Valid @RequestBody TransactionCriteriaDto criteriaDto,
       @PathVariable Long userId) {
     List<TransactionDto> transactionDtos = transactionService
@@ -74,7 +74,7 @@ public class TransactionController extends AbstractApplicationController{
         .map(transactionMapper::toDto)
         .toList();
 
-    PremierePaginationReponseDto<TransactionDto> res = applicationMapper.toDto(transactionDtos, criteriaDto);
+    PremierePaginationResponseDto<TransactionDto> res = applicationMapper.toDto(transactionDtos, criteriaDto);
     res.getMeta().getPagination().setTotalPages(
         transactionService.getTotalPages(criteriaDto.getTransactionType(), userId,
             criteriaDto.getSize()));

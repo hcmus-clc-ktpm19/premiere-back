@@ -2,6 +2,7 @@ package org.hcmus.premiere.service.impl;
 
 import static org.hcmus.premiere.model.enums.PremiereRole.CUSTOMER;
 import static org.hcmus.premiere.model.enums.PremiereRole.EMPLOYEE;
+import static org.hcmus.premiere.model.exception.WrongPasswordException.WRONG_PASSWORD_I18N_PLACEHOLDER;
 import static org.hcmus.premiere.model.exception.WrongPasswordException.WRONG_PASSWORD_MESSAGE;
 
 import java.net.URI;
@@ -149,7 +150,7 @@ public class KeycloakServiceImpl implements KeycloakService {
           String.class);
       return response.getStatusCode() == HttpStatus.OK;
     } catch (Exception e) {
-      throw new WrongPasswordException(WRONG_PASSWORD_MESSAGE, password);
+      throw new WrongPasswordException(WRONG_PASSWORD_MESSAGE, password, WRONG_PASSWORD_I18N_PLACEHOLDER);
     }
   }
 
@@ -168,7 +169,7 @@ public class KeycloakServiceImpl implements KeycloakService {
           .get(principal.getName())
           .resetPassword(credential);
     } else {
-      throw new WrongPasswordException(WRONG_PASSWORD_MESSAGE, passwordDto.getUsername());
+      throw new WrongPasswordException(WRONG_PASSWORD_MESSAGE, passwordDto.getUsername(), WRONG_PASSWORD_I18N_PLACEHOLDER);
     }
   }
 
