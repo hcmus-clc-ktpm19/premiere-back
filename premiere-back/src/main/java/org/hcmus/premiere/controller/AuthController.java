@@ -1,13 +1,15 @@
 package org.hcmus.premiere.controller;
 
+import static org.springframework.http.HttpStatus.CREATED;
+
 import java.util.HashMap;
 import java.util.Map;
-import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.hcmus.premiere.common.consts.PremiereApiUrls;
 import org.hcmus.premiere.model.dto.OTPDto;
 import org.hcmus.premiere.model.dto.PasswordDto;
-import org.hcmus.premiere.model.dto.RegisterAccountDto;
+import org.hcmus.premiere.model.dto.FullInfoUserDto;
 import org.hcmus.premiere.model.dto.UserDto;
 import org.hcmus.premiere.model.entity.User;
 import org.hcmus.premiere.model.enums.PremiereRole;
@@ -24,12 +26,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping(PremiereApiUrls.PREMIERE_API_V1 + "/auth")
 @RequiredArgsConstructor
 public class AuthController {
 
   private final UserService userService;
+
   private final KeycloakService keycloakService;
+
   private final OTPService otpService;
 
   @GetMapping("/token/user")
@@ -56,23 +60,18 @@ public class AuthController {
   }
 
   @PostMapping("/register-customer")
-  @RolesAllowed({"EMPLOYEE", "PREMIERE_ADMIN"})
-  public ResponseEntity<Map<String, String>> registerCustomer(@RequestBody @Valid RegisterAccountDto registerAccountDto) {
-    keycloakService.createCustomer(registerAccountDto);
+  public ResponseEntity<Map<String, String>> registerCustomer(@RequestBody @Valid FullInfoUserDto fullInfoUserDto) {
+    keycloakService.createCustomer(fullInfoUserDto);
     Map<String, String> response = new HashMap<>();
     response.put("code", "201");
     response.put("message", "Register successfully");
-    return ResponseEntity.status(201).body(response);
+    return ResponseEntity.status(CREATED).body(response);
   }
 
-  @PostMapping("/register-employee")
-  @RolesAllowed("PREMIERE_ADMIN")
-  public ResponseEntity<Map<String, String>> registerEmployee(@RequestBody @Valid RegisterAccountDto registerAccountDto) {
-    keycloakService.createEmployee(registerAccountDto);
-    Map<String, String> response = new HashMap<>();
-    response.put("code", "201");
-    response.put("message", "Register successfully");
-    return ResponseEntity.status(201).body(response);
+  @PostMapping("/save-employee")
+  public ResponseEntity<Long> saveEmployee(@RequestBody @Valid FullInfoUserDto fullInfoUserDto) {
+    Long userId = keycloakService.saveEmployee(fullInfoUserDto);
+    return ResponseEntity.status(CREATED).body(userId);
   }
 
   @PostMapping("/request-otp")
@@ -89,10 +88,7 @@ public class AuthController {
 
   @PostMapping("/verify-otp")
   public ResponseEntity<?> verifyOTP(@RequestBody OTPDto otpDto) {
-    Boolean verifyOTP = otpService.verifyOTP(otpDto.getOtp(), otpDto.getEmail());
-    if (verifyOTP) {
-      return ResponseEntity.ok().build();
-    }
-    return ResponseEntity.badRequest().build();
+    boolean verifyOTP = otpService.verifyOTP(otpDto.getOtp(), otpDto.getEmail());
+    return verifyOTP ? ResponseEntity.ok().build() : ResponseEntity.badRequest().build();
   }
 }
