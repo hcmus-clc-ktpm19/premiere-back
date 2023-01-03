@@ -2,6 +2,13 @@ package org.hcmus.premiere.controller;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.hcmus.premiere.model.dto.ReceiverDto;
@@ -18,12 +25,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "Receivers API")
 @RestController
 @RequestMapping("/api/v1/receivers")
 @RequiredArgsConstructor
 public class ReceiverController extends AbstractApplicationController{
+
   private final ReceiverService receiverService;
 
+  @Operation(summary = "Get user's receivers by that user id")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200",
+          content = @Content(
+              mediaType = "application/json",
+              array = @ArraySchema(schema = @Schema(implementation = ReceiverDto.class))))
+  })
   @GetMapping
   public ResponseEntity<List<ReceiverDto>> getReceiverByUserId(@RequestParam("userId") Long userId) {
     return ResponseEntity.ok(
@@ -33,22 +49,48 @@ public class ReceiverController extends AbstractApplicationController{
             .toList());
   }
 
+  @Operation(summary = "Get user's receivers by that user's credit card number")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200",
+          content = @Content(
+              mediaType = "application/json",
+              schema = @Schema(implementation = ReceiverDto.class)))
+  })
   @GetMapping("/{cardNumber}")
   public ResponseEntity<ReceiverDto> getReceiverByCardNumber(@PathVariable String cardNumber) {
     Receiver receiver = receiverService.findReceiverByCardNumber(cardNumber);
     return ResponseEntity.ok(applicationMapper.toReceiverDto(receiver));
   }
 
+
+  @Operation(summary = "Save new receiver of a user by that user's id")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "201",
+          content = @Content(
+              mediaType = "application/json",
+              schema = @Schema(implementation = ReceiverDto.class)))
+  })
   @PostMapping
   public ResponseEntity<ReceiverDto> saveReceiver(@RequestBody ReceiverDto receiverDto) {
     return new ResponseEntity<>(applicationMapper.toReceiverDto(receiverService.saveReceiver(receiverDto)), CREATED);
   }
 
+  @Operation(summary = "Update a receiver of a user by that user's id")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200",
+          content = @Content(
+              mediaType = "application/json",
+              schema = @Schema(implementation = ReceiverDto.class)))
+  })
   @PutMapping
   public ResponseEntity<ReceiverDto> updateReceiver(@RequestBody ReceiverDto receiverDto) {
     return ResponseEntity.ok(applicationMapper.toReceiverDto(receiverService.updateReceiver(receiverDto)));
   }
 
+  @Operation(summary = "Delete a receiver of a user by that user's id")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "204", description = "The receiver is deleted successfully but no content is returned")
+  })
   @DeleteMapping("/{cardNumber}")
   public ResponseEntity<Void> deleteReceiver(@PathVariable String cardNumber) {
     receiverService.deleteReceiver(cardNumber);

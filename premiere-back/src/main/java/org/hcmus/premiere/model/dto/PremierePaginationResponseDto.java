@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class PremierePaginationReponseDto<T> {
+public class PremierePaginationResponseDto<T> {
 
   private List<T> payload;
   private MetaDataDto meta;
