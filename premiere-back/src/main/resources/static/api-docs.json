@@ -274,7 +274,8 @@
     },
     "/api/v1/loan-management/loan-reminder/cancel": {
       "put": {
-        "summary": "Update the status of a loan reminder to CANCELLED",
+        "summary": "Cancel loan reminder",
+        "description": "Update the status of a loan reminder to CANCELLED",
         "tags": [
           "Loan Management API"
         ],
@@ -333,6 +334,8 @@
     },
     "/api/v1/credit-card/deposit-money": {
       "put": {
+        "summary": "Deposit money to a credit card by credit card number or username",
+        "description": "Update the balance of a credit card",
         "tags": [
           "Credit Card API"
         ],
@@ -341,7 +344,11 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/DepositMoneyRequestDto"
+                "example": {
+                  "username": "admin",
+                  "creditCardNumber": "1234567890123457",
+                  "amount": 1000000
+                }
               }
             }
           },
@@ -351,7 +358,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "type": "integer",
                   "format": "int64"
@@ -366,39 +373,6 @@
                 "example": {
                   "message": "Credit card not found",
                   "i18nPlaceHolder": "CREDIT_CARD.NOT_FOUND"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Assign illegal data",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "Assign illegal data",
-                  "i18nPlaceHolder": "AUTH.ROLE.ASSIGN_ILLEGAL_EMPLOYEE_ROLE"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Wrong password",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "Wrong password",
-                  "i18nPlaceHolder": "AUTH.WRONG_PASSWORD"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Resource already existed",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "Receiver already existed",
-                  "i18nPlaceHolder": "RECEIVER.EXISTED"
                 }
               }
             }
@@ -419,15 +393,21 @@
     },
     "/api/v1/auth/reset-password": {
       "put": {
+        "summary": "Get back the password that user forgot",
         "tags": [
-          "auth-controller"
+          "Auth API"
         ],
         "operationId": "resetPassword",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/PasswordDto"
+                "example": {
+                  "username": null,
+                  "email": "admin@test.com",
+                  "currentPassword": "admin",
+                  "newPassword": "admin1"
+                }
               }
             }
           },
@@ -505,7 +485,7 @@
     "/api/v1/auth/change-password": {
       "put": {
         "tags": [
-          "auth-controller"
+          "Auth API"
         ],
         "operationId": "changePassword",
         "requestBody": {
@@ -1025,7 +1005,7 @@
     "/api/v1/auth/verify-otp": {
       "post": {
         "tags": [
-          "auth-controller"
+          "Auth API"
         ],
         "operationId": "verifyOTP",
         "requestBody": {
@@ -1110,7 +1090,7 @@
     "/api/v1/auth/save-employee": {
       "post": {
         "tags": [
-          "auth-controller"
+          "Auth API"
         ],
         "operationId": "saveEmployee",
         "requestBody": {
@@ -1196,7 +1176,7 @@
     "/api/v1/auth/request-otp": {
       "post": {
         "tags": [
-          "auth-controller"
+          "Auth API"
         ],
         "operationId": "requestOTP",
         "requestBody": {
@@ -1281,7 +1261,7 @@
     "/api/v1/auth/register-customer": {
       "post": {
         "tags": [
-          "auth-controller"
+          "Auth API"
         ],
         "operationId": "registerCustomer",
         "requestBody": {
@@ -2239,7 +2219,7 @@
       "get": {
         "summary": "Get user info by token",
         "tags": [
-          "auth-controller"
+          "Auth API"
         ],
         "operationId": "getUserByToken",
         "responses": {
