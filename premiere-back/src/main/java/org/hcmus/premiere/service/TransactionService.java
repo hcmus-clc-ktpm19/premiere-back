@@ -17,7 +17,7 @@ public interface TransactionService {
 
   long getTotalElements(TransactionType transactionType, Long customerId);
 
-  @PreAuthorize("@SecurityUtils.isCustomer() or @SecurityUtils.isStaff()")
+  @PreAuthorize("@SecurityUtils.isCustomer or @SecurityUtils.employeeOrAdmin")
   List<Transaction> getTransactionsByCustomerId(
       long page,
       long size,
