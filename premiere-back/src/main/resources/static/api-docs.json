@@ -22,6 +22,7 @@
         "operationId": "getReceiverByUserId",
         "parameters": [
           {
+            "example": 1,
             "name": "userId",
             "in": "query",
             "required": true,
@@ -132,7 +133,7 @@
               "schema": {
                 "example": {
                   "id": 1,
-                  "cardNumber": "1234567890123456",
+                  "cardNumber": "1234567890123451",
                   "nickname": "Nam",
                   "fullName": "Nguyen Duc Nam",
                   "userId": 1,
@@ -207,7 +208,7 @@
             "application/json": {
               "schema": {
                 "example": {
-                  "cardNumber": "1234567890123457",
+                  "cardNumber": "1234567890123451",
                   "nickname": "Nam",
                   "fullName": "Nguyen Duc Nam",
                   "userId": 1,
@@ -984,6 +985,8 @@
     },
     "/api/v1/auth/save-employee": {
       "post": {
+        "summary": "Save the employee information",
+        "description": "The API can either create or update employee information",
         "tags": [
           "Auth API"
         ],
@@ -992,7 +995,18 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/FullInfoUserDto"
+                "example": {
+                  "username": "employee1",
+                  "email": "employee2@test.com",
+                  "firstName": "Nhat",
+                  "lastName": "Minh",
+                  "phone": "0826081111",
+                  "gender": "MALE",
+                  "panNumber": "1234567899",
+                  "address": "Hue",
+                  "password": "employee1",
+                  "role": "EMPLOYEE"
+                }
               }
             }
           },
@@ -1002,7 +1016,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "type": "integer",
                   "format": "int64"
@@ -1010,14 +1024,11 @@
               }
             }
           },
-          "202": {
-            "description": "Resource not found",
+          "201": {
+            "description": "Created",
             "content": {
               "application/json": {
-                "example": {
-                  "message": "Credit card not found",
-                  "i18nPlaceHolder": "CREDIT_CARD.NOT_FOUND"
-                }
+                "example": 1
               }
             }
           },
@@ -1032,24 +1043,13 @@
               }
             }
           },
-          "401": {
-            "description": "Wrong password",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "Wrong password",
-                  "i18nPlaceHolder": "AUTH.WRONG_PASSWORD"
-                }
-              }
-            }
-          },
           "409": {
             "description": "Resource already existed",
             "content": {
               "application/json": {
                 "example": {
-                  "message": "Receiver already existed",
-                  "i18nPlaceHolder": "RECEIVER.EXISTED"
+                  "message": "Email already existed",
+                  "i18nPlaceHolder": "EMAIL.EXISTED"
                 }
               }
             }
@@ -1155,6 +1155,7 @@
     },
     "/api/v1/auth/register-customer": {
       "post": {
+        "summary": "Register customer",
         "tags": [
           "Auth API"
         ],
@@ -1163,7 +1164,18 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/FullInfoUserDto"
+                "example": {
+                  "username": "minhnhat0212",
+                  "email": "lengocminhnhatntp@gmail.com",
+                  "firstName": "Minh Nhat",
+                  "lastName": "Le",
+                  "phone": "0123456722",
+                  "gender": "MALE",
+                  "panNumber": "19191196549",
+                  "address": "Ho Chi Minh",
+                  "password": "minhnhat0212",
+                  "role": "CUSTOMER"
+                }
               }
             }
           },
@@ -1173,7 +1185,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "type": "object",
                   "additionalProperties": {
@@ -1188,8 +1200,8 @@
             "content": {
               "application/json": {
                 "example": {
-                  "message": "Credit card not found",
-                  "i18nPlaceHolder": "CREDIT_CARD.NOT_FOUND"
+                  "message": "User not found",
+                  "i18nPlaceHolder": "USER.NOT_FOUND"
                 }
               }
             }
@@ -1205,24 +1217,13 @@
               }
             }
           },
-          "401": {
-            "description": "Wrong password",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "Wrong password",
-                  "i18nPlaceHolder": "AUTH.WRONG_PASSWORD"
-                }
-              }
-            }
-          },
           "409": {
             "description": "Resource already existed",
             "content": {
               "application/json": {
                 "example": {
-                  "message": "Receiver already existed",
-                  "i18nPlaceHolder": "RECEIVER.EXISTED"
+                  "message": "Phone number already existed",
+                  "i18nPlaceHolder": "PHONE.EXISTED"
                 }
               }
             }
@@ -1451,6 +1452,7 @@
         "operationId": "getReceiverByCardNumber",
         "parameters": [
           {
+            "example": "1234567890123451",
             "name": "cardNumber",
             "in": "path",
             "required": true,
@@ -1535,6 +1537,7 @@
         "operationId": "deleteReceiver",
         "parameters": [
           {
+            "example": "1234567890123451",
             "name": "cardNumber",
             "in": "path",
             "required": true,
