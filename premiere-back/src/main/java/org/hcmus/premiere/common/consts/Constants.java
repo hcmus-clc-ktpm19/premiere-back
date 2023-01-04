@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 public class Constants {
     public static final String CREDIT_CARD_NUMBER_BIN = "2102";
-    public static final int CREDIT_CARD_NUMBER_LENGTH = 12;
+    public static final int CREDIT_CARD_NUMBER_LENGTH = 16;
     public static final BigDecimal CREDIT_CARD_INITIAL_BALANCE = new BigDecimal(50000);
     public static final String KEYCLOAK_TOKEN_URL = "http://localhost:8180/realms/premiere-realm/protocol/openid-connect/token";
     public static final BigDecimal MINIMUM_AMOUNT_TO_WITHDRAW = new BigDecimal(10000);
@@ -21,6 +21,7 @@ public class Constants {
     public static final String SENDER_AND_RECEIVER_ARE_SAME = "Both the sender and the receiver must be unique";
     public static final String TRANSACTION_ALREADY_COMPLETED = "Transaction has been completed";
     public static final String LOAN_REMINDER_STATUS_IS_NOT_PENDING = "The loan reminder status is not pending";
+    public static final String INVALID_RSA_TOKEN = "The RSA token is invalid";
 
 
     }
