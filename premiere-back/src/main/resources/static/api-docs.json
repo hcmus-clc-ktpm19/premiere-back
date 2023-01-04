@@ -405,7 +405,7 @@
                 "example": {
                   "username": null,
                   "email": "admin@test.com",
-                  "currentPassword": "admin",
+                  "currentPassword": null,
                   "newPassword": "admin1"
                 }
               }
@@ -415,58 +415,7 @@
         },
         "responses": {
           "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
-          "202": {
-            "description": "Resource not found",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "Credit card not found",
-                  "i18nPlaceHolder": "CREDIT_CARD.NOT_FOUND"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Assign illegal data",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "Assign illegal data",
-                  "i18nPlaceHolder": "AUTH.ROLE.ASSIGN_ILLEGAL_EMPLOYEE_ROLE"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Wrong password",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "Wrong password",
-                  "i18nPlaceHolder": "AUTH.WRONG_PASSWORD"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Resource already existed",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "Receiver already existed",
-                  "i18nPlaceHolder": "RECEIVER.EXISTED"
-                }
-              }
-            }
+            "description": "OK"
           },
           "500": {
             "description": "Unexpected error",
@@ -484,6 +433,7 @@
     },
     "/api/v1/auth/change-password": {
       "put": {
+        "summary": "Change the password of a user",
         "tags": [
           "Auth API"
         ],
@@ -492,7 +442,12 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/PasswordDto"
+                "example": {
+                  "username": "admin",
+                  "email": null,
+                  "currentPassword": "admin",
+                  "newPassword": "admin1"
+                }
               }
             }
           },
@@ -500,14 +455,7 @@
         },
         "responses": {
           "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
+            "description": "OK"
           },
           "202": {
             "description": "Resource not found",
@@ -520,17 +468,6 @@
               }
             }
           },
-          "400": {
-            "description": "Assign illegal data",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "Assign illegal data",
-                  "i18nPlaceHolder": "AUTH.ROLE.ASSIGN_ILLEGAL_EMPLOYEE_ROLE"
-                }
-              }
-            }
-          },
           "401": {
             "description": "Wrong password",
             "content": {
@@ -538,17 +475,6 @@
                 "example": {
                   "message": "Wrong password",
                   "i18nPlaceHolder": "AUTH.WRONG_PASSWORD"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Resource already existed",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "Receiver already existed",
-                  "i18nPlaceHolder": "RECEIVER.EXISTED"
                 }
               }
             }
@@ -569,8 +495,10 @@
     },
     "/api/v1/transactions/users/{userId}/get-transactions": {
       "post": {
+        "summary": "Get user's transactions by user id",
+        "description": "Get transactions by category, order, and page",
         "tags": [
-          "transaction-controller"
+          "Transactions API"
         ],
         "operationId": "getTransactionsByCustomerId",
         "parameters": [
@@ -588,7 +516,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/TransactionCriteriaDto"
+                "example": {}
               }
             }
           },
@@ -598,7 +526,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PremierePaginationResponseDtoTransactionDto"
                 }
@@ -610,41 +538,8 @@
             "content": {
               "application/json": {
                 "example": {
-                  "message": "Credit card not found",
-                  "i18nPlaceHolder": "CREDIT_CARD.NOT_FOUND"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Assign illegal data",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "Assign illegal data",
-                  "i18nPlaceHolder": "AUTH.ROLE.ASSIGN_ILLEGAL_EMPLOYEE_ROLE"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Wrong password",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "Wrong password",
-                  "i18nPlaceHolder": "AUTH.WRONG_PASSWORD"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Resource already existed",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "Receiver already existed",
-                  "i18nPlaceHolder": "RECEIVER.EXISTED"
+                  "message": "User not found",
+                  "i18nPlaceHolder": "USER.NOT_FOUND"
                 }
               }
             }
@@ -666,7 +561,7 @@
     "/api/v1/transactions/money-transfer": {
       "post": {
         "tags": [
-          "transaction-controller"
+          "Transactions API"
         ],
         "operationId": "transferMoney",
         "requestBody": {
@@ -751,7 +646,7 @@
     "/api/v1/transactions/money-transfer/validate": {
       "post": {
         "tags": [
-          "transaction-controller"
+          "Transactions API"
         ],
         "operationId": "validateTransferMoney",
         "requestBody": {
@@ -1348,64 +1243,22 @@
     },
     "/api/v2/external/banks/customers": {
       "get": {
+        "summary": "Get list of customers calling from external bank",
+        "description": "API to test the external API",
         "tags": [
-          "external-controller"
+          "External API"
         ],
         "operationId": "getUsersForExternalBank",
         "responses": {
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/UserDto"
                   }
-                }
-              }
-            }
-          },
-          "202": {
-            "description": "Resource not found",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "Credit card not found",
-                  "i18nPlaceHolder": "CREDIT_CARD.NOT_FOUND"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Assign illegal data",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "Assign illegal data",
-                  "i18nPlaceHolder": "AUTH.ROLE.ASSIGN_ILLEGAL_EMPLOYEE_ROLE"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Wrong password",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "Wrong password",
-                  "i18nPlaceHolder": "AUTH.WRONG_PASSWORD"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Resource already existed",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "Receiver already existed",
-                  "i18nPlaceHolder": "RECEIVER.EXISTED"
                 }
               }
             }
@@ -1426,8 +1279,10 @@
     },
     "/api/v2/external/banks/credit-cards": {
       "get": {
+        "summary": "Get list of credit cards calling from external bank",
+        "description": "API to test the external API",
         "tags": [
-          "external-controller"
+          "External API"
         ],
         "operationId": "getCreditCardsForExternalBank",
         "responses": {
@@ -1505,7 +1360,7 @@
     "/api/v2/external/banks/credit-cards/{creditCardNumber}": {
       "get": {
         "tags": [
-          "external-controller"
+          "External API"
         ],
         "operationId": "getCreditCardByNumberForExternalBank",
         "parameters": [
@@ -1968,6 +1823,7 @@
     },
     "/api/v1/credit-card/external-bank/{externalBankName}/card-number/{cardNumber}": {
       "get": {
+        "summary": "Get credit card information from external bank by external bank id and card number",
         "tags": [
           "Credit Card API"
         ],
@@ -1979,7 +1835,8 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int64"
+              "format": "int64",
+              "example": 1
             }
           },
           {
@@ -1987,7 +1844,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "1234567890123457"
             }
           }
         ],
@@ -2009,39 +1867,6 @@
                 "example": {
                   "message": "Credit card not found",
                   "i18nPlaceHolder": "CREDIT_CARD.NOT_FOUND"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Assign illegal data",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "Assign illegal data",
-                  "i18nPlaceHolder": "AUTH.ROLE.ASSIGN_ILLEGAL_EMPLOYEE_ROLE"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Wrong password",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "Wrong password",
-                  "i18nPlaceHolder": "AUTH.WRONG_PASSWORD"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Resource already existed",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "Receiver already existed",
-                  "i18nPlaceHolder": "RECEIVER.EXISTED"
                 }
               }
             }
