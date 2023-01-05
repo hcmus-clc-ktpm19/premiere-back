@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.hcmus.premiere.common.consts.Constants;
 import org.hcmus.premiere.model.dto.TransactionRequestDto;
+import org.hcmus.premiere.model.entity.Bank;
 import org.hcmus.premiere.model.entity.CreditCard;
 import org.hcmus.premiere.model.entity.LoanReminder;
 import org.hcmus.premiere.model.enums.LoanStatus;
@@ -51,8 +52,8 @@ public class ValidationServiceImpl implements ValidationService {
       if(StringUtils.isEmpty(transactionRequestDto.getReceiverBankName())) {
         throw new IllegalArgumentException(Constants.BANK_NAME_IS_NOT_VALID);
       }
-      bankService.findBankByName(transactionRequestDto.getReceiverBankName());
-      // TODO: validate receiver card number from other bank (rest template)
+      Bank receiverBank = bankService.findBankByName(transactionRequestDto.getReceiverBankName());
+      creditCardService.getCreditCardByNumberAndExternalBankId(receiverBank.getId(), transactionRequestDto.getReceiverCardNumber());
     }
     return true;
   }

@@ -88,6 +88,15 @@ public class CreditCardServiceImpl implements CreditCardService {
   }
 
   @Override
+  public CreditCard findCreditCardByNumberExternal(String number) {
+    return creditCardRepository
+        .findCreditCardByCardNumber(number)
+        .orElseThrow(
+            () -> new CreditCardNotFoundException("Credit card with number not found", number,
+                CREDIT_CARD_NOT_FOUND));
+  }
+
+  @Override
   public CreditCard findCreditCardByUserId(Long id) {
     User user = userService.findUserById(id);
     return creditCardRepository
