@@ -12,10 +12,11 @@ import org.hcmus.premiere.service.BankService;
 import org.hcmus.premiere.service.CreditCardService;
 import org.hcmus.premiere.service.ValidationService;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
+@Transactional(rollbackFor = Throwable.class)
 @AllArgsConstructor
 public class ValidationServiceImpl implements ValidationService {
 
