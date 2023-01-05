@@ -20,6 +20,7 @@ import org.hcmus.premiere.model.exception.IllegalRoleAssignException;
 import org.hcmus.premiere.model.exception.PremiereAbstractException;
 import org.hcmus.premiere.model.exception.WrongPasswordException;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -90,10 +91,13 @@ public class ExceptionController {
               }"""
       ))
   )
-  public ResponseEntity<ErrorDto> handleIllegalArgumentException(PremiereAbstractException e) {
-    return ResponseEntity
-        .badRequest()
-        .body(new ErrorDto(e.getMessage(), e.getI18nPlaceHolder()));
+  public ResponseEntity<Map<String, String>> handleIllegalArgumentException(
+      IllegalArgumentException e) {
+    log.error(e.getMessage(), e);
+    Map<String, String> response = new HashMap<>();
+    response.put(ERROR_MESSAGE, e.getMessage());
+
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
   }
 
   @ExceptionHandler(DataIntegrityViolationException.class)

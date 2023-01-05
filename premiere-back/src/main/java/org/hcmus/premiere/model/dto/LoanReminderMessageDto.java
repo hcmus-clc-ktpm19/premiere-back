@@ -10,4 +10,5 @@ public class LoanReminderMessageDto implements Serializable {
   private String receiverName;
   private Long receiverId;
   private String message;
+  private String destination;
 }
