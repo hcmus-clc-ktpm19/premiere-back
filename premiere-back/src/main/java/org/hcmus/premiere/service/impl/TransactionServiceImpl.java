@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
+@Transactional(rollbackFor = Throwable.class)
 @AllArgsConstructor
 public class TransactionServiceImpl implements TransactionService {
 

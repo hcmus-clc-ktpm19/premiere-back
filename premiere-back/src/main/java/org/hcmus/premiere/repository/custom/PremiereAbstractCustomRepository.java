@@ -5,9 +5,8 @@ import com.querydsl.core.types.Expression;
 import com.querydsl.jpa.impl.JPAQuery;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import org.hcmus.premiere.model.entity.PremiereAbstractEntity;
 
-public abstract class PremiereAbstractCustomRepository<T extends PremiereAbstractEntity> {
+public abstract class PremiereAbstractCustomRepository<T> {
 
   @PersistenceContext
   protected EntityManager entityManager;

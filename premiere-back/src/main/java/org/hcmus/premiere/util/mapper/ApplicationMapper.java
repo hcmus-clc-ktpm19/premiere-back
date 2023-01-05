@@ -38,9 +38,7 @@ public class ApplicationMapper {
       ReceiverDto receiverDto = new ReceiverDto();
       receiverDto.setId(receiver.getId());
       receiverDto.setCardNumber(receiver.getCardNumber());
-      receiverDto.setNickname(receiver.getNickname());
-      receiverDto.setFullName(receiver.getFullName());
-      receiverDto.setUserId(receiver.getUser().getId());
+      receiverDto.setUserId(receiver.getId());
       receiverDto.setBankName(receiver.getBank().getBankName());
       return receiverDto;
     }
