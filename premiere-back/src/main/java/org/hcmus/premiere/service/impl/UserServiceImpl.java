@@ -15,9 +15,11 @@ import org.hcmus.premiere.model.exception.UserNotFoundException;
 import org.hcmus.premiere.repository.UserRepository;
 import org.hcmus.premiere.service.UserService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
+@Transactional(rollbackFor = Throwable.class)
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
 

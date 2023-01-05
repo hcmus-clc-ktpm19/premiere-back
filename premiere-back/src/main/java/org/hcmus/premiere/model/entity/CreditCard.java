@@ -8,7 +8,6 @@ import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -34,7 +33,7 @@ public class CreditCard extends PremiereAbstractEntity {
   private String cardNumber;
 
   @JsonIgnore
-  @OneToOne(fetch = FetchType.LAZY)
+  @OneToOne
   @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false, unique = true)
   @ToString.Exclude
   private User user;

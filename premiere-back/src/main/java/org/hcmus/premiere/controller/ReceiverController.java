@@ -13,7 +13,9 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.hcmus.premiere.model.dto.ReceiverDto;
 import org.hcmus.premiere.model.entity.Receiver;
+import org.hcmus.premiere.model.entity.UserReceiver;
 import org.hcmus.premiere.service.ReceiverService;
+import org.hcmus.premiere.service.UserReceiverService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +35,8 @@ public class ReceiverController extends AbstractApplicationController{
 
   private final ReceiverService receiverService;
 
+  private final UserReceiverService userReceiverService;
+
   @Operation(summary = "Get user's receivers by that user id")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200",
@@ -43,9 +47,15 @@ public class ReceiverController extends AbstractApplicationController{
   @GetMapping
   public ResponseEntity<List<ReceiverDto>> getReceiverByUserId(@RequestParam("userId") Long userId) {
     return ResponseEntity.ok(
-        receiverService.findAllReceiverByUserId(userId)
+        receiverService.findAllReceiversByUserId(userId)
             .stream()
-            .map(applicationMapper::toReceiverDto)
+            .map(receiver -> {
+              UserReceiver userReceiver = userReceiverService.getUserReceiverByUserIdAndReceiverId(userId, receiver.getId());
+              ReceiverDto receiverDto = applicationMapper.toReceiverDto(receiver);
+              receiverDto.setNickname(userReceiver.getNickname());
+              receiverDto.setFullName(userReceiver.getFullName());
+              return receiverDto;
+            })
             .toList());
   }
 
@@ -56,10 +66,17 @@ public class ReceiverController extends AbstractApplicationController{
               mediaType = "application/json",
               schema = @Schema(implementation = ReceiverDto.class)))
   })
-  @GetMapping("/{cardNumber}")
-  public ResponseEntity<ReceiverDto> getReceiverByCardNumber(@PathVariable String cardNumber) {
+  @GetMapping("/{userId}/{cardNumber}")
+  public ResponseEntity<ReceiverDto> getReceiverByCardNumber(
+      @PathVariable Long userId,
+      @PathVariable String cardNumber
+  ) {
     Receiver receiver = receiverService.findReceiverByCardNumber(cardNumber);
-    return ResponseEntity.ok(applicationMapper.toReceiverDto(receiver));
+    UserReceiver userReceiver = userReceiverService.getUserReceiverByUserIdAndReceiverId(userId, receiver.getId());
+    ReceiverDto receiverDto = applicationMapper.toReceiverDto(receiver);
+    receiverDto.setNickname(userReceiver.getNickname());
+    receiverDto.setFullName(userReceiver.getFullName());
+    return ResponseEntity.ok(receiverDto);
   }
 
 

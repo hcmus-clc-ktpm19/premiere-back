@@ -48,7 +48,7 @@ CREATE TABLE "bank"
 CREATE TABLE "receiver"
 (
     "id"          SERIAL       NOT NULL,
-    "card_number" VARCHAR(255) NOT NULL,
+    "card_number" VARCHAR(255) NOT NULL UNIQUE,
     "nickname"    VARCHAR(255) NOT NULL,
     "full_name"   VARCHAR(255) NOT NULL,
     "user_id"     INTEGER      NOT NULL,

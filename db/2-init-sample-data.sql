@@ -64,4 +64,4 @@ VALUES ('1234567890123456', 'Nam', 'Nguyen Duc Nam', 2, 1);
 INSERT INTO "receiver"(card_number, nickname, full_name, user_id, bank_id)
 VALUES ('1234567890123457', 'Giap', 'Hoang Huu Giap', 1, 2);
 INSERT INTO "receiver"(card_number, nickname, full_name, user_id, bank_id)
-VALUES ('1234567890123456', 'Nhat', 'Le Ngoc Minh Nhat', 1, 3);
+VALUES ('1234567890123458', 'Nhat', 'Le Ngoc Minh Nhat', 1, 3);

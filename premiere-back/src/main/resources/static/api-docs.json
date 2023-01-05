@@ -1,5 +1,8 @@
 {
-
+  "info": {
+    "title": "Premiere API Documentation",
+    "version": "0.0.2"
+  },
   "openapi": "3.0.1",
   "servers": [
     {
@@ -75,39 +78,6 @@
               }
             }
           },
-          "400": {
-            "description": "Assign illegal data",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "Assign illegal data",
-                  "i18nPlaceHolder": "AUTH.ROLE.ASSIGN_ILLEGAL_EMPLOYEE_ROLE"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Wrong password",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "Wrong password",
-                  "i18nPlaceHolder": "AUTH.WRONG_PASSWORD"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Resource already existed",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "Receiver already existed",
-                  "i18nPlaceHolder": "RECEIVER.EXISTED"
-                }
-              }
-            }
-          },
           "500": {
             "description": "Unexpected error",
             "content": {
@@ -126,11 +96,13 @@
           "Receivers API"
         ],
         "summary": "Update a receiver of a user by that user's id",
+        "description": "Need to provide id (receiver id) and user id to update",
         "operationId": "updateReceiver",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
+                "description": "id stands for receiver id",
                 "example": {
                   "id": 1,
                   "cardNumber": "1234567890123451",
@@ -1443,14 +1415,24 @@
         }
       }
     },
-    "/api/v1/receivers/{cardNumber}": {
+    "/api/v1/receivers/{userId}/{cardNumber}": {
       "get": {
         "tags": [
           "Receivers API"
         ],
-        "summary": "Get user's receivers by that user's credit card number",
+        "summary": "Get user's receiver by the receiver's card number",
         "operationId": "getReceiverByCardNumber",
         "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 1
+            }
+          },
           {
             "example": "1234567890123451",
             "name": "cardNumber",
@@ -2606,8 +2588,4 @@
       }
     }
   },
-  "info": {
-    "title": "Premiere API Documentation",
-    "version": "0.0.1"
-  }
 }
