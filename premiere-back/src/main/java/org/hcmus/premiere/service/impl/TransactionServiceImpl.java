@@ -8,10 +8,9 @@ import java.security.InvalidKeyException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Map;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.hcmus.premiere.common.consts.Constants;
 import org.hcmus.premiere.model.dto.DepositMoneyExternalRequestDto;
 import org.hcmus.premiere.model.dto.TransferMoneyRequestDto;
@@ -117,7 +116,6 @@ public class TransactionServiceImpl implements TransactionService {
       creditCardService.updateCreditCard(senderCard);
       creditCardService.updateCreditCard(receiverCard);
       transaction.setStatus(TransactionStatus.COMPLETED);
-
     } catch (Exception e) {
       transaction.setStatus(TransactionStatus.FAILED);
     } finally {
@@ -129,6 +127,7 @@ public class TransactionServiceImpl implements TransactionService {
     try {
       CreditCard senderCard = creditCardService.findCreditCardByNumber(transaction.getSenderCreditCardNumber());
       transaction.setSenderBalance(senderCard.getBalance());
+      transaction.setReceiverBalance(BigDecimal.ZERO);
       DepositMoneyExternalRequestDto depositMoneyExternalRequestDto = new DepositMoneyExternalRequestDto();
       depositMoneyExternalRequestDto.setSenderCreditCardNumber(transaction.getSenderCreditCardNumber());
       depositMoneyExternalRequestDto.setReceiverCreditCardNumber(transaction.getReceiverCreditCardNumber());
@@ -159,19 +158,32 @@ public class TransactionServiceImpl implements TransactionService {
     String authToken = securityUtils.hash(servletPath + credentialsTime + zoneId + secretKey);
     String rsaToken = securityUtils.encrypt(env.getProperty("system-auth.secret-key"), true);
     depositMoneyExternalRequestDto.setRsaToken(rsaToken);
-    resource.transferMoneyExternalBankId(
-        authToken,
-        credentialsTime,
-        zoneId,
-        depositMoneyExternalRequestDto
-    );
+    try{
+      Map<String, String> res = (Map<String, String>) resource.transferMoneyExternalBankId(
+          authToken,
+          credentialsTime,
+          zoneId,
+          depositMoneyExternalRequestDto
+      );
+      if(!securityUtils.decrypt(res.get("rsaToken"), true).equals(env.getProperty("system-auth.secret-key"))) {
+        throw new IllegalArgumentException(Constants.INVALID_RSA_TOKEN);
+      }
+    } catch (Exception e) {
+      throw new IllegalArgumentException(Constants.EXTERNAL_BANK_ERROR);
+    }
   }
 
-  public void transferMoneyExternalBankId(DepositMoneyExternalRequestDto depositMoneyExternalRequestDto)
+  @Override
+  public String transferMoneyExternalBank(DepositMoneyExternalRequestDto depositMoneyExternalRequestDto)
       throws InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
     if(!securityUtils.decrypt(depositMoneyExternalRequestDto.getRsaToken(), true).equals(env.getProperty("system-auth.secret-key"))) {
       throw new IllegalArgumentException(Constants.INVALID_RSA_TOKEN);
     }
+    CreditCard receiverCard = creditCardService.findCreditCardByNumberExternal(depositMoneyExternalRequestDto.getReceiverCreditCardNumber());
+    receiverCard.setBalance(receiverCard.getBalance().add(depositMoneyExternalRequestDto.getAmount()));
+    creditCardService.updateCreditCard(receiverCard);
+    //TODO: save transaction external bank
+    return securityUtils.encrypt(env.getProperty("system-auth.secret-key"), true);
   }
 
   private boolean verifyOTP(String otp, CheckingTransaction checkingTransaction){

@@ -22,6 +22,7 @@ public class Constants {
     public static final String TRANSACTION_ALREADY_COMPLETED = "Transaction has been completed";
     public static final String LOAN_REMINDER_STATUS_IS_NOT_PENDING = "The loan reminder status is not pending";
     public static final String INVALID_RSA_TOKEN = "The RSA token is invalid";
+    public static final String EXTERNAL_BANK_ERROR = "The external bank is not available";
 
 
     }
