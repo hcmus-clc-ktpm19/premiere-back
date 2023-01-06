@@ -25,11 +25,17 @@ public interface KeycloakService {
   @PreAuthorize("hasRole('EMPLOYEE')")
   Set<UserRepresentation> getAllCustomers();
 
+  @PreAuthorize("hasRole('EMPLOYEE')")
+  UserRepresentation getCustomerById(Long id);
+
   @PreAuthorize("hasRole('PREMIERE_ADMIN')")
   Long saveEmployee(FullInfoUserDto fullInfoUserDto);
 
   @PreAuthorize("hasRole('PREMIERE_ADMIN')")
   Set<UserRepresentation> getAllEmployees();
+
+  @PreAuthorize("hasRole('PREMIERE_ADMIN')")
+  UserRepresentation getEmployeeById(Long id);
 
   @PreAuthorize("hasRole('PREMIERE_ADMIN')")
   void changeEmployeeAccountStatus(EmployeeStatusDto employeeStatusDto);

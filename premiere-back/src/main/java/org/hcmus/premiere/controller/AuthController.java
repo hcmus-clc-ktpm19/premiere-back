@@ -25,6 +25,7 @@ import org.hcmus.premiere.service.UserService;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -86,6 +87,13 @@ public class AuthController extends AbstractApplicationController {
     return ResponseEntity.status(CREATED).body(employeeId);
   }
 
+  @GetMapping("/get-employee/{id}")
+  public ResponseEntity<FullInfoUserDto> getEmployeeById(@PathVariable Long id) {
+    UserRepresentation userRepresentation = keycloakService.getEmployeeById(id);
+    User user = userService.findUserById(Long.valueOf(userRepresentation.getAttributes().get("userId").get(0)));
+    return ResponseEntity.ok().body(applicationMapper.toFullInfoUserDto(user, userRepresentation, EMPLOYEE.value));
+  }
+
   @GetMapping("/get-employees")
   public ResponseEntity<List<FullInfoUserDto>> getAllEmployees() {
     Set<UserRepresentation> userRepresentations = keycloakService.getAllEmployees();
@@ -98,6 +106,18 @@ public class AuthController extends AbstractApplicationController {
         })
         .collect(Collectors.toList());
     return ResponseEntity.ok().body(employees);
+  }
+
+  @GetMapping("/get-customer/{id}")
+  public ResponseEntity<FullInfoUserDto> getCustomerById(@PathVariable Long id) {
+    UserRepresentation userRepresentation = keycloakService.getCustomerById(id);
+    User user = userService.findUserById(Long.valueOf(userRepresentation.getAttributes().get("userId").get(0)));
+
+    if (user == null) {
+      return ResponseEntity.notFound().build();
+    }
+
+    return ResponseEntity.ok().body(applicationMapper.toFullInfoUserDto(user, userRepresentation, CUSTOMER.value));
   }
 
   @GetMapping("/get-customers")

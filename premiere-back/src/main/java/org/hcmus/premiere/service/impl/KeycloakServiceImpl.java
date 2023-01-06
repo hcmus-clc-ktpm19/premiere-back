@@ -2,6 +2,8 @@ package org.hcmus.premiere.service.impl;
 
 import static org.hcmus.premiere.model.enums.PremiereRole.CUSTOMER;
 import static org.hcmus.premiere.model.enums.PremiereRole.EMPLOYEE;
+import static org.hcmus.premiere.model.exception.UserNotFoundException.USER_NOT_FOUND;
+import static org.hcmus.premiere.model.exception.UserNotFoundException.USER_NOT_FOUND_MESSAGE;
 import static org.hcmus.premiere.model.exception.WrongPasswordException.WRONG_PASSWORD_I18N_PLACEHOLDER;
 import static org.hcmus.premiere.model.exception.WrongPasswordException.WRONG_PASSWORD_MESSAGE;
 
@@ -310,6 +312,19 @@ public class KeycloakServiceImpl implements KeycloakService {
   }
 
   @Override
+  public UserRepresentation getEmployeeById(Long id) {
+    Set<UserRepresentation> userRepresentations = realmResource
+        .roles()
+        .get(EMPLOYEE.value)
+        .getRoleUserMembers();
+
+    return userRepresentations.stream()
+        .filter(userRepresentation -> userRepresentation.getAttributes().get("userId").get(0).equals(String.valueOf(id)))
+        .findFirst()
+        .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND_MESSAGE, id.toString(), USER_NOT_FOUND));
+  }
+
+  @Override
   public Set<UserRepresentation> getAllCustomers() {
     Set<UserRepresentation> userRepresentations = realmResource
         .roles()
@@ -317,5 +332,18 @@ public class KeycloakServiceImpl implements KeycloakService {
         .getRoleUserMembers();
 
     return userRepresentations;
+  }
+
+  @Override
+  public UserRepresentation getCustomerById(Long id) {
+    Set<UserRepresentation> userRepresentations = realmResource
+        .roles()
+        .get(CUSTOMER.value)
+        .getRoleUserMembers();
+
+    return userRepresentations.stream()
+        .filter(userRepresentation -> userRepresentation.getAttributes().get("userId").get(0).equals(String.valueOf(id)))
+        .findFirst()
+        .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND_MESSAGE, id.toString(), USER_NOT_FOUND));
   }
 }
