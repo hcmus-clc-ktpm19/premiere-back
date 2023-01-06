@@ -87,7 +87,7 @@ public class AuthController extends AbstractApplicationController {
     return ResponseEntity.status(CREATED).body(employeeId);
   }
 
-  @GetMapping("/get-employee/{id}")
+  @GetMapping("/get-employees/{id}")
   public ResponseEntity<FullInfoUserDto> getEmployeeById(@PathVariable Long id) {
     UserRepresentation userRepresentation = keycloakService.getEmployeeById(id);
     User user = userService.findUserById(Long.valueOf(userRepresentation.getAttributes().get("userId").get(0)));
@@ -108,7 +108,7 @@ public class AuthController extends AbstractApplicationController {
     return ResponseEntity.ok().body(employees);
   }
 
-  @GetMapping("/get-customer/{id}")
+  @GetMapping("/get-customers/{id}")
   public ResponseEntity<FullInfoUserDto> getCustomerById(@PathVariable Long id) {
     UserRepresentation userRepresentation = keycloakService.getCustomerById(id);
     User user = userService.findUserById(Long.valueOf(userRepresentation.getAttributes().get("userId").get(0)));
