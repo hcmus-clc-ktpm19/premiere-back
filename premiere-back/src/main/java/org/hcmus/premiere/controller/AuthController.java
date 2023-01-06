@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.hcmus.premiere.common.consts.PremiereApiUrls;
+import org.hcmus.premiere.model.dto.EmployeeStatusDto;
 import org.hcmus.premiere.model.dto.FullInfoUserDto;
 import org.hcmus.premiere.model.dto.OTPDto;
 import org.hcmus.premiere.model.dto.PasswordDto;
@@ -111,6 +112,12 @@ public class AuthController extends AbstractApplicationController {
         })
         .collect(Collectors.toList());
     return ResponseEntity.ok().body(customers);
+  }
+
+  @PostMapping("/change-employee-status")
+  public ResponseEntity<?> changeEmployeeAccountStatus(@RequestBody EmployeeStatusDto employeeStatusDto) {
+    keycloakService.changeEmployeeAccountStatus(employeeStatusDto);
+    return ResponseEntity.ok().build();
   }
 
 

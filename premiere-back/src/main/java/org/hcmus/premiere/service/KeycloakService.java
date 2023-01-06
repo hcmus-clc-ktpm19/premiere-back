@@ -1,6 +1,7 @@
 package org.hcmus.premiere.service;
 
 import java.util.Set;
+import org.hcmus.premiere.model.dto.EmployeeStatusDto;
 import org.hcmus.premiere.model.dto.FullInfoUserDto;
 import org.hcmus.premiere.model.dto.PasswordDto;
 import org.keycloak.representations.idm.RoleRepresentation;
@@ -29,6 +30,9 @@ public interface KeycloakService {
 
   @PreAuthorize("hasRole('PREMIERE_ADMIN')")
   Set<UserRepresentation> getAllEmployees();
+
+  @PreAuthorize("hasRole('PREMIERE_ADMIN')")
+  void changeEmployeeAccountStatus(EmployeeStatusDto employeeStatusDto);
 
   void changePassword(PasswordDto passwordDto);
 

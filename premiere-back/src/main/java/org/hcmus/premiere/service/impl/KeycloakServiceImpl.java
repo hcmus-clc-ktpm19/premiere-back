@@ -17,6 +17,7 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.Response.StatusType;
 import lombok.RequiredArgsConstructor;
 import org.hcmus.premiere.common.consts.Constants;
+import org.hcmus.premiere.model.dto.EmployeeStatusDto;
 import org.hcmus.premiere.model.dto.FullInfoUserDto;
 import org.hcmus.premiere.model.dto.PasswordDto;
 import org.hcmus.premiere.model.entity.User;
@@ -142,6 +143,19 @@ public class KeycloakServiceImpl implements KeycloakService {
       );
     }
     return fullInfoUserDto.getId() == null ? createUser(fullInfoUserDto) : updateUser(fullInfoUserDto);
+  }
+
+  @Override
+  public void changeEmployeeAccountStatus(EmployeeStatusDto employeeStatusDto) {
+    List<UserRepresentation> userRepresentations = realmResource.users()
+        .search(employeeStatusDto.getUsername(), null, null, null, null, null, null, null);
+
+    userRepresentations.stream()
+        .findFirst()
+        .ifPresent(userRepresentation -> {
+          userRepresentation.setEnabled(employeeStatusDto.isEnabled());
+          realmResource.users().get(userRepresentation.getId()).update(userRepresentation);
+        });
   }
 
   @Override
