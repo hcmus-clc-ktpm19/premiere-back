@@ -73,10 +73,16 @@ public class AuthController extends AbstractApplicationController {
     return ResponseEntity.status(CREATED).body(response);
   }
 
+  @PostMapping("/save-customer")
+  public ResponseEntity<Long> saveCustomer(@RequestBody @Valid FullInfoUserDto fullInfoUserDto) {
+    Long customerId = keycloakService.saveCustomer(fullInfoUserDto);
+    return ResponseEntity.status(CREATED).body(customerId);
+  }
+
   @PostMapping("/save-employee")
   public ResponseEntity<Long> saveEmployee(@RequestBody @Valid FullInfoUserDto fullInfoUserDto) {
-    Long userId = keycloakService.saveEmployee(fullInfoUserDto);
-    return ResponseEntity.status(CREATED).body(userId);
+    Long employeeId = keycloakService.saveEmployee(fullInfoUserDto);
+    return ResponseEntity.status(CREATED).body(employeeId);
   }
 
   @GetMapping("/get-employees")
