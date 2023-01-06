@@ -17,12 +17,14 @@ import org.hcmus.premiere.model.exception.OTPNotFoundException;
 import org.hcmus.premiere.repository.OTPRepository;
 import org.hcmus.premiere.service.OTPService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import sendinblue.auth.ApiKeyAuth;
 import sibApi.TransactionalEmailsApi;
 import sibModel.SendSmtpEmail;
 
 @Slf4j
 @Service
+@Transactional(rollbackFor = Throwable.class)
 @RequiredArgsConstructor
 public class OTPServiceImpl implements OTPService {
 

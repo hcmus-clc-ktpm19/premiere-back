@@ -28,7 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
+@Transactional(rollbackFor = Throwable.class)
 @RequiredArgsConstructor
 public class LoanReminderServiceImpl implements LoanReminderService {
 
@@ -105,7 +105,7 @@ public class LoanReminderServiceImpl implements LoanReminderService {
 
     transactionService.internalTransfer(transaction);
 
-    loanReminder.setStatus(LoanStatus.APPROVED);
+    loanReminder.setStatus(LoanStatus.PAID);
     loanReminderRepository.saveAndFlush(loanReminder);
   }
 

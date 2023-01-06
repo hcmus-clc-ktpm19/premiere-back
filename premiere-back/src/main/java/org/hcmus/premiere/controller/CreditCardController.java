@@ -8,6 +8,7 @@ import org.hcmus.premiere.model.dto.DepositMoneyRequestDto;
 import org.hcmus.premiere.model.entity.CreditCard;
 import org.hcmus.premiere.service.CreditCardService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @AllArgsConstructor
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/v1/credit-card")
 public class CreditCardController extends AbstractApplicationController {

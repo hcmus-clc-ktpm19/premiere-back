@@ -1,0 +1,2591 @@
+{
+  "info": {
+    "title": "Premiere API Documentation",
+    "version": "0.0.2"
+  },
+  "openapi": "3.0.1",
+  "servers": [
+    {
+      "url": "http://localhost:8080/",
+      "description": "Generated server url"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/api/v1/receivers": {
+      "get": {
+        "tags": [
+          "Receivers API"
+        ],
+        "summary": "Get user's receivers by that user id",
+        "operationId": "getReceiverByUserId",
+        "parameters": [
+          {
+            "example": 1,
+            "name": "userId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "example": [
+                    {
+                      "id": 1,
+                      "cardNumber": "1234567890123456",
+                      "nickname": "Nam",
+                      "fullName": "Nguyen Duc Nam",
+                      "userId": 1,
+                      "bankName": "Vietcombank"
+                    },
+                    {
+                      "id": 2,
+                      "cardNumber": "1234567890123457",
+                      "nickname": "Giap",
+                      "fullName": "Hoang Huu Giap",
+                      "userId": 1,
+                      "bankName": "Vietcombank"
+                    }
+                  ],
+                  "items": {
+                    "$ref": "#/components/schemas/ReceiverDto"
+                  }
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Credit card not found",
+                  "i18nPlaceHolder": "CREDIT_CARD.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Check and uncheck exception error message",
+                  "i18nPlaceHolder": "PREMIERE.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Receivers API"
+        ],
+        "summary": "Update a receiver of a user by that user's id",
+        "description": "Need to provide id (receiver id) and user id to update",
+        "operationId": "updateReceiver",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "description": "id stands for receiver id",
+                "example": {
+                  "id": 1,
+                  "cardNumber": "1234567890123451",
+                  "nickname": "Nam",
+                  "fullName": "Nguyen Duc Nam",
+                  "userId": 1,
+                  "bankName": "Vietcombank"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "id": 1,
+                    "cardNumber": "1234567890123456",
+                    "nickname": "Nam",
+                    "fullName": "Nguyen Duc Nam",
+                    "userId": 1,
+                    "bankName": "Vietcombank"
+                  }
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "User not found",
+                  "i18nPlaceHolder": "USER.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Resource already existed",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Receiver already existed",
+                  "i18nPlaceHolder": "RECEIVER.EXISTED"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Check and uncheck exception error message",
+                  "i18nPlaceHolder": "PREMIERE.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Receivers API"
+        ],
+        "summary": "Save new receiver of a user by that user's id",
+        "operationId": "saveReceiver",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "example": {
+                  "cardNumber": "1234567890123451",
+                  "nickname": "Nam",
+                  "fullName": "Nguyen Duc Nam",
+                  "userId": 1,
+                  "bankName": "Vietcombank"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "id": 1,
+                    "cardNumber": "1234567890123457",
+                    "nickname": "Nam",
+                    "fullName": "Nguyen Duc Nam",
+                    "userId": 1,
+                    "bankName": "Vietcombank"
+                  }
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "User not found",
+                  "i18nPlaceHolder": "USER.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Resource already existed",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Receiver already existed",
+                  "i18nPlaceHolder": "RECEIVER.EXISTED"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Check and uncheck exception error message",
+                  "i18nPlaceHolder": "PREMIERE.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/loan-management/loan-reminder/cancel": {
+      "put": {
+        "summary": "Cancel loan reminder",
+        "description": "Update the status of a loan reminder to CANCELLED",
+        "tags": [
+          "Loan Management API"
+        ],
+        "operationId": "cancelLoanReminder",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "example": {
+                  "id": 1,
+                  "status": "CANCELLED",
+                  "cancelReason": "Cancel reason"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int64",
+                  "example": 1
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Loan reminder not found",
+                  "i18nPlaceHolder": "LOAN_REMINDER.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Check and uncheck exception error message",
+                  "i18nPlaceHolder": "PREMIERE.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/credit-card/deposit-money": {
+      "put": {
+        "summary": "Deposit money to a credit card by credit card number or username",
+        "description": "Update the balance of a credit card",
+        "tags": [
+          "Credit Card API"
+        ],
+        "operationId": "depositMoney",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "example": {
+                  "username": "admin",
+                  "creditCardNumber": "1234567890123457",
+                  "amount": 1000000
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Credit card not found",
+                  "i18nPlaceHolder": "CREDIT_CARD.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Check and uncheck exception error message",
+                  "i18nPlaceHolder": "PREMIERE.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/reset-password": {
+      "put": {
+        "summary": "Get back the password that user forgot",
+        "tags": [
+          "Auth API"
+        ],
+        "operationId": "resetPassword",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "example": {
+                  "username": null,
+                  "email": "admin@test.com",
+                  "currentPassword": null,
+                  "newPassword": "admin1"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Check and uncheck exception error message",
+                  "i18nPlaceHolder": "PREMIERE.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/change-password": {
+      "put": {
+        "summary": "Change the password of a user",
+        "tags": [
+          "Auth API"
+        ],
+        "operationId": "changePassword",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "example": {
+                  "username": "admin",
+                  "email": null,
+                  "currentPassword": "admin",
+                  "newPassword": "admin1"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "202": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Credit card not found",
+                  "i18nPlaceHolder": "CREDIT_CARD.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Wrong password",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Wrong password",
+                  "i18nPlaceHolder": "AUTH.WRONG_PASSWORD"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Check and uncheck exception error message",
+                  "i18nPlaceHolder": "PREMIERE.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/transactions/users/{userId}/get-transactions": {
+      "post": {
+        "summary": "Get user's transactions by user id",
+        "description": "Get transactions by category, order, and page",
+        "tags": [
+          "Transactions API"
+        ],
+        "operationId": "getTransactionsByCustomerId",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "example": {}
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PremierePaginationResponseDtoTransactionDto"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "User not found",
+                  "i18nPlaceHolder": "USER.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Check and uncheck exception error message",
+                  "i18nPlaceHolder": "PREMIERE.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/transactions/money-transfer": {
+      "post": {
+        "tags": [
+          "Transactions API"
+        ],
+        "operationId": "transferMoney",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransferMoneyRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Credit card not found",
+                  "i18nPlaceHolder": "CREDIT_CARD.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Assign illegal data",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Assign illegal data",
+                  "i18nPlaceHolder": "AUTH.ROLE.ASSIGN_ILLEGAL_EMPLOYEE_ROLE"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Wrong password",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Wrong password",
+                  "i18nPlaceHolder": "AUTH.WRONG_PASSWORD"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Resource already existed",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Receiver already existed",
+                  "i18nPlaceHolder": "RECEIVER.EXISTED"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Check and uncheck exception error message",
+                  "i18nPlaceHolder": "PREMIERE.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/transactions/money-transfer/validate": {
+      "post": {
+        "tags": [
+          "Transactions API"
+        ],
+        "operationId": "validateTransferMoney",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransactionRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Credit card not found",
+                  "i18nPlaceHolder": "CREDIT_CARD.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Assign illegal data",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Assign illegal data",
+                  "i18nPlaceHolder": "AUTH.ROLE.ASSIGN_ILLEGAL_EMPLOYEE_ROLE"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Wrong password",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Wrong password",
+                  "i18nPlaceHolder": "AUTH.WRONG_PASSWORD"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Resource already existed",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Receiver already existed",
+                  "i18nPlaceHolder": "RECEIVER.EXISTED"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Check and uncheck exception error message",
+                  "i18nPlaceHolder": "PREMIERE.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/loan-management": {
+      "post": {
+        "summary": "Create new loan request",
+        "tags": [
+          "Loan Management API"
+        ],
+        "operationId": "saveLoanReminder",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "example": {
+                  "creditorCreditCardNumber": "1234567890123456",
+                  "debtorCreditCardNumber": "1234567890123457",
+                  "debtorName": "Hoang Huu Giap",
+                  "transferAmount": 100000,
+                  "loanRemark": "Loan remark",
+                  "debtorPhone": "0123456789"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Credit card not found",
+                  "i18nPlaceHolder": "CREDIT_CARD.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Check and uncheck exception error message",
+                  "i18nPlaceHolder": "PREMIERE.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/loan-management/loan-reminder/validate/{id}": {
+      "post": {
+        "summary": "Validate loan request",
+        "tags": [
+          "Loan Management API"
+        ],
+        "operationId": "validateLoanReminder",
+        "parameters": [
+          {
+            "description": "Loan reminder id to validate",
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Credit card not found",
+                  "i18nPlaceHolder": "CREDIT_CARD.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Check and uncheck exception error message",
+                  "i18nPlaceHolder": "PREMIERE.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/loan-management/loan-reminder/pay": {
+      "post": {
+        "summary": "Pay loan request",
+        "tags": [
+          "Loan Management API"
+        ],
+        "operationId": "payLoanReminder",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransferMoneyRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Credit card not found",
+                  "i18nPlaceHolder": "CREDIT_CARD.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Check and uncheck exception error message",
+                  "i18nPlaceHolder": "PREMIERE.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/verify-otp": {
+      "post": {
+        "tags": [
+          "Auth API"
+        ],
+        "operationId": "verifyOTP",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OTPDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Credit card not found",
+                  "i18nPlaceHolder": "CREDIT_CARD.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Assign illegal data",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Assign illegal data",
+                  "i18nPlaceHolder": "AUTH.ROLE.ASSIGN_ILLEGAL_EMPLOYEE_ROLE"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Wrong password",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Wrong password",
+                  "i18nPlaceHolder": "AUTH.WRONG_PASSWORD"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Resource already existed",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Receiver already existed",
+                  "i18nPlaceHolder": "RECEIVER.EXISTED"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Check and uncheck exception error message",
+                  "i18nPlaceHolder": "PREMIERE.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/save-employee": {
+      "post": {
+        "summary": "Save the employee information",
+        "description": "The API can either create or update employee information",
+        "tags": [
+          "Auth API"
+        ],
+        "operationId": "saveEmployee",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "example": {
+                  "username": "employee1",
+                  "email": "employee2@test.com",
+                  "firstName": "Nhat",
+                  "lastName": "Minh",
+                  "phone": "0826081111",
+                  "gender": "MALE",
+                  "panNumber": "1234567899",
+                  "address": "Hue",
+                  "password": "employee1",
+                  "role": "EMPLOYEE"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "example": 1
+              }
+            }
+          },
+          "400": {
+            "description": "Assign illegal data",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Assign illegal data",
+                  "i18nPlaceHolder": "AUTH.ROLE.ASSIGN_ILLEGAL_EMPLOYEE_ROLE"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Resource already existed",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Email already existed",
+                  "i18nPlaceHolder": "EMAIL.EXISTED"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Check and uncheck exception error message",
+                  "i18nPlaceHolder": "PREMIERE.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/request-otp": {
+      "post": {
+        "tags": [
+          "Auth API"
+        ],
+        "operationId": "requestOTP",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OTPDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Credit card not found",
+                  "i18nPlaceHolder": "CREDIT_CARD.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Assign illegal data",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Assign illegal data",
+                  "i18nPlaceHolder": "AUTH.ROLE.ASSIGN_ILLEGAL_EMPLOYEE_ROLE"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Wrong password",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Wrong password",
+                  "i18nPlaceHolder": "AUTH.WRONG_PASSWORD"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Resource already existed",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Receiver already existed",
+                  "i18nPlaceHolder": "RECEIVER.EXISTED"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Check and uncheck exception error message",
+                  "i18nPlaceHolder": "PREMIERE.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/register-customer": {
+      "post": {
+        "summary": "Register customer",
+        "tags": [
+          "Auth API"
+        ],
+        "operationId": "registerCustomer",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "example": {
+                  "username": "minhnhat0212",
+                  "email": "lengocminhnhatntp@gmail.com",
+                  "firstName": "Minh Nhat",
+                  "lastName": "Le",
+                  "phone": "0123456722",
+                  "gender": "MALE",
+                  "panNumber": "19191196549",
+                  "address": "Ho Chi Minh",
+                  "password": "minhnhat0212",
+                  "role": "CUSTOMER"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "User not found",
+                  "i18nPlaceHolder": "USER.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Assign illegal data",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Assign illegal data",
+                  "i18nPlaceHolder": "AUTH.ROLE.ASSIGN_ILLEGAL_EMPLOYEE_ROLE"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Resource already existed",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Phone number already existed",
+                  "i18nPlaceHolder": "PHONE.EXISTED"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Check and uncheck exception error message",
+                  "i18nPlaceHolder": "PREMIERE.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v2/external/banks/customers": {
+      "get": {
+        "summary": "Get list of customers calling from external bank",
+        "description": "API to test the external API",
+        "tags": [
+          "External API"
+        ],
+        "operationId": "getUsersForExternalBank",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserDto"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Check and uncheck exception error message",
+                  "i18nPlaceHolder": "PREMIERE.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v2/external/banks/credit-cards": {
+      "get": {
+        "summary": "Get list of credit cards calling from external bank",
+        "description": "API to test the external API",
+        "tags": [
+          "External API"
+        ],
+        "operationId": "getCreditCardsForExternalBank",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CreditCardDto"
+                  }
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Credit card not found",
+                  "i18nPlaceHolder": "CREDIT_CARD.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Assign illegal data",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Assign illegal data",
+                  "i18nPlaceHolder": "AUTH.ROLE.ASSIGN_ILLEGAL_EMPLOYEE_ROLE"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Wrong password",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Wrong password",
+                  "i18nPlaceHolder": "AUTH.WRONG_PASSWORD"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Resource already existed",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Receiver already existed",
+                  "i18nPlaceHolder": "RECEIVER.EXISTED"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Check and uncheck exception error message",
+                  "i18nPlaceHolder": "PREMIERE.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v2/external/banks/credit-cards/{creditCardNumber}": {
+      "get": {
+        "tags": [
+          "External API"
+        ],
+        "operationId": "getCreditCardByNumberForExternalBank",
+        "parameters": [
+          {
+            "name": "creditCardNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreditCardDto"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Credit card not found",
+                  "i18nPlaceHolder": "CREDIT_CARD.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Assign illegal data",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Assign illegal data",
+                  "i18nPlaceHolder": "AUTH.ROLE.ASSIGN_ILLEGAL_EMPLOYEE_ROLE"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Wrong password",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Wrong password",
+                  "i18nPlaceHolder": "AUTH.WRONG_PASSWORD"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Resource already existed",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Receiver already existed",
+                  "i18nPlaceHolder": "RECEIVER.EXISTED"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Check and uncheck exception error message",
+                  "i18nPlaceHolder": "PREMIERE.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/receivers/{userId}/{cardNumber}": {
+      "get": {
+        "tags": [
+          "Receivers API"
+        ],
+        "summary": "Get user's receiver by the receiver's card number",
+        "operationId": "getReceiverByCardNumber",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 1
+            }
+          },
+          {
+            "example": "1234567890123451",
+            "name": "cardNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReceiverDto"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Credit card not found",
+                  "i18nPlaceHolder": "CREDIT_CARD.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Assign illegal data",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Assign illegal data",
+                  "i18nPlaceHolder": "AUTH.ROLE.ASSIGN_ILLEGAL_EMPLOYEE_ROLE"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Wrong password",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Wrong password",
+                  "i18nPlaceHolder": "AUTH.WRONG_PASSWORD"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Resource already existed",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Receiver already existed",
+                  "i18nPlaceHolder": "RECEIVER.EXISTED"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Check and uncheck exception error message",
+                  "i18nPlaceHolder": "PREMIERE.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Receivers API"
+        ],
+        "summary": "Delete a receiver of a user by that user's id",
+        "operationId": "deleteReceiver",
+        "parameters": [
+          {
+            "example": "1234567890123451",
+            "name": "cardNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Credit card not found",
+                  "i18nPlaceHolder": "CREDIT_CARD.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "The receiver is deleted successfully but no content is returned"
+          },
+          "400": {
+            "description": "Assign illegal data",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Assign illegal data",
+                  "i18nPlaceHolder": "AUTH.ROLE.ASSIGN_ILLEGAL_EMPLOYEE_ROLE"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Wrong password",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Wrong password",
+                  "i18nPlaceHolder": "AUTH.WRONG_PASSWORD"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Resource already existed",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Receiver already existed",
+                  "i18nPlaceHolder": "RECEIVER.EXISTED"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Check and uncheck exception error message",
+                  "i18nPlaceHolder": "PREMIERE.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/loan-management/user/card-number/{cardNumber}": {
+      "get": {
+        "summary": "Get debtor by credit card number",
+        "tags": [
+          "Loan Management API"
+        ],
+        "operationId": "getDebtor",
+        "parameters": [
+          {
+            "description": "Credit card number",
+            "name": "cardNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "1234567890123456"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "id": 2,
+                    "username": null,
+                    "email": "hehe@gmail.com",
+                    "firstName": "Giap",
+                    "lastName": "Hoang Huu",
+                    "phone": "0987654322",
+                    "role": null
+                  }
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Credit card not found",
+                  "i18nPlaceHolder": "CREDIT_CARD.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Assign illegal data",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Assign illegal data",
+                  "i18nPlaceHolder": "AUTH.ROLE.ASSIGN_ILLEGAL_EMPLOYEE_ROLE"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Wrong password",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Wrong password",
+                  "i18nPlaceHolder": "AUTH.WRONG_PASSWORD"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Resource already existed",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Receiver already existed",
+                  "i18nPlaceHolder": "RECEIVER.EXISTED"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Check and uncheck exception error message",
+                  "i18nPlaceHolder": "PREMIERE.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/loan-management/loan-reminder/{userCreditCardNumber}": {
+      "get": {
+        "summary": "Get all loan reminders of a user by that user's credit card number",
+        "tags": [
+          "Loan Management API"
+        ],
+        "operationId": "getLoanRemindersByUserCreditCardNumber",
+        "parameters": [
+          {
+            "name": "userCreditCardNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "1234567890123456"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LoanReminderDto"
+                  }
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Credit card not found",
+                  "i18nPlaceHolder": "CREDIT_CARD.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Check and uncheck exception error message",
+                  "i18nPlaceHolder": "PREMIERE.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/credit-card/{userId}": {
+      "get": {
+        "summary": "Get credit card information by user id",
+        "tags": [
+          "Credit Card API"
+        ],
+        "operationId": "getCreditCardInfo",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "example": {
+                    "id": null,
+                    "version": null,
+                    "createdAt": null,
+                    "updatedAt": null,
+                    "balance": 30000000,
+                    "openDay": null,
+                    "cardNumber": "1234567890123457",
+                    "userId": null
+                  }                }
+              }
+            }
+          },
+          "202": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "User not found",
+                  "i18nPlaceHolder": "USER.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Check and uncheck exception error message",
+                  "i18nPlaceHolder": "PREMIERE.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/credit-card/external-bank/{externalBankName}/card-number/{cardNumber}": {
+      "get": {
+        "summary": "Get credit card information from external bank by external bank id and card number",
+        "tags": [
+          "Credit Card API"
+        ],
+        "operationId": "getCreditCardByNumberAndExternalBankId",
+        "parameters": [
+          {
+            "name": "externalBankName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 1
+            }
+          },
+          {
+            "name": "cardNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "1234567890123457"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreditCardDto"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Credit card not found",
+                  "i18nPlaceHolder": "CREDIT_CARD.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Check and uncheck exception error message",
+                  "i18nPlaceHolder": "PREMIERE.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/credit-card/external-bank/{externalBankId}": {
+      "get": {
+        "summary": "Get credit cards from external bank by external bank id",
+        "tags": [
+          "Credit Card API"
+        ],
+        "operationId": "getCreditCardsFromByExternalBankId",
+        "parameters": [
+          {
+            "example": 1,
+            "name": "externalBankId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CreditCardDto"
+                  }
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Credit card not found",
+                  "i18nPlaceHolder": "CREDIT_CARD.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Assign illegal data",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Assign illegal data",
+                  "i18nPlaceHolder": "AUTH.ROLE.ASSIGN_ILLEGAL_EMPLOYEE_ROLE"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Wrong password",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Wrong password",
+                  "i18nPlaceHolder": "AUTH.WRONG_PASSWORD"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Resource already existed",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Receiver already existed",
+                  "i18nPlaceHolder": "RECEIVER.EXISTED"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Check and uncheck exception error message",
+                  "i18nPlaceHolder": "PREMIERE.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/credit-card/card-number/{number}": {
+      "get": {
+        "summary": "Get credit card info by credit card number",
+        "tags": [
+          "Credit Card API"
+        ],
+        "operationId": "getCreditCardByNumber",
+        "parameters": [
+          {
+            "description": "If this flag set to true then the return will not contain the balance",
+            "name": "ignoreBalance",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          },
+          {
+            "example": "1234567890123456",
+            "name": "number",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreditCardDto"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Credit card not found",
+                  "i18nPlaceHolder": "CREDIT_CARD.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Check and uncheck exception error message",
+                  "i18nPlaceHolder": "PREMIERE.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/token/user": {
+      "get": {
+        "summary": "Get user info by token",
+        "tags": [
+          "Auth API"
+        ],
+        "operationId": "getUserByToken",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDto"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Credit card not found",
+                  "i18nPlaceHolder": "CREDIT_CARD.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Check and uncheck exception error message",
+                  "i18nPlaceHolder": "PREMIERE.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ReceiverDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "cardNumber": {
+            "type": "string"
+          },
+          "nickname": {
+            "type": "string"
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "bankName": {
+            "type": "string"
+          }
+        }
+      },
+      "LoanReminderDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "version": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "transferAmount": {
+            "type": "number"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "APPROVED",
+              "PENDING",
+              "REJECTED",
+              "CANCELLED",
+              "PAID"
+            ]
+          },
+          "time": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "loanRemark": {
+            "type": "string"
+          },
+          "senderCreditCardId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "receiverCreditCardId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "senderCreditCardNumber": {
+            "type": "string"
+          },
+          "senderName": {
+            "type": "string"
+          },
+          "senderId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "receiverCreditCardNumber": {
+            "type": "string"
+          },
+          "receiverName": {
+            "type": "string"
+          },
+          "receiverId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "cancelReason": {
+            "type": "string"
+          }
+        }
+      },
+      "DepositMoneyRequestDto": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "creditCardNumber": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "number"
+          }
+        }
+      },
+      "PasswordDto": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "currentPassword": {
+            "type": "string"
+          },
+          "newPassword": {
+            "type": "string"
+          }
+        }
+      },
+      "TransactionCriteriaDto": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32"
+          },
+          "transactionType": {
+            "type": "string",
+            "enum": [
+              "MONEY_TRANSFER",
+              "LOAN"
+            ]
+          },
+          "asc": {
+            "type": "boolean"
+          }
+        }
+      },
+      "MetaDataDto": {
+        "type": "object",
+        "properties": {
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationDto"
+          }
+        }
+      },
+      "PaginationDto": {
+        "type": "object",
+        "properties": {
+          "currPage": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "sizePerPage": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "currPageTotalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PremierePaginationResponseDtoTransactionDto": {
+        "type": "object",
+        "properties": {
+          "payload": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TransactionDto"
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/MetaDataDto"
+          }
+        }
+      },
+      "TransactionDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "version": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "amount": {
+            "type": "number"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "MONEY_TRANSFER",
+              "LOAN"
+            ]
+          },
+          "time": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "transactionRemark": {
+            "type": "string"
+          },
+          "totalBalance": {
+            "type": "number"
+          },
+          "senderCreditCardNumber": {
+            "type": "string"
+          },
+          "receiverCreditCardNumber": {
+            "type": "string"
+          },
+          "fee": {
+            "type": "number"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "CHECKING",
+              "COMPLETED",
+              "FAILED"
+            ]
+          },
+          "senderBankId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "receiverBankId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "selfPaymentFee": {
+            "type": "boolean"
+          }
+        }
+      },
+      "TransferMoneyRequestDto": {
+        "required": [
+          "otp",
+          "requestID"
+        ],
+        "type": "object",
+        "properties": {
+          "requestID": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "otp": {
+            "type": "string"
+          }
+        }
+      },
+      "TransactionRequestDto": {
+        "required": [
+          "amount",
+          "isInternal",
+          "isSelfPaymentFee",
+          "receiverCardNumber",
+          "remark",
+          "senderCardNumber",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "senderCardNumber": {
+            "type": "string"
+          },
+          "receiverCardNumber": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "isInternal": {
+            "type": "boolean"
+          },
+          "isSelfPaymentFee": {
+            "type": "boolean"
+          },
+          "remark": {
+            "type": "string"
+          },
+          "senderBankName": {
+            "type": "string"
+          },
+          "receiverBankName": {
+            "type": "string"
+          },
+          "otp": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateLoanReminderDto": {
+        "required": [
+          "creditorCreditCardNumber",
+          "debtorCreditCardNumber",
+          "debtorName"
+        ],
+        "type": "object",
+        "properties": {
+          "creditorCreditCardNumber": {
+            "type": "string"
+          },
+          "debtorCreditCardNumber": {
+            "type": "string"
+          },
+          "debtorName": {
+            "type": "string"
+          },
+          "transferAmount": {
+            "minimum": 100000,
+            "type": "number"
+          },
+          "loanRemark": {
+            "type": "string"
+          },
+          "debtorPhone": {
+            "pattern": "\\(?(\\d{3})\\)?([ .-]?)(\\d{3})\\2(\\d{4})",
+            "type": "string"
+          }
+        }
+      },
+      "OTPDto": {
+        "type": "object",
+        "properties": {
+          "otp": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "FullInfoUserDto": {
+        "required": [
+          "address",
+          "email",
+          "firstName",
+          "gender",
+          "lastName",
+          "panNumber",
+          "password",
+          "phone",
+          "role",
+          "username"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "version": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "username": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "gender": {
+            "type": "string"
+          },
+          "panNumber": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "enabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "UserDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "username": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "CUSTOMER",
+              "EMPLOYEE",
+              "PREMIERE_ADMIN"
+            ]
+          }
+        }
+      },
+      "CreditCardDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "version": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "balance": {
+            "type": "number"
+          },
+          "openDay": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "cardNumber": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  },
+}

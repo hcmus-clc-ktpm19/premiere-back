@@ -6,7 +6,7 @@ import org.hcmus.premiere.model.dto.LoanReminderDto;
 import org.hcmus.premiere.model.dto.MetaDataDto;
 import org.hcmus.premiere.model.dto.OTPDto;
 import org.hcmus.premiere.model.dto.PaginationDto;
-import org.hcmus.premiere.model.dto.PremierePaginationReponseDto;
+import org.hcmus.premiere.model.dto.PremierePaginationResponseDto;
 import org.hcmus.premiere.model.dto.ReceiverDto;
 import org.hcmus.premiere.model.dto.TransactionCriteriaDto;
 import org.hcmus.premiere.model.dto.TransactionDto;
@@ -38,9 +38,7 @@ public class ApplicationMapper {
       ReceiverDto receiverDto = new ReceiverDto();
       receiverDto.setId(receiver.getId());
       receiverDto.setCardNumber(receiver.getCardNumber());
-      receiverDto.setNickname(receiver.getNickname());
-      receiverDto.setFullName(receiver.getFullName());
-      receiverDto.setUserId(receiver.getUser().getId());
+      receiverDto.setUserId(receiver.getId());
       receiverDto.setBankName(receiver.getBank().getBankName());
       return receiverDto;
     }
@@ -68,6 +66,7 @@ public class ApplicationMapper {
       loanReminderDto.setTransferAmount(loanReminder.getLoanBalance());
       loanReminderDto.setStatus(loanReminder.getStatus());
       loanReminderDto.setTime(loanReminder.getTime());
+      loanReminderDto.setUpdatedTime(loanReminder.getUpdatedAt());
       loanReminderDto.setLoanRemark(loanReminder.getLoanRemark());
       loanReminderDto.setSenderId(loanReminder.getSenderCreditCard().getUser().getId());
       loanReminderDto.setReceiverId(loanReminder.getReceiverCreditCard().getUser().getId());
@@ -82,7 +81,7 @@ public class ApplicationMapper {
     }
   }
 
-  public PremierePaginationReponseDto<TransactionDto> toDto(List<TransactionDto> transactionDtos,
+  public PremierePaginationResponseDto<TransactionDto> toDto(List<TransactionDto> transactionDtos,
       TransactionCriteriaDto criteriaDto) {
     PaginationDto paginationDto = new PaginationDto();
     paginationDto.setCurrPage(criteriaDto.getPage());
@@ -94,6 +93,6 @@ public class ApplicationMapper {
     MetaDataDto metaDataDto = new MetaDataDto();
     metaDataDto.setPagination(paginationDto);
 
-    return new PremierePaginationReponseDto<>(transactionDtos, metaDataDto);
+    return new PremierePaginationResponseDto<>(transactionDtos, metaDataDto);
   }
 }
