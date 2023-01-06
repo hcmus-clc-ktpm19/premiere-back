@@ -1,15 +1,20 @@
 package org.hcmus.premiere.controller;
 
+import static org.hcmus.premiere.model.enums.PremiereRole.CUSTOMER;
+import static org.hcmus.premiere.model.enums.PremiereRole.EMPLOYEE;
 import static org.springframework.http.HttpStatus.CREATED;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.hcmus.premiere.common.consts.PremiereApiUrls;
+import org.hcmus.premiere.model.dto.FullInfoUserDto;
 import org.hcmus.premiere.model.dto.OTPDto;
 import org.hcmus.premiere.model.dto.PasswordDto;
-import org.hcmus.premiere.model.dto.FullInfoUserDto;
 import org.hcmus.premiere.model.dto.UserDto;
 import org.hcmus.premiere.model.entity.User;
 import org.hcmus.premiere.model.enums.PremiereRole;
@@ -28,7 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(PremiereApiUrls.PREMIERE_API_V1 + "/auth")
 @RequiredArgsConstructor
-public class AuthController {
+public class AuthController extends AbstractApplicationController {
 
   private final UserService userService;
 
@@ -73,6 +78,35 @@ public class AuthController {
     Long userId = keycloakService.saveEmployee(fullInfoUserDto);
     return ResponseEntity.status(CREATED).body(userId);
   }
+
+  @GetMapping("/get-employees")
+  public ResponseEntity<List<FullInfoUserDto>> getAllEmployees() {
+    Set<UserRepresentation> userRepresentations = keycloakService.getAllEmployees();
+    List<FullInfoUserDto> employees = userRepresentations.stream()
+        .map(userRepresentation -> {
+          User user = userService.findUserById(
+              Long.valueOf(userRepresentation.getAttributes().get("userId").get(0)));
+
+          return applicationMapper.toFullInfoUserDto(user, userRepresentation, EMPLOYEE.value);
+        })
+        .collect(Collectors.toList());
+    return ResponseEntity.ok().body(employees);
+  }
+
+  @GetMapping("/get-customers")
+  public ResponseEntity<List<FullInfoUserDto>> getAllCustomers() {
+    Set<UserRepresentation> userRepresentations = keycloakService.getAllCustomers();
+    List<FullInfoUserDto> customers = userRepresentations.stream()
+        .map(userRepresentation -> {
+          User user = userService.findUserById(
+              Long.valueOf(userRepresentation.getAttributes().get("userId").get(0)));
+
+          return applicationMapper.toFullInfoUserDto(user, userRepresentation, CUSTOMER.value);
+        })
+        .collect(Collectors.toList());
+    return ResponseEntity.ok().body(customers);
+  }
+
 
   @PostMapping("/request-otp")
   public ResponseEntity<?> requestOTP(@RequestBody OTPDto otpDto) {

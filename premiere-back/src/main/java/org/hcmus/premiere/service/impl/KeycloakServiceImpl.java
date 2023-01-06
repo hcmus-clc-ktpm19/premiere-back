@@ -23,6 +23,7 @@ import org.hcmus.premiere.model.enums.PremiereRole;
 import org.hcmus.premiere.model.exception.IllegalRoleAssignException;
 import org.hcmus.premiere.model.exception.UserNotFoundException;
 import org.hcmus.premiere.model.exception.WrongPasswordException;
+import org.hcmus.premiere.repository.UserRepository;
 import org.hcmus.premiere.service.CreditCardService;
 import org.hcmus.premiere.service.KeycloakService;
 import org.hcmus.premiere.service.UserService;
@@ -272,5 +273,25 @@ public class KeycloakServiceImpl implements KeycloakService {
     userResource.roles().realmLevel().add(Collections.singletonList(roleRepresentation));
 
     return user.getId();
+  }
+
+  @Override
+  public Set<UserRepresentation> getAllEmployees() {
+    Set<UserRepresentation> userRepresentations = realmResource
+        .roles()
+        .get(EMPLOYEE.value)
+        .getRoleUserMembers();
+
+    return userRepresentations;
+  }
+
+  @Override
+  public Set<UserRepresentation> getAllCustomers() {
+    Set<UserRepresentation> userRepresentations = realmResource
+        .roles()
+        .get(CUSTOMER.value)
+        .getRoleUserMembers();
+
+    return userRepresentations;
   }
 }

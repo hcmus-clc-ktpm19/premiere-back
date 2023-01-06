@@ -1,7 +1,8 @@
 package org.hcmus.premiere.service;
 
-import org.hcmus.premiere.model.dto.PasswordDto;
+import java.util.Set;
 import org.hcmus.premiere.model.dto.FullInfoUserDto;
+import org.hcmus.premiere.model.dto.PasswordDto;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,6 +20,12 @@ public interface KeycloakService {
 
   @PreAuthorize("hasRole('PREMIERE_ADMIN')")
   Long saveEmployee(FullInfoUserDto fullInfoUserDto);
+
+  @PreAuthorize("hasRole('PREMIERE_ADMIN')")
+  Set<UserRepresentation> getAllEmployees();
+
+  @PreAuthorize("hasRole('EMPLOYEE')")
+  Set<UserRepresentation> getAllCustomers();
 
   void changePassword(PasswordDto passwordDto);
 
