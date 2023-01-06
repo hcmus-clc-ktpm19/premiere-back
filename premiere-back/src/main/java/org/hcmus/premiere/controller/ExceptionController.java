@@ -1,6 +1,7 @@
 package org.hcmus.premiere.controller;
 
 import static org.springframework.http.HttpStatus.ACCEPTED;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
@@ -66,7 +67,7 @@ public class ExceptionController {
   }
 
   @ExceptionHandler(WrongPasswordException.class)
-  @ApiResponse(responseCode = "401", description = "Wrong password",
+  @ApiResponse(responseCode = "400", description = "Wrong password",
       content = @Content(mediaType = "application/json", examples = @ExampleObject(
           value = """
               {
@@ -75,10 +76,10 @@ public class ExceptionController {
               }"""
       ))
   )
-  @ApiResponse(responseCode = "401", description = "Wrong password")
+  @ApiResponse(responseCode = "400", description = "Wrong password")
   public ResponseEntity<ErrorDto> handleWrongPasswordException(WrongPasswordException e) {
     log.error(e.getMessage(), e);
-    return ResponseEntity.status(UNAUTHORIZED).body(new ErrorDto(e.getMessage(), e.getI18nPlaceHolder()));
+    return ResponseEntity.status(BAD_REQUEST).body(new ErrorDto(e.getMessage(), e.getI18nPlaceHolder()));
   }
 
   @ExceptionHandler({IllegalArgumentException.class, IllegalRoleAssignException.class})

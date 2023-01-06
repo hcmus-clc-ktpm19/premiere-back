@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public User saveUser(FullInfoUserDto fullInfoUserDto){
+  public User saveUser(FullInfoUserDto fullInfoUserDto) {
     User user;
 
     if (fullInfoUserDto.getId() != null && isUserExist(fullInfoUserDto.getId())) {

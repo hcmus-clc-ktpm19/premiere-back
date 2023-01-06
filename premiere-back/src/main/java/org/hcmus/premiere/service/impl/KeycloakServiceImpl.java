@@ -2,12 +2,15 @@ package org.hcmus.premiere.service.impl;
 
 import static org.hcmus.premiere.model.enums.PremiereRole.CUSTOMER;
 import static org.hcmus.premiere.model.enums.PremiereRole.EMPLOYEE;
+import static org.hcmus.premiere.model.exception.UserNotFoundException.USER_NOT_FOUND;
+import static org.hcmus.premiere.model.exception.UserNotFoundException.USER_NOT_FOUND_MESSAGE;
 import static org.hcmus.premiere.model.exception.WrongPasswordException.WRONG_PASSWORD_I18N_PLACEHOLDER;
 import static org.hcmus.premiere.model.exception.WrongPasswordException.WRONG_PASSWORD_MESSAGE;
 
 import java.net.URI;
 import java.util.Collections;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.ws.rs.WebApplicationException;
@@ -16,6 +19,7 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.Response.StatusType;
 import lombok.RequiredArgsConstructor;
 import org.hcmus.premiere.common.consts.Constants;
+import org.hcmus.premiere.model.dto.EmployeeStatusDto;
 import org.hcmus.premiere.model.dto.FullInfoUserDto;
 import org.hcmus.premiere.model.dto.PasswordDto;
 import org.hcmus.premiere.model.entity.User;
@@ -122,6 +126,17 @@ public class KeycloakServiceImpl implements KeycloakService {
   }
 
   @Override
+  public Long saveCustomer(FullInfoUserDto fullInfoUserDto) {
+    if (!CUSTOMER.value.equals(fullInfoUserDto.getRole())) {
+      throw new IllegalRoleAssignException(
+          "Account's role must be CUSTOMER",
+          IllegalRoleAssignException.ASSIGN_ILLEGAL_CUSTOMER_ROLE
+      );
+    }
+    return fullInfoUserDto.getId() == null ? createUser(fullInfoUserDto) : updateUser(fullInfoUserDto);
+  }
+
+  @Override
   public Long saveEmployee(FullInfoUserDto fullInfoUserDto) {
     if (!EMPLOYEE.value.equals(fullInfoUserDto.getRole())) {
       throw new IllegalRoleAssignException(
@@ -130,6 +145,19 @@ public class KeycloakServiceImpl implements KeycloakService {
       );
     }
     return fullInfoUserDto.getId() == null ? createUser(fullInfoUserDto) : updateUser(fullInfoUserDto);
+  }
+
+  @Override
+  public void changeEmployeeAccountStatus(EmployeeStatusDto employeeStatusDto) {
+    List<UserRepresentation> userRepresentations = realmResource.users()
+        .search(employeeStatusDto.getUsername(), null, null, null, null, null, null, null);
+
+    userRepresentations.stream()
+        .findFirst()
+        .ifPresent(userRepresentation -> {
+          userRepresentation.setEnabled(employeeStatusDto.isEnabled());
+          realmResource.users().get(userRepresentation.getId()).update(userRepresentation);
+        });
   }
 
   @Override
@@ -242,22 +270,21 @@ public class KeycloakServiceImpl implements KeycloakService {
   private Long updateUser(FullInfoUserDto fullInfoUserDto) {
     User user = userService.saveUser(fullInfoUserDto);
 
-    if (CUSTOMER.value.equals(fullInfoUserDto.getRole())) {
-      creditCardService.saveCreditCard(user);
-    }
+    List<UserRepresentation> userRepresentations = realmResource.users()
+        .search(fullInfoUserDto.getUsername(), null, null, null, null, null, null, null);
 
-    UserRepresentation userRepresentation = new UserRepresentation();
-    userRepresentation.setUsername(fullInfoUserDto.getUsername());
-    userRepresentation.setFirstName(user.getFirstName());
-    userRepresentation.setLastName(user.getLastName());
-    userRepresentation.setEmail(user.getEmail());
-    userRepresentation.setEnabled(true);
-    userRepresentation.singleAttribute("userId", String.valueOf(user.getId()));
-    userRepresentation.setEnabled(fullInfoUserDto.isEnabled());
-
-    String userId = realmResource.users().search(fullInfoUserDto.getUsername()).get(0).getId();
+    userRepresentations.stream()
+        .findFirst()
+        .ifPresent(userRepresentation -> {
+          userRepresentation.setFirstName(user.getFirstName());
+          userRepresentation.setLastName(user.getLastName());
+          userRepresentation.setEmail(user.getEmail());
+          userRepresentation.singleAttribute("userId", String.valueOf(user.getId()));
+          userRepresentation.setEnabled(fullInfoUserDto.isEnabled());
+          realmResource.users().get(userRepresentation.getId()).update(userRepresentation);
+        });
+    String userId = userRepresentations.get(0).getId();
     UserResource userResource = realmResource.users().get(userId);
-    userResource.update(userRepresentation);
 
     CredentialRepresentation credentialRepresentation = new CredentialRepresentation();
     credentialRepresentation.setTemporary(false);
@@ -272,5 +299,51 @@ public class KeycloakServiceImpl implements KeycloakService {
     userResource.roles().realmLevel().add(Collections.singletonList(roleRepresentation));
 
     return user.getId();
+  }
+
+  @Override
+  public Set<UserRepresentation> getAllEmployees() {
+    Set<UserRepresentation> userRepresentations = realmResource
+        .roles()
+        .get(EMPLOYEE.value)
+        .getRoleUserMembers();
+
+    return userRepresentations;
+  }
+
+  @Override
+  public UserRepresentation getEmployeeById(Long id) {
+    Set<UserRepresentation> userRepresentations = realmResource
+        .roles()
+        .get(EMPLOYEE.value)
+        .getRoleUserMembers();
+
+    return userRepresentations.stream()
+        .filter(userRepresentation -> userRepresentation.getAttributes().get("userId").get(0).equals(String.valueOf(id)))
+        .findFirst()
+        .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND_MESSAGE, id.toString(), USER_NOT_FOUND));
+  }
+
+  @Override
+  public Set<UserRepresentation> getAllCustomers() {
+    Set<UserRepresentation> userRepresentations = realmResource
+        .roles()
+        .get(CUSTOMER.value)
+        .getRoleUserMembers();
+
+    return userRepresentations;
+  }
+
+  @Override
+  public UserRepresentation getCustomerById(Long id) {
+    Set<UserRepresentation> userRepresentations = realmResource
+        .roles()
+        .get(CUSTOMER.value)
+        .getRoleUserMembers();
+
+    return userRepresentations.stream()
+        .filter(userRepresentation -> userRepresentation.getAttributes().get("userId").get(0).equals(String.valueOf(id)))
+        .findFirst()
+        .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND_MESSAGE, id.toString(), USER_NOT_FOUND));
   }
 }

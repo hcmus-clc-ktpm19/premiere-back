@@ -2,6 +2,7 @@ package org.hcmus.premiere.util.mapper;
 
 import java.util.List;
 import org.hcmus.premiere.model.dto.CreditCardDto;
+import org.hcmus.premiere.model.dto.FullInfoUserDto;
 import org.hcmus.premiere.model.dto.LoanReminderDto;
 import org.hcmus.premiere.model.dto.MetaDataDto;
 import org.hcmus.premiere.model.dto.OTPDto;
@@ -14,6 +15,8 @@ import org.hcmus.premiere.model.entity.CreditCard;
 import org.hcmus.premiere.model.entity.LoanReminder;
 import org.hcmus.premiere.model.entity.OTP;
 import org.hcmus.premiere.model.entity.Receiver;
+import org.hcmus.premiere.model.entity.User;
+import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.stereotype.Component;
 
 
@@ -94,5 +97,27 @@ public class ApplicationMapper {
     metaDataDto.setPagination(paginationDto);
 
     return new PremierePaginationResponseDto<>(transactionDtos, metaDataDto);
+  }
+
+  public FullInfoUserDto toFullInfoUserDto(User user, UserRepresentation userRepresentation, String role) {
+    if (user == null){
+      return null;
+    }
+    FullInfoUserDto fullInfoUserDto = new FullInfoUserDto();
+    fullInfoUserDto.setId(user.getId());
+    fullInfoUserDto.setUsername(userRepresentation.getUsername());
+    fullInfoUserDto.setFirstName(userRepresentation.getFirstName());
+    fullInfoUserDto.setLastName(userRepresentation.getLastName());
+    fullInfoUserDto.setEmail(userRepresentation.getEmail());
+    fullInfoUserDto.setRole(role);
+    fullInfoUserDto.setPhone(user.getPhone());
+    fullInfoUserDto.setAddress(user.getAddress());
+    fullInfoUserDto.setGender(user.getGender().toString());
+    fullInfoUserDto.setPanNumber(user.getPanNumber());
+    fullInfoUserDto.setEnabled(userRepresentation.isEnabled());
+    fullInfoUserDto.setVersion(user.getVersion());
+    fullInfoUserDto.setCreatedAt(user.getCreatedAt());
+    fullInfoUserDto.setUpdatedAt(user.getUpdatedAt());
+    return fullInfoUserDto;
   }
 }
