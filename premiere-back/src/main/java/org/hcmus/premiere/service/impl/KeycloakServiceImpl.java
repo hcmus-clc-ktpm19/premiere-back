@@ -286,11 +286,13 @@ public class KeycloakServiceImpl implements KeycloakService {
     String userId = userRepresentations.get(0).getId();
     UserResource userResource = realmResource.users().get(userId);
 
-    CredentialRepresentation credentialRepresentation = new CredentialRepresentation();
-    credentialRepresentation.setTemporary(false);
-    credentialRepresentation.setType(CredentialRepresentation.PASSWORD);
-    credentialRepresentation.setValue(fullInfoUserDto.getPassword());
-    userResource.resetPassword(credentialRepresentation);
+    if (fullInfoUserDto.getPassword() != null) { // only update password when necessary
+      CredentialRepresentation credentialRepresentation = new CredentialRepresentation();
+      credentialRepresentation.setTemporary(false);
+      credentialRepresentation.setType(CredentialRepresentation.PASSWORD);
+      credentialRepresentation.setValue(fullInfoUserDto.getPassword());
+      userResource.resetPassword(credentialRepresentation);
+    }
 
     RoleRepresentation roleRepresentation = realmResource
         .roles()

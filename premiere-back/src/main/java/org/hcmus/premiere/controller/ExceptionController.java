@@ -4,7 +4,6 @@ import static org.springframework.http.HttpStatus.ACCEPTED;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
-import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -123,17 +122,6 @@ public class ExceptionController {
     response.put("message", Objects.requireNonNull(e.getFieldError()).getDefaultMessage());
 
     return ResponseEntity.badRequest().body(response);
-  }
-
-  @ExceptionHandler(Exception.class)
-  @ApiResponse(responseCode = "500", description = "Unexpected exception")
-  public ResponseEntity<Map<String, String>> handleTokenExpiredException(Exception e) {
-    String message = e.getMessage();
-    log.error("Unexpected error: {}", message);
-
-    return ResponseEntity
-        .status(UNAUTHORIZED)
-        .body(Map.of(ERROR_MESSAGE, message));
   }
 
   @ExceptionHandler(PremiereAbstractException.class)
