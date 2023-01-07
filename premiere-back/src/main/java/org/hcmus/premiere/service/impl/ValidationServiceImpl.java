@@ -1,5 +1,7 @@
 package org.hcmus.premiere.service.impl;
 
+import static org.hcmus.premiere.model.exception.CreditCardNotFoundException.CREDIT_CARD_DISABLED;
+
 import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -8,7 +10,9 @@ import org.hcmus.premiere.model.dto.TransactionRequestDto;
 import org.hcmus.premiere.model.entity.Bank;
 import org.hcmus.premiere.model.entity.CreditCard;
 import org.hcmus.premiere.model.entity.LoanReminder;
+import org.hcmus.premiere.model.enums.CardStatus;
 import org.hcmus.premiere.model.enums.LoanStatus;
+import org.hcmus.premiere.model.exception.CreditCardNotFoundException;
 import org.hcmus.premiere.service.BankService;
 import org.hcmus.premiere.service.CreditCardService;
 import org.hcmus.premiere.service.ValidationService;
@@ -42,12 +46,20 @@ public class ValidationServiceImpl implements ValidationService {
       totalAmount = amount;
     }
     CreditCard senderCard = creditCardService.findCreditCardByNumber(transactionRequestDto.getSenderCardNumber());
+
+    if(senderCard.getStatus() == CardStatus.DISABLED) {
+      throw new CreditCardNotFoundException("Credit card is disabled", senderCard.getCardNumber(), CREDIT_CARD_DISABLED);
+    }
+
     if (senderCard.getBalance().subtract(totalAmount).compareTo(BigDecimal.ZERO) < 0) {
       throw new IllegalArgumentException(Constants.ACCOUNT_CURRENT_BALANCE_IS_NOT_AVAILABLE_TO_WITHDRAW);
     }
 
     if (transactionRequestDto.getIsInternal()) {
-      creditCardService.findCreditCardByNumber(transactionRequestDto.getReceiverCardNumber());
+      CreditCard receiver = creditCardService.findCreditCardByNumber(transactionRequestDto.getReceiverCardNumber());
+      if (receiver.getStatus() == CardStatus.DISABLED) {
+        throw new CreditCardNotFoundException("Credit card is disabled", receiver.getCardNumber(), CREDIT_CARD_DISABLED);
+      }
     } else {
       if(StringUtils.isEmpty(transactionRequestDto.getReceiverBankName())) {
         throw new IllegalArgumentException(Constants.BANK_NAME_IS_NOT_VALID);
