@@ -1,5 +1,6 @@
 package org.hcmus.premiere.service.impl;
 
+import static org.hcmus.premiere.model.exception.CreditCardNotFoundException.CREDIT_CARD_DISABLED;
 import static org.hcmus.premiere.model.exception.ReceiverNotFoundException.RECEIVER_NOT_FOUND;
 import static org.hcmus.premiere.model.exception.ReceiverNotFoundException.RECEIVER_NOT_FOUND_MESSAGE;
 import static org.hcmus.premiere.model.exception.UserReceiverNotFoundException.USER_RECEIVER_NOT_FOUND;
@@ -14,6 +15,8 @@ import org.hcmus.premiere.model.entity.CreditCard;
 import org.hcmus.premiere.model.entity.Receiver;
 import org.hcmus.premiere.model.entity.User;
 import org.hcmus.premiere.model.entity.UserReceiver;
+import org.hcmus.premiere.model.enums.CardStatus;
+import org.hcmus.premiere.model.exception.CreditCardNotFoundException;
 import org.hcmus.premiere.model.exception.ReceiverExisted;
 import org.hcmus.premiere.model.exception.ReceiverNotFoundException;
 import org.hcmus.premiere.model.exception.UserNotFoundException;
@@ -68,6 +71,9 @@ public class ReceiverServiceImpl implements ReceiverService {
   @Override
   public Receiver saveReceiver(ReceiverDto receiverDto) {
     CreditCard creditCard = creditCardService.findCreditCardByNumber(receiverDto.getCardNumber());
+    if (creditCard.getStatus() == CardStatus.DISABLED) {
+      throw new CreditCardNotFoundException("Credit card is disabled", creditCard.getCardNumber(), CREDIT_CARD_DISABLED);
+    }
     User user = userRepository
         .findById(receiverDto.getUserId())
         .orElseThrow(() -> new UserNotFoundException(
