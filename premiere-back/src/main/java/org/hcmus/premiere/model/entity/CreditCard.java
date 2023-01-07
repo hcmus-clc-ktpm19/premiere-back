@@ -8,12 +8,15 @@ import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.Data;
 import lombok.ToString;
+import org.hcmus.premiere.model.enums.CardStatus;
 
 @Entity
 @Table(name = "credit_card", schema = "premiere")
@@ -31,6 +34,11 @@ public class CreditCard extends PremiereAbstractEntity {
   @Basic
   @Column(name = "card_number", nullable = false, unique = true, columnDefinition = "VARCHAR(255)")
   private String cardNumber;
+
+  @Basic
+  @Column(name = "status", nullable = false, columnDefinition = "CARD_STATUS")
+  @Enumerated(EnumType.STRING)
+  private CardStatus status;
 
   @JsonIgnore
   @OneToOne

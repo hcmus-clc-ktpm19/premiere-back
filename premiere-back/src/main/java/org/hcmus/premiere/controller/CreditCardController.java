@@ -61,4 +61,10 @@ public class CreditCardController extends AbstractApplicationController {
         depositMoneyRequestDto.getAmount()
     );
   }
+
+  @GetMapping("/disable/{cardNumber}")
+  public ResponseEntity<?> disableCreditCardByUsername(@PathVariable String cardNumber) {
+    creditCardService.disableCreditCard(cardNumber);
+    return ResponseEntity.ok().build();
+  }
 }

@@ -25,22 +25,22 @@ INSERT INTO "user"(first_name, last_name, dob, gender, email, phone, pan_number,
 VALUES ('Nam', 'Nguyen Van', '01/01/2001', 'MALE','test4@gmail.com', '0987654328',
         'pan_number', 'address', 'avatar');
 
-INSERT INTO "credit_card"(user_id, balance, open_day, card_number)
-VALUES (1, 100000, CURRENT_TIMESTAMP, '1234567890123451');
-INSERT INTO "credit_card"(user_id, balance, open_day, card_number)
-VALUES (2, 200000, CURRENT_TIMESTAMP, '1234567890123452');
-INSERT INTO "credit_card"(user_id, balance, open_day, card_number)
-VALUES (3, 300000, CURRENT_TIMESTAMP, '1234567890123453');
-INSERT INTO "credit_card"(user_id, balance, open_day, card_number)
-VALUES (4, 400000, CURRENT_TIMESTAMP, '1234567890123454');
-INSERT INTO "credit_card"(user_id, balance, open_day, card_number)
-VALUES (5, 500000, CURRENT_TIMESTAMP, '1234567890123455');
-INSERT INTO "credit_card"(user_id, balance, open_day, card_number)
-VALUES (6, 600000, CURRENT_TIMESTAMP, '1234567890123456');
-INSERT INTO "credit_card"(user_id, balance, open_day, card_number)
-VALUES (7, 700000, CURRENT_TIMESTAMP, '1234567890123457');
-INSERT INTO "credit_card"(user_id, balance, open_day, card_number)
-VALUES (8, 800000, CURRENT_TIMESTAMP, '1234567890123458');
+INSERT INTO "credit_card"(user_id, balance, open_day, card_number, status)
+VALUES (1, 100000, CURRENT_TIMESTAMP, '1234567890123451', 'AVAILABLE');
+INSERT INTO "credit_card"(user_id, balance, open_day, card_number, status)
+VALUES (2, 200000, CURRENT_TIMESTAMP, '1234567890123452', 'AVAILABLE');
+INSERT INTO "credit_card"(user_id, balance, open_day, card_number, status)
+VALUES (3, 300000, CURRENT_TIMESTAMP, '1234567890123453', 'AVAILABLE');
+INSERT INTO "credit_card"(user_id, balance, open_day, card_number, status)
+VALUES (4, 400000, CURRENT_TIMESTAMP, '1234567890123454', 'AVAILABLE');
+INSERT INTO "credit_card"(user_id, balance, open_day, card_number, status)
+VALUES (5, 500000, CURRENT_TIMESTAMP, '1234567890123455', 'AVAILABLE');
+INSERT INTO "credit_card"(user_id, balance, open_day, card_number, status)
+VALUES (6, 600000, CURRENT_TIMESTAMP, '1234567890123456', 'AVAILABLE');
+INSERT INTO "credit_card"(user_id, balance, open_day, card_number, status)
+VALUES (7, 700000, CURRENT_TIMESTAMP, '1234567890123457', 'AVAILABLE');
+INSERT INTO "credit_card"(user_id, balance, open_day, card_number, status)
+VALUES (8, 800000, CURRENT_TIMESTAMP, '1234567890123458', 'AVAILABLE');
 
 INSERT INTO "bank"(bank_name)
 VALUES ('Premierebank');
