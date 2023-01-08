@@ -80,4 +80,4 @@ fabric.properties
 /.idea
 
 # ENV #
-etc/docker/env
+etc/docker/env/*
