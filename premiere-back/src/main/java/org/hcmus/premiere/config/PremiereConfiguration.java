@@ -28,6 +28,15 @@ public class PremiereConfiguration {
   @Value("${sendinblue.api-key}")
   private String SENDINBLUE_API_KEY;
 
+  @Value("${back-end.origin}")
+  private String backEndOrigin;
+
+  @Value("${keycloak-username}")
+  private String keycloakUsername;
+
+  @Value("${keycloak-password}")
+  private String keycloakPassword;
+
   @Bean
   public Keycloak keycloak() {
     return KeycloakBuilder
@@ -37,8 +46,8 @@ public class PremiereConfiguration {
         .grantType(OAuth2Constants.CLIENT_CREDENTIALS)
         .clientId(keycloakSpringBootProperties.getResource())
         .clientSecret(keycloakSpringBootProperties.getClientKeyPassword())
-        .username("admin")
-        .password("admin")
+        .username(keycloakUsername)
+        .password(keycloakPassword)
         .build();
   }
 
@@ -78,6 +87,6 @@ public class PremiereConfiguration {
   @Bean
   public ResteasyWebTarget resteasyWebTarget() {
     ResteasyClient client = resteasyClient();
-    return client.target("http://localhost:8080");
+    return client.target(backEndOrigin);
   }
 }

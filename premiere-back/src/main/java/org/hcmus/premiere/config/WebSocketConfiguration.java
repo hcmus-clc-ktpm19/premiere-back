@@ -62,8 +62,8 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
     registry.enableStompBrokerRelay("/topic")
         .setRelayHost(rabbitProperties.getHost())
         .setRelayPort(stompPort)
-        .setSystemLogin("guest")
-        .setSystemPasscode("guest");
+        .setSystemLogin(rabbitProperties.getUsername())
+        .setSystemPasscode(rabbitProperties.getPassword());
     registry.setApplicationDestinationPrefixes("/app");
   }
 
