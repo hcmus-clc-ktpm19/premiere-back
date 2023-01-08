@@ -264,6 +264,6 @@
         </configuration>
       </plugin>
     </plugins>
+    <finalName>premiere-back</finalName>
   </build>
-
 </project>

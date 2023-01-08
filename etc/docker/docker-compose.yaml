@@ -13,6 +13,8 @@ services:
     volumes:
       - postgres:/data/postgres
       - ../../db:/docker-entrypoint-initdb.d
+    networks:
+      - premiere-network
     restart: unless-stopped
 
   postgresql:
@@ -25,6 +27,8 @@ services:
       - POSTGRESQL_DATABASE=bitnami_keycloak
     volumes:
       - postgresql_data:/bitnami/postgresql
+    networks:
+      - keycloak-network
     ports:
       - "5433:5433"
   keycloak:
@@ -32,6 +36,8 @@ services:
     image: docker.io/bitnami/keycloak:19
     volumes:
       - ./keycloak/realms:/opt/bitnami/keycloak/data/import
+    networks:
+      - keycloak-network
     depends_on:
       - postgresql
     ports:
@@ -57,9 +63,35 @@ services:
     volumes:
       - rabbitmq:/var/lib/rabbitmq
       - ./rabbitmq/plugins/rabbit_enabled_plugins:/etc/rabbitmq/enabled_plugins
+    networks:
+      - premiere-network
+
+  premiere-back:
+    container_name: premiere-back-container
+    image: namworkmc/premiere-back:latest
+    ports:
+      - "8080:8080"
+    networks:
+      - premiere-network
+    env_file: env/back-end.env
+
+  premiere-front:
+    container_name: premiere-front-container
+    image: namworkmc/premiere-front:latest
+    ports:
+      - "3000:3000"
+    networks:
+      - premiere-network
+    env_file: env/front-end.env
 
 volumes:
   postgres:
   postgresql_data:
     driver: local
   rabbitmq:
+
+networks:
+  premiere-network:
+    driver: bridge
+  keycloak-network:
+    driver: bridge
