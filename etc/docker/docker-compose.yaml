@@ -14,6 +14,8 @@ services:
       - postgres:/data/postgres
       - ../../db:/docker-entrypoint-initdb.d
     restart: unless-stopped
+    networks:
+      - premiere-network
 
   postgresql:
     container_name: keycloak-postgresql-container
@@ -27,8 +29,11 @@ services:
       - postgresql_data:/bitnami/postgresql
     ports:
       - "5433:5433"
+    networks:
+      - keycloak-network
   keycloak:
     container_name: keycloak-container
+    hostname: keycloak-container
     image: docker.io/bitnami/keycloak:19
     depends_on:
       - postgresql
@@ -37,6 +42,9 @@ services:
     environment:
       - KEYCLOAK_ADMIN_USER=admin
       - KEYCLOAK_ADMIN_PASSWORD=admin
+    networks:
+      - premiere-network
+      - keycloak-network
 
   rabbitmq:
     hostname: localhost
@@ -54,9 +62,35 @@ services:
     volumes:
       - rabbitmq:/var/lib/rabbitmq
       - ./rabbitmq/plugins/rabbit_enabled_plugins:/etc/rabbitmq/enabled_plugins
+    networks:
+      - premiere-network
+
+  premiere-back:
+    container_name: premiere-back-container
+    image: premiere-back:latest
+    ports:
+      - "8080:8080"
+    networks:
+      - premiere-network
+    env_file: env/back-end.env
+
+  premiere-front:
+    container_name: premiere-front-container
+    image: premiere-front
+    ports:
+      - "3000:3000"
+    networks:
+      - premiere-network
+    env_file: env/front-end.env
 
 volumes:
   postgres:
   postgresql_data:
     driver: local
   rabbitmq:
+
+networks:
+  premiere-network:
+    driver: bridge
+  keycloak-network:
+    driver: bridge
