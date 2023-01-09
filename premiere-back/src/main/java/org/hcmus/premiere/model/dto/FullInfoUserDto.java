@@ -6,6 +6,7 @@ import lombok.Data;
 import org.hcmus.premiere.model.enums.Gender;
 import org.hcmus.premiere.model.enums.PremiereRole;
 import org.hcmus.premiere.util.validation.ValueOfEnum;
+import org.springframework.lang.Nullable;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -28,7 +29,7 @@ public class FullInfoUserDto extends PremiereAbstractEntityDto {
   private String panNumber;
   @NotBlank(message = "Address may not be blank")
   private String address;
-  @NotBlank(message = "Password may not be blank")
+  @Nullable
   private String password;
   @ValueOfEnum(enumClass = PremiereRole.class)
   @NotBlank(message = "Role may not be blank")

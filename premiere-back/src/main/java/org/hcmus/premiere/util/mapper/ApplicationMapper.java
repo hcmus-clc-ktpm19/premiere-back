@@ -106,9 +106,9 @@ public class ApplicationMapper {
     FullInfoUserDto fullInfoUserDto = new FullInfoUserDto();
     fullInfoUserDto.setId(user.getId());
     fullInfoUserDto.setUsername(userRepresentation.getUsername());
-    fullInfoUserDto.setFirstName(userRepresentation.getFirstName());
-    fullInfoUserDto.setLastName(userRepresentation.getLastName());
-    fullInfoUserDto.setEmail(userRepresentation.getEmail());
+    fullInfoUserDto.setFirstName(user.getFirstName());
+    fullInfoUserDto.setLastName(user.getLastName());
+    fullInfoUserDto.setEmail(user.getEmail());
     fullInfoUserDto.setRole(role);
     fullInfoUserDto.setPhone(user.getPhone());
     fullInfoUserDto.setAddress(user.getAddress());
