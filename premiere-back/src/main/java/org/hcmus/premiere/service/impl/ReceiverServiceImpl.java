@@ -1,6 +1,7 @@
 package org.hcmus.premiere.service.impl;
 
 import static org.hcmus.premiere.model.exception.CreditCardNotFoundException.CREDIT_CARD_DISABLED;
+import static org.hcmus.premiere.model.exception.CreditCardNotFoundException.CREDIT_CARD_NOT_FOUND;
 import static org.hcmus.premiere.model.exception.ReceiverNotFoundException.RECEIVER_NOT_FOUND;
 import static org.hcmus.premiere.model.exception.ReceiverNotFoundException.RECEIVER_NOT_FOUND_MESSAGE;
 import static org.hcmus.premiere.model.exception.UserReceiverNotFoundException.USER_RECEIVER_NOT_FOUND;
@@ -21,6 +22,7 @@ import org.hcmus.premiere.model.exception.ReceiverExisted;
 import org.hcmus.premiere.model.exception.ReceiverNotFoundException;
 import org.hcmus.premiere.model.exception.UserNotFoundException;
 import org.hcmus.premiere.model.exception.UserReceiverNotFoundException;
+import org.hcmus.premiere.repository.CreditCardRepository;
 import org.hcmus.premiere.repository.ReceiverRepository;
 import org.hcmus.premiere.repository.UserReceiverRepository;
 import org.hcmus.premiere.repository.UserRepository;
@@ -40,6 +42,7 @@ public class ReceiverServiceImpl implements ReceiverService {
   private final BankService bankService;
   private final UserRepository userRepository;
   private final UserReceiverRepository userReceiverRepository;
+  private final CreditCardRepository creditCardRepository;
 
   @Override
   public List<Receiver> findAllReceiversByUserId(Long userId) {
@@ -74,6 +77,11 @@ public class ReceiverServiceImpl implements ReceiverService {
     if (creditCard.getStatus() == CardStatus.DISABLED) {
       throw new CreditCardNotFoundException("Credit card is disabled", creditCard.getCardNumber(), CREDIT_CARD_DISABLED);
     }
+
+    if (!creditCardRepository.existsByUserId(receiverDto.getUserId())) {
+      throw new CreditCardNotFoundException("Credit card by user id not found", creditCard.getCardNumber(), CREDIT_CARD_NOT_FOUND);
+    }
+
     User user = userRepository
         .findById(receiverDto.getUserId())
         .orElseThrow(() -> new UserNotFoundException(
