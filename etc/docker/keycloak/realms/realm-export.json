@@ -3,7 +3,7 @@
     {
       "username": "admin",
       "enabled": true,
-      "email": "admin@test.com",
+      "email": "admin@gmail.com",
       "credentials": [
         {
           "type": "password",
@@ -28,13 +28,13 @@
         ]
       },
       "attributes": {
-        "userId": "1"
+        "userId": "9"
       }
     },
     {
       "username": "employee",
       "enabled": true,
-      "email": "employee@test.com",
+      "email": "employee@gmail.com",
       "credentials": [
         {
           "type": "password",
@@ -60,13 +60,69 @@
       }
     },
     {
-      "username": "customer",
+      "username": "customer1",
       "enabled": true,
-      "email": "customer@test.com",
+      "email": "customer1@gmail.com",
       "credentials": [
         {
           "type": "password",
-          "value": "customer",
+          "value": "customer1",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "offline_access",
+        "CUSTOMER",
+        "uma_authorization",
+        "default-roles-premiere"
+      ],
+      "clientRoles": {
+        "account": [
+          "manage-account",
+          "manage-account-links",
+          "view-profile"
+        ]
+      },
+      "attributes": {
+        "userId": "1"
+      }
+    },
+    {
+      "username": "customer2",
+      "enabled": true,
+      "email": "customer2@gmail.com",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "customer2",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "offline_access",
+        "CUSTOMER",
+        "uma_authorization",
+        "default-roles-premiere"
+      ],
+      "clientRoles": {
+        "account": [
+          "manage-account",
+          "manage-account-links",
+          "view-profile"
+        ]
+      },
+      "attributes": {
+        "userId": "2"
+      }
+    },
+    {
+      "username": "customer3",
+      "enabled": true,
+      "email": "customer3@gmail.com",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "customer3",
           "temporary": false
         }
       ],
@@ -85,6 +141,146 @@
       },
       "attributes": {
         "userId": "3"
+      }
+    },
+    {
+      "username": "customer4",
+      "enabled": true,
+      "email": "customer4@gmail.com",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "customer4",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "offline_access",
+        "CUSTOMER",
+        "uma_authorization",
+        "default-roles-premiere"
+      ],
+      "clientRoles": {
+        "account": [
+          "manage-account",
+          "manage-account-links",
+          "view-profile"
+        ]
+      },
+      "attributes": {
+        "userId": "4"
+      }
+    },
+    {
+      "username": "customer5",
+      "enabled": true,
+      "email": "customer5@gmail.com",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "customer5",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "offline_access",
+        "CUSTOMER",
+        "uma_authorization",
+        "default-roles-premiere"
+      ],
+      "clientRoles": {
+        "account": [
+          "manage-account",
+          "manage-account-links",
+          "view-profile"
+        ]
+      },
+      "attributes": {
+        "userId": "5"
+      }
+    },
+    {
+      "username": "customer6",
+      "enabled": true,
+      "email": "customer6@gmail.com",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "customer6",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "offline_access",
+        "CUSTOMER",
+        "uma_authorization",
+        "default-roles-premiere"
+      ],
+      "clientRoles": {
+        "account": [
+          "manage-account",
+          "manage-account-links",
+          "view-profile"
+        ]
+      },
+      "attributes": {
+        "userId": "6"
+      }
+    },
+    {
+      "username": "customer7",
+      "enabled": true,
+      "email": "customer7@gmail.com",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "customer7",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "offline_access",
+        "CUSTOMER",
+        "uma_authorization",
+        "default-roles-premiere"
+      ],
+      "clientRoles": {
+        "account": [
+          "manage-account",
+          "manage-account-links",
+          "view-profile"
+        ]
+      },
+      "attributes": {
+        "userId": "7"
+      }
+    },
+    {
+      "username": "customer8",
+      "enabled": true,
+      "email": "customer8@gmail.com",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "customer8",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "offline_access",
+        "CUSTOMER",
+        "uma_authorization",
+        "default-roles-premiere"
+      ],
+      "clientRoles": {
+        "account": [
+          "manage-account",
+          "manage-account-links",
+          "view-profile"
+        ]
+      },
+      "attributes": {
+        "userId": "8"
       }
     }
   ],
@@ -572,134 +768,6 @@
   "webAuthnPolicyPasswordlessCreateTimeout": 0,
   "webAuthnPolicyPasswordlessAvoidSameAuthenticatorRegister": false,
   "webAuthnPolicyPasswordlessAcceptableAaguids": [],
-  "users": [
-    {
-      "username": "admin",
-      "enabled": true,
-      "email": "admin@test.com",
-      "credentials": [
-        {
-          "type": "password",
-          "value": "admin",
-          "temporary": false
-        }
-      ],
-      "realmRoles": [
-        "offline_access",
-        "uma_authorization",
-        "PREMIERE_ADMIN",
-        "default-roles-premiere"
-      ],
-      "clientRoles": {
-        "realm-management": [
-          "manage-users"
-        ],
-        "account": [
-          "manage-account",
-          "manage-account-links",
-          "view-profile"
-        ]
-      },
-      "attributes": {
-        "userId": "1"
-      }
-    },
-    {
-      "username": "employee",
-      "enabled": true,
-      "email": "employee@test.com",
-      "credentials": [
-        {
-          "type": "password",
-          "value": "employee",
-          "temporary": false
-        }
-      ],
-      "realmRoles": [
-        "EMPLOYEE",
-        "offline_access",
-        "uma_authorization",
-        "default-roles-premiere"
-      ],
-      "clientRoles": {
-        "account": [
-          "manage-account",
-          "manage-account-links",
-          "view-profile"
-        ]
-      },
-      "attributes": {
-        "userId": "2"
-      }
-    },
-    {
-      "username": "customer",
-      "enabled": true,
-      "email": "customer@test.com",
-      "credentials": [
-        {
-          "type": "password",
-          "value": "customer",
-          "temporary": false
-        }
-      ],
-      "realmRoles": [
-        "offline_access",
-        "CUSTOMER",
-        "uma_authorization",
-        "default-roles-premiere"
-      ],
-      "clientRoles": {
-        "account": [
-          "manage-account",
-          "manage-account-links",
-          "view-profile"
-        ]
-      },
-      "attributes": {
-        "userId": "3"
-      }
-    },
-    {
-      "id": "dde25a8c-c617-4e53-b1a1-8daa4039ffa5",
-      "createdTimestamp": 1671164865298,
-      "username": "service-account-premiere-client",
-      "enabled": true,
-      "totp": false,
-      "emailVerified": false,
-      "serviceAccountClientId": "premiere-client",
-      "disableableCredentialTypes": [],
-      "requiredActions": [],
-      "realmRoles": [
-        "default-roles-premiere-realm"
-      ],
-      "clientRoles": {
-        "realm-management": [
-          "manage-events",
-          "view-events",
-          "query-users",
-          "realm-admin",
-          "manage-clients",
-          "view-clients",
-          "view-realm",
-          "manage-authorization",
-          "view-authorization",
-          "query-groups",
-          "manage-identity-providers",
-          "view-users",
-          "query-realms",
-          "view-identity-providers",
-          "create-client",
-          "manage-realm",
-          "impersonation",
-          "manage-users",
-          "query-clients"
-        ]
-      },
-      "notBefore": 0,
-      "groups": []
-    }
-  ],
   "scopeMappings": [
     {
       "clientScope": "offline_access",
@@ -910,7 +978,7 @@
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
-      "secret": "**********",
+      "secret": "AW4aUnOGcPpitHX0TI6grfZeA3WLt5ru",
       "redirectUris": [
         "http://localhost:3000"
       ],
