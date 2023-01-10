@@ -1,28 +1,28 @@
 SET SEARCH_PATH TO premiere;
 
 INSERT INTO "user"(first_name, last_name, dob, gender, email, phone, pan_number, address, avatar)
-VALUES ('Nam', 'Nguyen Duc', '01/01/2001', 'MALE', 'keke@gmail.com', '0987654321', 'pan_number',
+VALUES ('Nam', 'Nguyen Duc', '01/01/2001', 'MALE', 'customer1@gmail.com', '0987654321', 'pan_number',
         'address', 'avatar');
 INSERT INTO "user"(first_name, last_name, dob, gender, email, phone, pan_number, address, avatar)
-VALUES ('Giap', 'Hoang Huu', '01/01/2001', 'FEMALE', 'hehe@gmail.com', '0987654322',
+VALUES ('Giap', 'Hoang Huu', '01/01/2001', 'FEMALE', 'customer2@gmail.com', '0987654322',
         'pan_number', 'address', 'avatar');
 INSERT INTO "user"(first_name, last_name, dob, gender, email, phone, pan_number, address, avatar)
-VALUES ('Nhat', 'Le Ngoc Minh', '01/01/2001', 'MALE', 'hihi@gmail.com', '0987654323',
+VALUES ('Nhat', 'Le Ngoc Minh', '01/01/2001', 'MALE', 'customer3@gmail.com', '0987654323',
         'pan_number', 'address', 'avatar');
 INSERT INTO "user"(first_name, last_name, dob, gender, email, phone, pan_number, address, avatar)
-VALUES ('Huy', 'Nguyen Van', '01/01/2001', 'MALE', 'huhu@gmail.com', '0987654324',
+VALUES ('Huy', 'Nguyen Van', '01/01/2001', 'MALE', 'customer4@gmail.com', '0987654324',
         'pan_number', 'address', 'avatar');
 INSERT INTO "user"(first_name, last_name, dob, gender, email, phone, pan_number, address, avatar)
-VALUES ('Hai', 'Nguyen Van', '01/01/2001', 'MALE','test1@gmail.com', '0987654325',
+VALUES ('Hai', 'Nguyen Van', '01/01/2001', 'MALE','customer5@gmail.com', '0987654325',
         'pan_number', 'address', 'avatar');
 INSERT INTO "user"(first_name, last_name, dob, gender, email, phone, pan_number, address, avatar)
-VALUES ('Ba', 'Nguyen Van', '01/01/2001', 'MALE','test2@gmail.com', '0987654326',
+VALUES ('Ba', 'Nguyen Van', '01/01/2001', 'MALE','customer6@gmail.com', '0987654326',
         'pan_number', 'address', 'avatar');
 INSERT INTO "user"(first_name, last_name, dob, gender, email, phone, pan_number, address, avatar)
-VALUES ('Bon', 'Nguyen Van', '01/01/2001', 'MALE','test3@gmail.com', '0987654327',
+VALUES ('Bon', 'Nguyen Van', '01/01/2001', 'MALE','customer7@gmail.com', '0987654327',
         'pan_number', 'address', 'avatar');
 INSERT INTO "user"(first_name, last_name, dob, gender, email, phone, pan_number, address, avatar)
-VALUES ('Nam', 'Nguyen Van', '01/01/2001', 'MALE','test4@gmail.com', '0987654328',
+VALUES ('Nam', 'Nguyen Van', '01/01/2001', 'MALE','customer8@gmail.com', '0987654328',
         'pan_number', 'address', 'avatar');
 
 INSERT INTO "credit_card"(user_id, balance, open_day, card_number, status)
