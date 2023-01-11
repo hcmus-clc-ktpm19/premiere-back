@@ -1,6 +1,7 @@
 package org.hcmus.premiere.service.impl;
 
 import static org.hcmus.premiere.common.consts.PremiereApiUrls.PREMIERE_API_V2_EXTERNAL;
+import static org.hcmus.premiere.model.exception.CreditCardNotFoundException.CREDIT_CARD_DISABLED;
 import static org.hcmus.premiere.model.exception.CreditCardNotFoundException.CREDIT_CARD_NOT_FOUND;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,6 +14,7 @@ import org.hcmus.premiere.common.consts.Constants;
 import org.hcmus.premiere.model.dto.CreditCardDto;
 import org.hcmus.premiere.model.entity.CreditCard;
 import org.hcmus.premiere.model.entity.User;
+import org.hcmus.premiere.model.enums.CardStatus;
 import org.hcmus.premiere.model.exception.CreditCardNotFoundException;
 import org.hcmus.premiere.repository.CreditCardRepository;
 import org.hcmus.premiere.resource.ExternalBankResource;
@@ -80,6 +82,15 @@ public class CreditCardServiceImpl implements CreditCardService {
 
   @Override
   public CreditCard findCreditCardByNumber(String number) {
+    return creditCardRepository
+        .findCreditCardByCardNumber(number)
+        .orElseThrow(
+            () -> new CreditCardNotFoundException("Credit card with number not found", number,
+                CREDIT_CARD_NOT_FOUND));
+  }
+
+  @Override
+  public CreditCard findCreditCardByNumberExternal(String number) {
     return creditCardRepository
         .findCreditCardByCardNumber(number)
         .orElseThrow(
@@ -163,11 +174,15 @@ public class CreditCardServiceImpl implements CreditCardService {
     creditCard.setBalance(Constants.CREDIT_CARD_INITIAL_BALANCE);
     creditCard.setUser(user);
     creditCard.setOpenDay(LocalDateTime.now());
+    creditCard.setStatus(CardStatus.AVAILABLE);
     return creditCardRepository.saveAndFlush(creditCard);
   }
 
   @Override
   public CreditCard updateCreditCard(CreditCard creditCard) {
+    if(creditCard.getStatus() == CardStatus.DISABLED) {
+      throw new CreditCardNotFoundException("Credit card is disabled", creditCard.getCardNumber(), CREDIT_CARD_DISABLED);
+    }
     return creditCardRepository.saveAndFlush(creditCard);
   }
 
@@ -184,7 +199,19 @@ public class CreditCardServiceImpl implements CreditCardService {
     if (creditCard == null) {
       throw new CreditCardNotFoundException("Credit card not found", null, CREDIT_CARD_NOT_FOUND);
     }
+
+    if(creditCard.getStatus() == CardStatus.DISABLED) {
+      throw new CreditCardNotFoundException("Credit card is disabled", creditCard.getCardNumber(), CREDIT_CARD_DISABLED);
+    }
+
     creditCard.setBalance(creditCard.getBalance().add(amount));
     return creditCard.getId();
+  }
+
+  @Override
+  public void disableCreditCard(String cardNumber) {
+    CreditCard creditCard = findCreditCardByNumber(cardNumber);
+    creditCard.setStatus(CardStatus.DISABLED);
+    creditCardRepository.saveAndFlush(creditCard);
   }
 }

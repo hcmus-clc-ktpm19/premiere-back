@@ -1,11 +1,15 @@
 package org.hcmus.premiere.model.entity;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.Data;
 
@@ -18,22 +22,16 @@ public class Receiver extends PremiereAbstractEntity {
   @Column(name = "card_number", nullable = false, columnDefinition = "VARCHAR(255)")
   private String cardNumber;
 
-  @Basic
-  @Column(name = "nickname", nullable = false, columnDefinition = "VARCHAR(255)")
-  private String nickname;
-
-  @Basic
-  @Column(name = "full_name", nullable = false, columnDefinition = "VARCHAR(255)")
-  private String fullName;
-
-  @ManyToOne
-  @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
-  private User user;
+  @OneToMany(
+      mappedBy = "receiver",
+      cascade = CascadeType.ALL,
+      orphanRemoval = true
+  )
+  private Set<UserReceiver> users = new HashSet<>();
 
   @ManyToOne
   @JoinColumn(name = "bank_id", referencedColumnName = "id", nullable = false)
   private Bank bank;
-
 
   @Override
   public boolean equals(Object o) {
@@ -45,13 +43,11 @@ public class Receiver extends PremiereAbstractEntity {
     }
     Receiver receiver = (Receiver) o;
     return Objects.equals(id, receiver.id)
-        && Objects.equals(version, receiver.version) && Objects.equals(cardNumber, receiver.cardNumber)
-        && Objects.equals(nickname, receiver.nickname) && Objects.equals(fullName,
-        receiver.fullName);
+        && Objects.equals(version, receiver.version) && Objects.equals(cardNumber, receiver.cardNumber);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, cardNumber, nickname, fullName, version);
+    return Objects.hash(id, cardNumber, version);
   }
 }

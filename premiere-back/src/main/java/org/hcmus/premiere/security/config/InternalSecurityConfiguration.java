@@ -55,7 +55,11 @@ public class InternalSecurityConfiguration extends KeycloakWebSecurityConfigurer
         .authorizeRequests()
         .antMatchers(PremiereApiUrls.PREMIERE_API_V1 + "/credit-card/**")
         .hasAnyRole(CUSTOMER.value, EMPLOYEE.value, PREMIERE_ADMIN.value)
-        .antMatchers(PremiereApiUrls.PREMIERE_API_V1 + "/receivers/**").hasRole(CUSTOMER.value)
+        .antMatchers(PremiereApiUrls.PREMIERE_API_V1 + "/receivers/**").hasAnyRole(CUSTOMER.value, PREMIERE_ADMIN.value)
+        .antMatchers("/api-docs/**").permitAll()
+        .antMatchers(PremiereApiUrls.PREMIERE_API_V1 + "/auth/request-otp/**").permitAll()
+        .antMatchers(PremiereApiUrls.PREMIERE_API_V1 + "/auth/verify-otp/**").permitAll()
+        .antMatchers(PremiereApiUrls.PREMIERE_API_V1 + "/auth/reset-password/**").permitAll()
         .anyRequest()
         .authenticated(); // used to be .permitAll()
   }

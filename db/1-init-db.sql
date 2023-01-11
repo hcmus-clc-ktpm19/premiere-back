@@ -5,6 +5,14 @@ CREATE TYPE GENDER AS ENUM ('MALE', 'FEMALE', 'OTHER');
 CREATE TYPE LOAN_STATUS AS ENUM ('APPROVED', 'REJECTED', 'PENDING');
 CREATE TYPE TRANSACTION_TYPE AS ENUM ('PURCHASE', 'REDEMPTION', 'LOAN');
 CREATE TYPE TRANSACTION_STATUS AS ENUM ('CHECKING', 'COMPLETED', 'FAILED');
+CREATE TYPE CARD_STATUS AS ENUM ('AVAILABLE', 'DISABLED');
+
+CREATE TABLE "premiere_abstract_table"
+(
+    "version"    INT          NOT NULL DEFAULT 0,
+    "created_at" TIMESTAMP(0) NOT NULL DEFAULT NOW(),
+    "updated_at" TIMESTAMP(0) NOT NULL DEFAULT NOW()
+);
 
 CREATE TABLE "user"
 (
@@ -18,11 +26,8 @@ CREATE TABLE "user"
     "pan_number" VARCHAR(255) NOT NULL,
     "address"    VARCHAR(255) NOT NULL,
     "avatar"     VARCHAR(255),
-    "version"    INT          NOT NULL DEFAULT 0,
     CONSTRAINT "user_pk" PRIMARY KEY ("id")
-) WITH (
-      OIDS= FALSE
-    );
+) INHERITS ("premiere_abstract_table") WITH (OIDS= FALSE);
 
 CREATE TABLE "credit_card"
 (
@@ -31,35 +36,27 @@ CREATE TABLE "credit_card"
     "balance"     NUMERIC      NOT NULL,
     "open_day"    TIMESTAMP    NOT NULL,
     "card_number" VARCHAR(255) NOT NULL UNIQUE,
-    "version"     INT          NOT NULL DEFAULT 0,
+    "status"      CARD_STATUS  NOT NULL,
     CONSTRAINT "credit_card_pk" PRIMARY KEY ("id")
-) WITH (
-      OIDS= FALSE
-    );
+) INHERITS ("premiere_abstract_table") WITH (OIDS= FALSE);
 
 CREATE TABLE "bank"
 (
     "id"        SERIAL       NOT NULL,
     "bank_name" VARCHAR(255) NOT NULL UNIQUE,
-    "version"   INT          NOT NULL DEFAULT 0,
     CONSTRAINT "bank_pk" PRIMARY KEY ("id")
-) WITH (
-      OIDS= FALSE
-    );
+) INHERITS ("premiere_abstract_table") WITH (OIDS= FALSE);
 
 CREATE TABLE "receiver"
 (
     "id"          SERIAL       NOT NULL,
-    "card_number" VARCHAR(255) NOT NULL,
+    "card_number" VARCHAR(255) NOT NULL UNIQUE,
     "nickname"    VARCHAR(255) NOT NULL,
     "full_name"   VARCHAR(255) NOT NULL,
     "user_id"     INTEGER      NOT NULL,
     "bank_id"     INTEGER      NOT NULL,
-    "version"     INT          NOT NULL DEFAULT 0,
     CONSTRAINT "receivers_pk" PRIMARY KEY ("id")
-) WITH (
-      OIDS= FALSE
-    );
+) INHERITS ("premiere_abstract_table") WITH (OIDS= FALSE);
 
 CREATE TABLE "loan_reminder"
 (
@@ -71,11 +68,8 @@ CREATE TABLE "loan_reminder"
     "time"                    TIMESTAMP    NOT NULL,
     "loan_remark"             VARCHAR(255) NOT NULL,
     "cancel_reason"           VARCHAR(255),
-    "version"                 INT          NOT NULL DEFAULT 0,
     CONSTRAINT "loan_reminder_pk" PRIMARY KEY ("id")
-) WITH (
-      OIDS= FALSE
-    );
+) INHERITS ("premiere_abstract_table") WITH (OIDS= FALSE);
 
 CREATE TABLE "transaction"
 (
@@ -92,11 +86,8 @@ CREATE TABLE "transaction"
     "fee"                         NUMERIC            NOT NULL,
     "is_self_payment_fee"         BOOLEAN            NOT NULL,
     "status"                      TRANSACTION_STATUS NOT NULL,
-    "version"                     INT                NOT NULL DEFAULT 0,
     CONSTRAINT "transaction_pk" PRIMARY KEY ("id")
-) WITH (
-      OIDS= FALSE
-    );
+) INHERITS ("premiere_abstract_table") WITH (OIDS= FALSE);
 
 CREATE TABLE "checking_transaction"
 (
@@ -114,11 +105,8 @@ CREATE TABLE "checking_transaction"
     "is_self_payment_fee"         BOOLEAN,
     "is_internal"                 BOOLEAN,
     "status"                      TRANSACTION_STATUS,
-    "version"                     INT DEFAULT 0,
     CONSTRAINT "checking_transaction_pk" PRIMARY KEY ("id")
-) WITH (
-      OIDS= FALSE
-    );
+) INHERITS ("premiere_abstract_table") WITH (OIDS= FALSE);
 
 ALTER TABLE "credit_card"
     ADD CONSTRAINT "credit_card_fk0" FOREIGN KEY ("user_id") REFERENCES "user" ("id");

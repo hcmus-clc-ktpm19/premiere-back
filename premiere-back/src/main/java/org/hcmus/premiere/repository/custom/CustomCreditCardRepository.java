@@ -6,6 +6,8 @@ import org.hcmus.premiere.model.entity.CreditCard;
 
 public interface CustomCreditCardRepository {
 
+  boolean existsByUserId(Long userId);
+
   List<CreditCard> getCreditCardsIgnoreBalance();
 
   Optional<CreditCard> getCreditCardByNumberIgnoreBalance(String number);

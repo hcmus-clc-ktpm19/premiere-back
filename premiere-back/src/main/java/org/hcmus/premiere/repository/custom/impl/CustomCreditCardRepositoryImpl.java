@@ -1,6 +1,7 @@
 package org.hcmus.premiere.repository.custom.impl;
 
 import static org.hcmus.premiere.model.entity.QCreditCard.*;
+import static org.hcmus.premiere.model.entity.QUser.user;
 
 import com.querydsl.core.Tuple;
 import java.util.List;
@@ -13,6 +14,14 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class CustomCreditCardRepositoryImpl extends PremiereAbstractCustomRepository<CreditCard> implements CustomCreditCardRepository {
+
+  @Override
+  public boolean existsByUserId(Long userId) {
+    return selectFrom(creditCard)
+        .innerJoin(creditCard.user, user)
+        .where(user.id.eq(userId))
+        .fetchOne() != null;
+  }
 
   @Override
   public List<CreditCard> getCreditCardsIgnoreBalance() {

@@ -14,6 +14,8 @@ public interface CreditCardService {
   @PreAuthorize("@SecurityUtils.containsRoles('CUSTOMER', 'PREMIERE_ADMIN', 'EMPLOYEE')")
   CreditCard findCreditCardByNumber(String number);
 
+  CreditCard findCreditCardByNumberExternal(String number);
+
   CreditCard findCreditCardByUserId(Long id);
 
   CreditCard getCreditCardByNumberIgnoreBalance(String cardNumber);
@@ -29,4 +31,6 @@ public interface CreditCardService {
   CreditCard updateCreditCard(CreditCard creditCard);
 
   Long depositMoney(String username, String creditCardNumber, BigDecimal amount);
+
+  void disableCreditCard(String cardNumber);
 }

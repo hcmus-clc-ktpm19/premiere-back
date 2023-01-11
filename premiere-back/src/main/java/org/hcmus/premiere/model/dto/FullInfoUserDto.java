@@ -1,13 +1,17 @@
 package org.hcmus.premiere.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.validation.constraints.NotBlank;
 import lombok.Data;
 import org.hcmus.premiere.model.enums.Gender;
 import org.hcmus.premiere.model.enums.PremiereRole;
 import org.hcmus.premiere.util.validation.ValueOfEnum;
+import org.springframework.lang.Nullable;
 
 @Data
-public class RegisterAccountDto {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class FullInfoUserDto extends PremiereAbstractEntityDto {
+
   @NotBlank(message = "Username may not be blank")
   private String username;
   @NotBlank(message = "Email may not be blank")
@@ -25,9 +29,10 @@ public class RegisterAccountDto {
   private String panNumber;
   @NotBlank(message = "Address may not be blank")
   private String address;
-  @NotBlank(message = "Password may not be blank")
+  @Nullable
   private String password;
   @ValueOfEnum(enumClass = PremiereRole.class)
   @NotBlank(message = "Role may not be blank")
   private String role;
+  private boolean enabled;
 }

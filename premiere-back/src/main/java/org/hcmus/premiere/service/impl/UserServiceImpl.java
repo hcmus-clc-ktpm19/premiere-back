@@ -7,7 +7,7 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.hcmus.premiere.model.dto.RegisterAccountDto;
+import org.hcmus.premiere.model.dto.FullInfoUserDto;
 import org.hcmus.premiere.model.entity.User;
 import org.hcmus.premiere.model.enums.Gender;
 import org.hcmus.premiere.model.exception.CreditCardNotFoundException;
@@ -15,9 +15,11 @@ import org.hcmus.premiere.model.exception.UserNotFoundException;
 import org.hcmus.premiere.repository.UserRepository;
 import org.hcmus.premiere.service.UserService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
+@Transactional(rollbackFor = Throwable.class)
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
 
@@ -48,15 +50,26 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public User saveUser(RegisterAccountDto registerAccountDto){
-    User user = new User();
-    user.setEmail(registerAccountDto.getEmail());
-    user.setFirstName(registerAccountDto.getFirstName());
-    user.setLastName(registerAccountDto.getLastName());
-    user.setPhone(registerAccountDto.getPhone());
-    user.setAddress(registerAccountDto.getAddress());
-    user.setGender(Gender.valueOf(registerAccountDto.getGender()));
-    user.setPanNumber(registerAccountDto.getPanNumber());
+  public boolean isUserExist(Long id) {
+    return userRepository.existsById(id);
+  }
+
+  @Override
+  public User saveUser(FullInfoUserDto fullInfoUserDto) {
+    User user;
+
+    if (fullInfoUserDto.getId() != null && isUserExist(fullInfoUserDto.getId())) {
+      user = findUserById(fullInfoUserDto.getId());
+    } else {
+      user = new User();
+    }
+    user.setEmail(fullInfoUserDto.getEmail());
+    user.setFirstName(fullInfoUserDto.getFirstName());
+    user.setLastName(fullInfoUserDto.getLastName());
+    user.setPhone(fullInfoUserDto.getPhone());
+    user.setAddress(fullInfoUserDto.getAddress());
+    user.setGender(Gender.valueOf(fullInfoUserDto.getGender()));
+    user.setPanNumber(fullInfoUserDto.getPanNumber());
     return userRepository.saveAndFlush(user);
   }
 }

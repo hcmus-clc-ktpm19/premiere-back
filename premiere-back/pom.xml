@@ -19,6 +19,7 @@
     <org.mapstruct.version>1.5.3.Final</org.mapstruct.version>
     <com.querydsl.version>5.0.0</com.querydsl.version>
     <org.keycloak.version>19.0.0</org.keycloak.version>
+    <org.springdoc.version>1.6.14</org.springdoc.version>
   </properties>
   <dependencies>
     <dependency>
@@ -118,6 +119,11 @@
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-test</artifactId>
+      <scope>test</scope>
+    </dependency>
 
     <dependency>
       <groupId>org.json</groupId>
@@ -150,6 +156,12 @@
     <dependency>
       <groupId>com.fasterxml.jackson.datatype</groupId>
       <artifactId>jackson-datatype-jdk8</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springdoc</groupId>
+      <artifactId>springdoc-openapi-ui</artifactId>
+      <version>${org.springdoc.version}</version>
     </dependency>
   </dependencies>
 

@@ -2,11 +2,12 @@ package org.hcmus.premiere.util.mapper;
 
 import java.util.List;
 import org.hcmus.premiere.model.dto.CreditCardDto;
+import org.hcmus.premiere.model.dto.FullInfoUserDto;
 import org.hcmus.premiere.model.dto.LoanReminderDto;
 import org.hcmus.premiere.model.dto.MetaDataDto;
 import org.hcmus.premiere.model.dto.OTPDto;
 import org.hcmus.premiere.model.dto.PaginationDto;
-import org.hcmus.premiere.model.dto.PremierePaginationReponseDto;
+import org.hcmus.premiere.model.dto.PremierePaginationResponseDto;
 import org.hcmus.premiere.model.dto.ReceiverDto;
 import org.hcmus.premiere.model.dto.TransactionCriteriaDto;
 import org.hcmus.premiere.model.dto.TransactionDto;
@@ -14,6 +15,8 @@ import org.hcmus.premiere.model.entity.CreditCard;
 import org.hcmus.premiere.model.entity.LoanReminder;
 import org.hcmus.premiere.model.entity.OTP;
 import org.hcmus.premiere.model.entity.Receiver;
+import org.hcmus.premiere.model.entity.User;
+import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.stereotype.Component;
 
 
@@ -38,9 +41,7 @@ public class ApplicationMapper {
       ReceiverDto receiverDto = new ReceiverDto();
       receiverDto.setId(receiver.getId());
       receiverDto.setCardNumber(receiver.getCardNumber());
-      receiverDto.setNickname(receiver.getNickname());
-      receiverDto.setFullName(receiver.getFullName());
-      receiverDto.setUserId(receiver.getUser().getId());
+      receiverDto.setUserId(receiver.getId());
       receiverDto.setBankName(receiver.getBank().getBankName());
       return receiverDto;
     }
@@ -68,6 +69,7 @@ public class ApplicationMapper {
       loanReminderDto.setTransferAmount(loanReminder.getLoanBalance());
       loanReminderDto.setStatus(loanReminder.getStatus());
       loanReminderDto.setTime(loanReminder.getTime());
+      loanReminderDto.setUpdatedTime(loanReminder.getUpdatedAt());
       loanReminderDto.setLoanRemark(loanReminder.getLoanRemark());
       loanReminderDto.setSenderId(loanReminder.getSenderCreditCard().getUser().getId());
       loanReminderDto.setReceiverId(loanReminder.getReceiverCreditCard().getUser().getId());
@@ -82,7 +84,7 @@ public class ApplicationMapper {
     }
   }
 
-  public PremierePaginationReponseDto<TransactionDto> toDto(List<TransactionDto> transactionDtos,
+  public PremierePaginationResponseDto<TransactionDto> toDto(List<TransactionDto> transactionDtos,
       TransactionCriteriaDto criteriaDto) {
     PaginationDto paginationDto = new PaginationDto();
     paginationDto.setCurrPage(criteriaDto.getPage());
@@ -94,6 +96,28 @@ public class ApplicationMapper {
     MetaDataDto metaDataDto = new MetaDataDto();
     metaDataDto.setPagination(paginationDto);
 
-    return new PremierePaginationReponseDto<>(transactionDtos, metaDataDto);
+    return new PremierePaginationResponseDto<>(transactionDtos, metaDataDto);
+  }
+
+  public FullInfoUserDto toFullInfoUserDto(User user, UserRepresentation userRepresentation, String role) {
+    if (user == null){
+      return null;
+    }
+    FullInfoUserDto fullInfoUserDto = new FullInfoUserDto();
+    fullInfoUserDto.setId(user.getId());
+    fullInfoUserDto.setUsername(userRepresentation.getUsername());
+    fullInfoUserDto.setFirstName(user.getFirstName());
+    fullInfoUserDto.setLastName(user.getLastName());
+    fullInfoUserDto.setEmail(user.getEmail());
+    fullInfoUserDto.setRole(role);
+    fullInfoUserDto.setPhone(user.getPhone());
+    fullInfoUserDto.setAddress(user.getAddress());
+    fullInfoUserDto.setGender(user.getGender().toString());
+    fullInfoUserDto.setPanNumber(user.getPanNumber());
+    fullInfoUserDto.setEnabled(userRepresentation.isEnabled());
+    fullInfoUserDto.setVersion(user.getVersion());
+    fullInfoUserDto.setCreatedAt(user.getCreatedAt());
+    fullInfoUserDto.setUpdatedAt(user.getUpdatedAt());
+    return fullInfoUserDto;
   }
 }

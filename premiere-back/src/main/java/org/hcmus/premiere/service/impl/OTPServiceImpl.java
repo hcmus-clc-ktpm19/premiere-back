@@ -17,12 +17,14 @@ import org.hcmus.premiere.model.exception.OTPNotFoundException;
 import org.hcmus.premiere.repository.OTPRepository;
 import org.hcmus.premiere.service.OTPService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import sendinblue.auth.ApiKeyAuth;
 import sibApi.TransactionalEmailsApi;
 import sibModel.SendSmtpEmail;
 
 @Slf4j
 @Service
+@Transactional(rollbackFor = Throwable.class)
 @RequiredArgsConstructor
 public class OTPServiceImpl implements OTPService {
 
@@ -57,7 +59,10 @@ public class OTPServiceImpl implements OTPService {
     Properties params = new Properties();
     params.setProperty("parameter", "My param value");
     params.setProperty("subject", "New Subject");
-    sendSmtpEmail.setSubject("OTP for reset password");
+    params.setProperty("otp", otp);
+    params.setProperty("customer", toEmail);
+    sendSmtpEmail.setSubject("OTP for verification");
+    sendSmtpEmail.setTemplateId(1L);
     sendSmtpEmail.setHtmlContent("Hello, your OTP is " + otp + " and it will be expired in 5 minutes");
     sendSmtpEmail.setSender(new sibModel.SendSmtpEmailSender().name("PREMIERE").email("premiere-noreply@proton.me"));
     sendSmtpEmail.setTo(List.of(new sibModel.SendSmtpEmailTo().email(toEmail)));
@@ -79,7 +84,7 @@ public class OTPServiceImpl implements OTPService {
   }
 
   @Override
-  public Boolean verifyOTP(String otp, String email) {
+  public boolean verifyOTP(String otp, String email) {
     // find the latest otp by email
     OTP otpResult = otpRepository.findTopByEmailOrderByCreatedAtDesc(email)
         .orElseThrow(
@@ -103,7 +108,7 @@ public class OTPServiceImpl implements OTPService {
   }
 
   @Override
-  public Boolean verifyOTPRequestId(String otp, String email, Long requestId) {
+  public boolean verifyOTPRequestId(String otp, String email, Long requestId) {
     OTP otpResult = otpRepository.findTopByEmailOrderByCreatedAtDesc(email)
         .orElseThrow(
             () -> new OTPNotFoundException(OTP_NOT_FOUND_MESSAGE + " for ", email, OTP_NOT_FOUND));

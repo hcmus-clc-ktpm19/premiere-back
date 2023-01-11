@@ -1,7 +1,12 @@
 package org.hcmus.premiere.service;
 
 import java.time.LocalDate;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
 import java.util.List;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import org.hcmus.premiere.model.dto.DepositMoneyExternalRequestDto;
 import org.hcmus.premiere.model.entity.Transaction;
 import org.hcmus.premiere.model.enums.TransactionType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,11 +24,14 @@ public interface TransactionService {
 
   long getTotalPages(int size);
 
+  String transferMoneyExternalBank(DepositMoneyExternalRequestDto depositMoneyExternalRequestDto)
+  throws InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException;
+
   long getTotalPages(TransactionType transactionType, Long customerId, int size);
 
   long getTotalElements(TransactionType transactionType, Long customerId);
 
-  @PreAuthorize("@SecurityUtils.isCustomer() or @SecurityUtils.isStaff()")
+  @PreAuthorize("@SecurityUtils.isCustomer or @SecurityUtils.employeeOrAdmin")
   List<Transaction> getTransactionsByCustomerId(
       long page,
       long size,

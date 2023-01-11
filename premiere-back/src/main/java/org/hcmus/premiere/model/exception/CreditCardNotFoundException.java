@@ -7,6 +7,9 @@ public class CreditCardNotFoundException extends AbstractNotFoundException {
 
   public static final String CREDIT_CARD_NOT_FOUND = "CREDIT_CARD.NOT_FOUND";
 
+  public static final String CREDIT_CARD_DISABLED = "CREDIT_CARD.DISABLED";
+
+
   public CreditCardNotFoundException(String message, String id, String i18nPlaceHolder) {
     super(message, id, i18nPlaceHolder);
   }

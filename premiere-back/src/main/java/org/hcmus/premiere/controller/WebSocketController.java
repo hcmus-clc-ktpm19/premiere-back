@@ -64,7 +64,7 @@ public class WebSocketController {
 
   @MessageMapping("/notify")
   @SendTo("/topic/messages") // send to all user subscribe to this topic
-  public LoanReminderMessageDto reset(@Payload LoanReminderMessageDto message){
+  public LoanReminderMessageDto reset(@Payload LoanReminderMessageDto message) {
     log.debug("Message from controller: {}", message);
     return message;
   }

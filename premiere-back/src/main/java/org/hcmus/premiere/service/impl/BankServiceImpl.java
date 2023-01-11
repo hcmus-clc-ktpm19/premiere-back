@@ -9,8 +9,10 @@ import org.hcmus.premiere.model.exception.BankNotFoundException;
 import org.hcmus.premiere.repository.BankRepository;
 import org.hcmus.premiere.service.BankService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(rollbackFor = Throwable.class)
 @RequiredArgsConstructor
 public class BankServiceImpl implements BankService {
   private final BankRepository bankRepository;
