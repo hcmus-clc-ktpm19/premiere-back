@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.hcmus.premiere.model.entity.Transaction;
+import org.hcmus.premiere.model.enums.MoneyTransferCriteria;
 import org.hcmus.premiere.model.enums.TransactionType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,7 @@ class TransactionRepositoryTest {
         9,
         TransactionType.MONEY_TRANSFER,
         true,
+        MoneyTransferCriteria.OUTGOING,
         customerId);
 
     // Then

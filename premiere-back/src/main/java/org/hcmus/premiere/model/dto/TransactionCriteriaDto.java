@@ -2,6 +2,7 @@ package org.hcmus.premiere.model.dto;
 
 import javax.validation.constraints.Min;
 import lombok.Data;
+import org.hcmus.premiere.model.enums.MoneyTransferCriteria;
 import org.hcmus.premiere.model.enums.TransactionType;
 import org.springframework.lang.Nullable;
 
@@ -18,4 +19,6 @@ public class TransactionCriteriaDto {
   private TransactionType transactionType;
   @Nullable
   private boolean isAsc;
+  @Nullable
+  private MoneyTransferCriteria moneyTransferCriteria;
 }

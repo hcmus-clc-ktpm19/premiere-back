@@ -42,7 +42,7 @@ public class TransactionController extends AbstractApplicationController{
   @PostMapping("/money-transfer/validate")
   public ResponseEntity<?> validateTransferMoney(@RequestBody @Valid TransactionRequestDto transactionRequestDto) {
     Map<String, String> response = new HashMap<>();
-    if(validationService.validateTransactionRequest(transactionRequestDto)) {
+    if (validationService.validateTransactionRequest(transactionRequestDto)) {
       Long checkingTransactionId = checkingTransactionService.sendOTP(transactionRequestDto);
       if (checkingTransactionId != null) {
         response.put("checkingTransactionId", checkingTransactionId.toString());
@@ -65,23 +65,29 @@ public class TransactionController extends AbstractApplicationController{
   @PostMapping("/users/{userId}/get-transactions")
   public PremierePaginationResponseDto<TransactionDto> getTransactionsByCustomerId(
       @Valid @RequestBody TransactionCriteriaDto criteriaDto,
-      @PathVariable Long userId) {
+      @PathVariable Long userId
+  ) {
     List<TransactionDto> transactionDtos = transactionService
         .getTransactionsByCustomerId(
             criteriaDto.getPage(),
             criteriaDto.getSize(),
             criteriaDto.getTransactionType(),
+            criteriaDto.getMoneyTransferCriteria(),
             criteriaDto.isAsc(),
-            userId)
+            userId
+        )
         .stream()
         .map(transactionMapper::toDto)
         .toList();
 
     PremierePaginationResponseDto<TransactionDto> res = applicationMapper.toDto(transactionDtos, criteriaDto);
     res.getMeta().getPagination().setTotalPages(
-        transactionService.getTotalPages(criteriaDto.getTransactionType(), userId,
+        transactionService.getTotalPages(criteriaDto.getTransactionType(), criteriaDto.getMoneyTransferCriteria(), userId,
             criteriaDto.getSize()));
-    res.getMeta().getPagination().setTotalElements(transactionService.getTotalElements(criteriaDto.getTransactionType(), userId));
+    res.getMeta().getPagination().setTotalElements(transactionService.getTotalElements(
+        criteriaDto.getTransactionType(),
+        criteriaDto.getMoneyTransferCriteria(),
+        userId));
 
     return res;
   }
