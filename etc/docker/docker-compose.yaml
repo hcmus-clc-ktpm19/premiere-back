@@ -69,7 +69,7 @@ services:
 
   premiere-back:
     container_name: premiere-back-container
-    image: premiere-back:latest
+    image: namworkmc/premiere-back:latest
     ports:
       - "8080:8080"
     networks:
@@ -78,7 +78,7 @@ services:
 
   premiere-front:
     container_name: premiere-front-container
-    image: premiere-front
+    image: namworkmc/premiere-front:latest
     ports:
       - "3000:3000"
     networks:
