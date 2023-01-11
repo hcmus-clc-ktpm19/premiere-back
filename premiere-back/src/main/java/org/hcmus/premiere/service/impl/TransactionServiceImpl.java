@@ -17,6 +17,7 @@ import org.hcmus.premiere.model.dto.TransferMoneyRequestDto;
 import org.hcmus.premiere.model.entity.CheckingTransaction;
 import org.hcmus.premiere.model.entity.CreditCard;
 import org.hcmus.premiere.model.entity.Transaction;
+import org.hcmus.premiere.model.enums.MoneyTransferCriteria;
 import org.hcmus.premiere.model.enums.TransactionStatus;
 import org.hcmus.premiere.model.enums.TransactionType;
 import org.hcmus.premiere.repository.TransactionRepository;
@@ -192,25 +193,36 @@ public class TransactionServiceImpl implements TransactionService {
   }
 
   @Override
-  public long getTotalPages(TransactionType transactionType, Long customerId, int size) {
-    long count = getTotalElements(transactionType, customerId);
+  public long getTotalPages(
+      TransactionType transactionType,
+      MoneyTransferCriteria moneyTransferCriteria,
+      Long customerId,
+      int size) {
+    long count = getTotalElements(transactionType, moneyTransferCriteria, customerId);
     long totalPages = count / size;
     return totalPages + (count % size == 0 ? 0 : 1);
   }
 
   @Override
-  public long getTotalElements(TransactionType transactionType, Long customerId) {
-    return transactionRepository.count(transactionType, customerId);
+  public long getTotalElements(TransactionType transactionType,
+      MoneyTransferCriteria moneyTransferCriteria, Long customerId) {
+    return transactionRepository.count(transactionType, moneyTransferCriteria, customerId);
   }
 
   @Override
-  public List<Transaction> getTransactionsByCustomerId(long page, long size, TransactionType transactionType,
-      boolean isAsc, Long customerId) {
+  public List<Transaction> getTransactionsByCustomerId(
+      long page,
+      long size,
+      TransactionType transactionType,
+      MoneyTransferCriteria moneyTransferCriteria,
+      boolean isAsc,
+      Long customerId) {
     return transactionRepository.getTransactionsByCustomerId(
         page,
         size,
         transactionType,
         isAsc,
+        moneyTransferCriteria,
         customerId);
   }
 }
