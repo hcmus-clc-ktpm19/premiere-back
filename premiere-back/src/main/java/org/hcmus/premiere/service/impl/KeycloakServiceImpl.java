@@ -305,12 +305,10 @@ public class KeycloakServiceImpl implements KeycloakService {
 
   @Override
   public Set<UserRepresentation> getAllEmployees() {
-    Set<UserRepresentation> userRepresentations = realmResource
+    return realmResource
         .roles()
         .get(EMPLOYEE.value)
         .getRoleUserMembers();
-
-    return userRepresentations;
   }
 
   @Override
@@ -328,12 +326,10 @@ public class KeycloakServiceImpl implements KeycloakService {
 
   @Override
   public Set<UserRepresentation> getAllCustomers() {
-    Set<UserRepresentation> userRepresentations = realmResource
+    return realmResource
         .roles()
         .get(CUSTOMER.value)
         .getRoleUserMembers();
-
-    return userRepresentations;
   }
 
   @Override
