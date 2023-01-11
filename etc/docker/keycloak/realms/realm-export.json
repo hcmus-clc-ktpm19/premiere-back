@@ -1,6 +1,48 @@
 {
   "users": [
     {
+      "id": "472a1ebd-7bb6-4559-9acf-7d6fb18be1ee",
+      "createdTimestamp": 1673432627026,
+      "username": "service-account-premiere-client",
+      "enabled": true,
+      "totp": false,
+      "emailVerified": false,
+      "serviceAccountClientId": "premiere-client",
+      "disableableCredentialTypes": [],
+      "requiredActions": [],
+      "realmRoles": [
+        "default-roles-premiere-realm"
+      ],
+      "clientRoles": {
+        "realm-management": [
+          "realm-admin"
+        ]
+      },
+      "notBefore": 0,
+      "groups": []
+    },
+    {
+      "id": "02c64679-a19c-43ac-888d-f7c7a80b97bf",
+      "createdTimestamp": 1673432627039,
+      "username": "service-account-realm-management",
+      "enabled": true,
+      "totp": false,
+      "emailVerified": false,
+      "serviceAccountClientId": "realm-management",
+      "disableableCredentialTypes": [],
+      "requiredActions": [],
+      "realmRoles": [
+        "default-roles-premiere-realm"
+      ],
+      "clientRoles": {
+        "realm-management": [
+          "uma_protection"
+        ]
+      },
+      "notBefore": 0,
+      "groups": []
+    },
+    {
       "username": "admin",
       "enabled": true,
       "email": "admin@gmail.com",

@@ -104,7 +104,7 @@ public class AuthController extends AbstractApplicationController {
 
           return applicationMapper.toFullInfoUserDto(user, userRepresentation, EMPLOYEE.value);
         })
-        .collect(Collectors.toList());
+        .toList();
     return ResponseEntity.ok().body(employees);
   }
 
