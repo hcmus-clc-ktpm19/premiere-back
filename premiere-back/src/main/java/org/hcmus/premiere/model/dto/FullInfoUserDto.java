@@ -35,4 +35,5 @@ public class FullInfoUserDto extends PremiereAbstractEntityDto {
   @NotBlank(message = "Role may not be blank")
   private String role;
   private boolean enabled;
+  private boolean cardEnabled;
 }

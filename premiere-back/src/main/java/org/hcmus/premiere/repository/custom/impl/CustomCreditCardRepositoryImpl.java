@@ -80,4 +80,11 @@ public class CustomCreditCardRepositoryImpl extends PremiereAbstractCustomReposi
       return Optional.of(creditCard);
     }
   }
+
+  @Override
+  public Optional<CreditCard> getCreditCardByUserId(Long userId) {
+    return Optional.ofNullable(selectFrom(creditCard)
+        .where(creditCard.user.id.eq(userId))
+        .fetchOne());
+  }
 }

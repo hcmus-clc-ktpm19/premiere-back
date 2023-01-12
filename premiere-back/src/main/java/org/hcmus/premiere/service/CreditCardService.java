@@ -9,6 +9,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface CreditCardService {
 
+  boolean isCreditCardEnable(Long userId);
+
   CreditCard findCreditCardById(Long id);
 
   @PreAuthorize("@SecurityUtils.containsRoles('CUSTOMER', 'PREMIERE_ADMIN', 'EMPLOYEE')")
