@@ -138,11 +138,23 @@ public class ReceiverServiceImpl implements ReceiverService {
   }
 
   @Override
-  public void deleteReceiver(String cardNumber) {
+  public void deleteReceiver(Long userId, String cardNumber) {
     Receiver receiver = receiverRepository
         .findByCardNumber(cardNumber)
         .orElseThrow(() -> new ReceiverNotFoundException(RECEIVER_NOT_FOUND_MESSAGE, cardNumber, RECEIVER_NOT_FOUND));
-    receiverRepository.deleteById(receiver.getId());
+    UserReceiver userReceiver = userReceiverRepository
+        .getUserReceiverByUserIdAndReceiverId(userId, receiver.getId())
+        .orElseThrow(() -> new UserReceiverNotFoundException(
+                USER_RECEIVER_NOT_FOUND_MESSAGE,
+                receiver.getId().toString(),
+                USER_RECEIVER_NOT_FOUND
+            )
+        );
+
+    userReceiverRepository.delete(userReceiver);
+    if (!userReceiverRepository.isAnyReceiverExists(receiver.getId())) {
+      receiverRepository.delete(receiver);
+    }
   }
 }
 
