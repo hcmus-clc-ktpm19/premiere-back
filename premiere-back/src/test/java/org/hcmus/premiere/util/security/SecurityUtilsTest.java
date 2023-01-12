@@ -29,7 +29,6 @@ import org.apache.commons.lang3.SerializationUtils;
 import org.assertj.core.api.Assertions;
 import org.hcmus.premiere.model.dto.OTPDto;
 import org.hcmus.premiere.model.dto.TransactionDto;
-import org.hcmus.premiere.model.dto.TransferExternalResponseDto;
 import org.hcmus.premiere.model.dto.TransferResponseDataDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -221,7 +220,7 @@ class SecurityUtilsTest {
     object.setAmount(130000);
     object.setStatus(0);
     object.setId(1058);
-    object.setUserId(1040);
+    object.setBankDesId(1040);
     object.setTransactionType("TRANSFER");
 
     Gson gson = new Gson();

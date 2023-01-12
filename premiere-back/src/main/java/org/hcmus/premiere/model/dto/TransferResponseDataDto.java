@@ -10,9 +10,11 @@ import org.hcmus.premiere.model.entity.CreditCard;
 public class TransferResponseDataDto {
   private String accountDesNumber;
   private long amount;
+  private String description;
+  private String payTransactionFee;
   private int status;
   private String accountSrcNumber;
-  private long userId;
   private String transactionType;
+  private long bankDesId;
   private long id;
 }
