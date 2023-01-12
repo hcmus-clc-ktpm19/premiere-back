@@ -17,6 +17,8 @@ public interface TransactionService {
 
   void internalTransfer(Transaction transaction);
 
+  void externalTransferTest(Transaction transaction);
+
   void externalTransfer(Transaction transaction);
 
   String transferMoneyExternalBank(DepositMoneyExternalRequestDto depositMoneyExternalRequestDto)

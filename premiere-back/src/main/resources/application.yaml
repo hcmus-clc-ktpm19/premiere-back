@@ -60,3 +60,6 @@ springdoc:
   swagger-ui:
     operations-sorter: method
     url: /api-docs.yaml
+
+external-bank:
+  secret-key: 2SIo8nL9ik

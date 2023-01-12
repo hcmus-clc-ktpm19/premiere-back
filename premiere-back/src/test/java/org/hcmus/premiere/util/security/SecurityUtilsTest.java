@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 
+import com.google.gson.Gson;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;
@@ -28,6 +29,8 @@ import org.apache.commons.lang3.SerializationUtils;
 import org.assertj.core.api.Assertions;
 import org.hcmus.premiere.model.dto.OTPDto;
 import org.hcmus.premiere.model.dto.TransactionDto;
+import org.hcmus.premiere.model.dto.TransferExternalResponseDto;
+import org.hcmus.premiere.model.dto.TransferResponseDataDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -208,5 +211,25 @@ class SecurityUtilsTest {
     String encrypted = securityUtils.hash(object);
 
     Assertions.assertThat(encrypted).isEqualTo("153ac2a6a61c3a8f4736ac98cb622cb7");
+  }
+
+  @Test
+  void testEncryptV2() throws Exception {
+    TransferResponseDataDto object = new TransferResponseDataDto();
+    object.setAccountDesNumber("59025838490");
+    object.setAccountSrcNumber("12345");
+    object.setAmount(130000);
+    object.setStatus(0);
+    object.setId(1058);
+    object.setUserId(1040);
+    object.setTransactionType("TRANSFER");
+
+    Gson gson = new Gson();
+    String data = gson.toJson(object);
+    String publicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmADanBNQmgK+iknNXOzZ+k7ZKqp82wArD4nE2n4Lg+6JRyGcKnHZJoYTuZ1jhC0s0HsnJn69DIeJCLlnBYgTxSYFBDQxS4bYp25+0WX7JpakibsMu6X4C9bvgDkf0QBIOY+D++u50SYM4x2yVUc1rF3V2U1YMosH5+i/SiSFvSgCiVEOGUF/IlD5S9lUUqUkvRSmFKkA4BaTO2B2sAkwLnVekN+kH2hDquado5kEGzvQQkPeB3kBvUkB9fYCeOvB3oRyxVAXLA+DYzDDl0SpWpw6NpockJTU+0fVBb/+KVCVFbclrFmF4RAPiPkPXziwsYsBRlkrkh/mV0Lug8RLGwIDAQAB";
+    String encrypted = securityUtils.encryptV2(data);
+    Boolean decrypt = securityUtils.verify(data, encrypted, publicKey);
+
+    Assertions.assertThat(decrypt).isEqualTo(true);
   }
 }
