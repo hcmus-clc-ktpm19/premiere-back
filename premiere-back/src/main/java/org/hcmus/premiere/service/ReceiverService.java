@@ -11,5 +11,5 @@ public interface ReceiverService {
   Receiver saveReceiver(ReceiverDto receiverDto);
   List<Receiver> findAllReceiversByUserId(Long userId);
   Receiver updateReceiver(ReceiverDto receiverDto);
-  void deleteReceiver(String cardNumber);
+  void deleteReceiver(Long userId, String cardNumber);
 }

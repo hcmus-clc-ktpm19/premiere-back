@@ -10,6 +10,12 @@ import org.hcmus.premiere.repository.custom.PremiereAbstractCustomRepository;
 
 public class CustomUserReceiverRepositoryImpl extends PremiereAbstractCustomRepository<UserReceiver> implements CustomUserReceiverRepository {
 
+  @Override
+  public boolean isAnyReceiverExists(Long receiverId) {
+    return selectFrom(QUserReceiver.userReceiver)
+        .where(QUserReceiver.userReceiver.receiver.id.eq(receiverId))
+        .fetchFirst() != null;
+  }
 
   @Override
   public Optional<UserReceiver> getUserReceiverByUserIdAndReceiverId(Long userId, Long receiverId) {
