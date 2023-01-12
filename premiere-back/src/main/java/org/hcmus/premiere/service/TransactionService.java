@@ -1,5 +1,6 @@
 package org.hcmus.premiere.service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -47,4 +48,6 @@ public interface TransactionService {
   List<Transaction> getTransactionsByBankIdAndInRangeOfDate(
       long page, long size, Long bankId,
       LocalDate fromDate, LocalDate toDate);
+
+  BigDecimal getTotalAmount();
 }

@@ -1,5 +1,6 @@
 package org.hcmus.premiere.repository.custom;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import org.hcmus.premiere.model.entity.Transaction;
@@ -18,4 +19,6 @@ public interface CustomTransactionRepository {
   List<Transaction> getTransactionsByBankIdAndInRangeOfDate(
       long page, long size,
       Long bankId, LocalDate fromDate, LocalDate toDate);
+
+  BigDecimal getTotalAmount();
 }

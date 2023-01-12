@@ -271,4 +271,9 @@ public class TransactionServiceImpl implements TransactionService {
         fromDate,
         toDate);
   }
+
+  @Override
+  public BigDecimal getTotalAmount() {
+    return transactionRepository.getTotalAmount();
+  }
 }

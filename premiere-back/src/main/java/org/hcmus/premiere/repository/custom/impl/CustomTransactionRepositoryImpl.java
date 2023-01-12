@@ -4,6 +4,7 @@ import static org.hcmus.premiere.model.enums.MoneyTransferCriteria.*;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import org.hcmus.premiere.model.entity.QBank;
@@ -67,6 +68,13 @@ public class CustomTransactionRepositoryImpl extends PremiereAbstractCustomRepos
         .limit(size)
         .offset(page * size)
         .fetch();
+  }
+
+  @Override
+  public BigDecimal getTotalAmount() {
+    return selectFrom(QTransaction.transaction)
+        .select(QTransaction.transaction.amount.sum())
+        .fetchFirst();
   }
 
   private JPAQuery<Transaction> getTransactionsByCustomerIdQuery(
