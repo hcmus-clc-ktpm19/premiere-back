@@ -110,6 +110,7 @@ public class ReceiverController extends AbstractApplicationController{
   })
   @DeleteMapping("/{cardNumber}")
   public ResponseEntity<Void> deleteReceiver(@PathVariable String cardNumber) {
+    // TODO: Fix this delete, this delete is not incorrect
     receiverService.deleteReceiver(cardNumber);
     return ResponseEntity.noContent().build();
   }

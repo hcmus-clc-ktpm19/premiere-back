@@ -477,6 +477,7 @@
         "parameters": [
           {
             "name": "userId",
+            "description": "User id use to get transactions",
             "in": "path",
             "required": true,
             "schema": {
@@ -1339,6 +1340,7 @@
         "parameters": [
           {
             "name": "creditCardNumber",
+            "description": "Credit card to be found",
             "in": "path",
             "required": true,
             "schema": {
@@ -1425,6 +1427,7 @@
         "parameters": [
           {
             "name": "userId",
+            "description": "User's id",
             "in": "path",
             "required": true,
             "schema": {
@@ -1435,6 +1438,7 @@
           },
           {
             "example": "1234567890123451",
+            "description": "Receiver to be found",
             "name": "cardNumber",
             "in": "path",
             "required": true,
@@ -1515,7 +1519,7 @@
         "tags": [
           "Receivers API"
         ],
-        "summary": "Delete a receiver of a user by that user's id",
+        "summary": "Delete a receiver of a user by that user's id and by the receiver's card number",
         "operationId": "deleteReceiver",
         "parameters": [
           {
@@ -1753,6 +1757,7 @@
         "parameters": [
           {
             "name": "userId",
+            "description": "User id use to find credit card information",
             "in": "path",
             "required": true,
             "schema": {
@@ -1980,6 +1985,7 @@
             }
           },
           {
+            "description": "Credit card to be found",
             "example": "1234567890123456",
             "name": "number",
             "in": "path",
@@ -2050,6 +2056,79 @@
                 "example": {
                   "message": "Credit card not found",
                   "i18nPlaceHolder": "CREDIT_CARD.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Check and uncheck exception error message",
+                  "i18nPlaceHolder": "PREMIERE.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/get-employees": {
+      "get": {
+        "tags": [
+          "Auth API"
+        ],
+        "summary": "Get all employees",
+        "operationId": "getAllEmployees",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "example": [
+                    {
+                      "id": 2,
+                      "version": 0,
+                      "createdAt": "2023-01-12 07:16:00",
+                      "updatedAt": "2023-01-12 07:16:00",
+                      "username": "customer2",
+                      "email": "customer2@gmail.com",
+                      "firstName": "Giap",
+                      "lastName": "Hoang Huu",
+                      "phone": "0987654322",
+                      "gender": "FEMALE",
+                      "panNumber": "pan_number",
+                      "address": "address",
+                      "password": null,
+                      "role": "CUSTOMER",
+                      "enabled": true,
+                      "cardEnabled": true
+                    },
+                    {
+                      "id": 5,
+                      "version": 0,
+                      "createdAt": "2023-01-12 07:16:00",
+                      "updatedAt": "2023-01-12 07:16:00",
+                      "username": "customer5",
+                      "email": "customer5@gmail.com",
+                      "firstName": "Hai",
+                      "lastName": "Nguyen Van",
+                      "phone": "0987654325",
+                      "gender": "MALE",
+                      "panNumber": "pan_number",
+                      "address": "address",
+                      "password": null,
+                      "role": "CUSTOMER",
+                      "enabled": true,
+                      "cardEnabled": true
+                    }
+                  ],
+                  "items": {
+                    "$ref": "#/components/schemas/ReceiverDto"
+                  }
                 }
               }
             }
@@ -2217,6 +2296,22 @@
           },
           "asc": {
             "type": "boolean"
+          },
+          "moneyTransferCriteria":  {
+            "type": "string",
+            "enum": ["INCOMING", "OUTGOING"]
+          },
+          "fromDate": {
+            "type": "string",
+            "format": "date",
+            "pattern": "yyyy-MM-dd",
+            "example": "2023-01-01"
+          },
+          "toDate": {
+            "type": "string",
+            "format": "date",
+            "pattern": "yyyy-MM-dd",
+            "example": "2023-01-10"
           }
         }
       },
@@ -2509,6 +2604,9 @@
             "type": "string"
           },
           "enabled": {
+            "type": "boolean"
+          },
+          "cardEnabled": {
             "type": "boolean"
           }
         }
