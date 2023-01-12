@@ -225,4 +225,11 @@ public class CreditCardServiceImpl implements CreditCardService {
     creditCard.setStatus(CardStatus.DISABLED);
     creditCardRepository.saveAndFlush(creditCard);
   }
+
+  @Override
+  public void enableCreditCard(String cardNumber) {
+    CreditCard creditCard = findCreditCardByNumber(cardNumber);
+    creditCard.setStatus(CardStatus.AVAILABLE);
+    creditCardRepository.saveAndFlush(creditCard);
+  }
 }

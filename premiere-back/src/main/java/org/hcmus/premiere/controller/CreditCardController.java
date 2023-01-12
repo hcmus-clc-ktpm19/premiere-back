@@ -67,4 +67,10 @@ public class CreditCardController extends AbstractApplicationController {
     creditCardService.disableCreditCard(cardNumber);
     return ResponseEntity.ok().build();
   }
+
+  @GetMapping("/enable/{cardNumber}")
+  public ResponseEntity<?> enableCreditCardByCreditCardNumber(@PathVariable String cardNumber) {
+    creditCardService.enableCreditCard(cardNumber);
+    return ResponseEntity.ok().build();
+  }
 }

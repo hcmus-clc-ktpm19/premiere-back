@@ -35,4 +35,6 @@ public interface CreditCardService {
   Long depositMoney(String username, String creditCardNumber, BigDecimal amount);
 
   void disableCreditCard(String cardNumber);
+
+  void enableCreditCard(String cardNumber);
 }
