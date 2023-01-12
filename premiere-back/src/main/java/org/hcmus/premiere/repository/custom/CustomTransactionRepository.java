@@ -8,12 +8,14 @@ import org.hcmus.premiere.model.enums.TransactionType;
 
 public interface CustomTransactionRepository {
 
-  long count(TransactionType transactionType, MoneyTransferCriteria moneyTransferCriteria, Long customerId);
+  long count(TransactionType transactionType, MoneyTransferCriteria moneyTransferCriteria, Long customerId,
+      LocalDate fromDate, LocalDate toDate);
 
   List<Transaction> getTransactionsByCustomerId(long page, long size, TransactionType transactionType,
-      boolean isAsc, MoneyTransferCriteria moneyTransferCriteria, Long customerId);
+      boolean isAsc, MoneyTransferCriteria moneyTransferCriteria, Long customerId,
+      LocalDate fromDate, LocalDate toDate);
 
-  List<Transaction> getTransactionsByMonthAndInRangeOfDate(
+  List<Transaction> getTransactionsByBankIdAndInRangeOfDate(
       long page, long size,
       Long bankId, LocalDate fromDate, LocalDate toDate);
 }

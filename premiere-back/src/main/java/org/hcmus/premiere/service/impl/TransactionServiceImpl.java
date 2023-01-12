@@ -203,8 +203,10 @@ public class TransactionServiceImpl implements TransactionService {
       TransactionType transactionType,
       MoneyTransferCriteria moneyTransferCriteria,
       Long customerId,
-      int size) {
-    long count = getTotalElements(transactionType, moneyTransferCriteria, customerId);
+      int size,
+      LocalDate fromDate,
+      LocalDate toDate) {
+    long count = getTotalElements(transactionType, moneyTransferCriteria, customerId, fromDate, toDate);
     long totalPages = count / size;
     return totalPages + (count % size == 0 ? 0 : 1);
   }
@@ -217,9 +219,13 @@ public class TransactionServiceImpl implements TransactionService {
   }
 
   @Override
-  public long getTotalElements(TransactionType transactionType,
-      MoneyTransferCriteria moneyTransferCriteria, Long customerId) {
-    return transactionRepository.count(transactionType, moneyTransferCriteria, customerId);
+  public long getTotalElements(
+      TransactionType transactionType,
+      MoneyTransferCriteria moneyTransferCriteria,
+      Long customerId,
+      LocalDate fromDate,
+      LocalDate toDate) {
+    return transactionRepository.count(transactionType, moneyTransferCriteria, customerId, fromDate, toDate);
   }
 
   @Override
@@ -229,20 +235,27 @@ public class TransactionServiceImpl implements TransactionService {
       TransactionType transactionType,
       MoneyTransferCriteria moneyTransferCriteria,
       boolean isAsc,
-      Long customerId) {
+      Long customerId,
+      LocalDate fromDate,
+      LocalDate toDate) {
     return transactionRepository.getTransactionsByCustomerId(
         page,
         size,
         transactionType,
         isAsc,
         moneyTransferCriteria,
-        customerId);
+        customerId,
+        fromDate,
+        toDate);
   }
 
   @Override
-  public List<Transaction> getTransactionsByMonthAndInRangeOfDate(
-      long page, long size, Long bankId,
-      LocalDate fromDate, LocalDate toDate) {
+  public List<Transaction> getTransactionsByBankIdAndInRangeOfDate(
+      long page,
+      long size,
+      Long bankId,
+      LocalDate fromDate,
+      LocalDate toDate) {
     if (fromDate.isAfter(toDate)) {
       throw new IllegalArgumentException();
     }
@@ -251,7 +264,7 @@ public class TransactionServiceImpl implements TransactionService {
       throw new IllegalArgumentException();
     }
 
-    return transactionRepository.getTransactionsByMonthAndInRangeOfDate(
+    return transactionRepository.getTransactionsByBankIdAndInRangeOfDate(
         page,
         size,
         bankId,

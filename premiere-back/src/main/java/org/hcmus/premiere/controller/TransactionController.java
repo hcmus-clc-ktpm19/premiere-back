@@ -74,7 +74,9 @@ public class TransactionController extends AbstractApplicationController{
             criteriaDto.getTransactionType(),
             criteriaDto.getMoneyTransferCriteria(),
             criteriaDto.isAsc(),
-            userId
+            userId,
+            criteriaDto.getFromDate(),
+            criteriaDto.getToDate()
         )
         .stream()
         .map(transactionMapper::toDto)
@@ -82,24 +84,32 @@ public class TransactionController extends AbstractApplicationController{
 
     PremierePaginationResponseDto<TransactionDto> res = applicationMapper.toDto(transactionDtos, criteriaDto);
     res.getMeta().getPagination().setTotalPages(
-        transactionService.getTotalPages(criteriaDto.getTransactionType(), criteriaDto.getMoneyTransferCriteria(), userId,
-            criteriaDto.getSize()));
-    res.getMeta().getPagination().setTotalElements(transactionService.getTotalElements(
-        criteriaDto.getTransactionType(),
-        criteriaDto.getMoneyTransferCriteria(),
-        userId));
+        transactionService.getTotalPages(
+            criteriaDto.getTransactionType(),
+            criteriaDto.getMoneyTransferCriteria(),
+            userId,
+            criteriaDto.getSize(),
+            criteriaDto.getFromDate(),
+            criteriaDto.getToDate()));
+    res.getMeta().getPagination().setTotalElements(
+        transactionService.getTotalElements(
+            criteriaDto.getTransactionType(),
+            criteriaDto.getMoneyTransferCriteria(),
+            userId,
+            criteriaDto.getFromDate(),
+            criteriaDto.getToDate()));
 
     return res;
   }
 
   @PostMapping("/{bankId}/get-transactions/{fromDate}/{toDate}")
-  public PremierePaginationReponseDto<TransactionDto> getTransactionsInRangeOfDate(
+  public PremierePaginationResponseDto<TransactionDto> getTransactionsInRangeOfDate(
       @PathVariable Long bankId,
       @PathVariable @DateTimeFormat(iso = ISO.DATE) LocalDate fromDate,
       @PathVariable @DateTimeFormat(iso = ISO.DATE) LocalDate toDate,
       @Valid @RequestBody TransactionCriteriaDto criteriaDto) {
     List<TransactionDto> transactionDtos = transactionService
-        .getTransactionsByMonthAndInRangeOfDate(
+        .getTransactionsByBankIdAndInRangeOfDate(
             criteriaDto.getPage(),
             criteriaDto.getSize(),
             bankId,
@@ -109,7 +119,7 @@ public class TransactionController extends AbstractApplicationController{
         .map(transactionMapper::toDto)
         .toList();
 
-    PremierePaginationReponseDto<TransactionDto> res = applicationMapper.toDto(transactionDtos, criteriaDto);
+    PremierePaginationResponseDto<TransactionDto> res = applicationMapper.toDto(transactionDtos, criteriaDto);
     res.getMeta().getPagination().setTotalPages(transactionService.getTotalPages(criteriaDto.getSize()));
     res.getMeta().getPagination().setTotalElements(transactionService.count());
     return res;

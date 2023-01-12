@@ -21,18 +21,28 @@ import org.springframework.stereotype.Repository;
 public class CustomTransactionRepositoryImpl extends PremiereAbstractCustomRepository<Transaction> implements CustomTransactionRepository {
 
   @Override
-  public long count(TransactionType transactionType, MoneyTransferCriteria moneyTransferCriteria,
-      Long customerId) {
-    return getTransactionsByCustomerIdQuery(transactionType, moneyTransferCriteria, customerId)
+  public long count(
+      TransactionType transactionType,
+      MoneyTransferCriteria moneyTransferCriteria,
+      Long customerId,
+      LocalDate fromDate,
+      LocalDate toDate) {
+    return getTransactionsByCustomerIdQuery(transactionType, moneyTransferCriteria, customerId, fromDate, toDate)
         .select(QTransaction.transaction.count())
         .fetchFirst();
   }
 
   @Override
-  public List<Transaction> getTransactionsByCustomerId(long page, long size,
-      TransactionType transactionType, boolean isAsc, MoneyTransferCriteria moneyTransferCriteria,
-      Long customerId) {
-    return getTransactionsByCustomerIdQuery(transactionType, moneyTransferCriteria, customerId)
+  public List<Transaction> getTransactionsByCustomerId(
+      long page,
+      long size,
+      TransactionType transactionType,
+      boolean isAsc,
+      MoneyTransferCriteria moneyTransferCriteria,
+      Long customerId,
+      LocalDate fromDate,
+      LocalDate toDate) {
+    return getTransactionsByCustomerIdQuery(transactionType, moneyTransferCriteria, customerId, fromDate, toDate)
         .orderBy(isAsc ? QTransaction.transaction.createdAt.asc() : QTransaction.transaction.createdAt.desc())
         .limit(size)
         .offset(page * size)
@@ -40,9 +50,12 @@ public class CustomTransactionRepositoryImpl extends PremiereAbstractCustomRepos
   }
 
   @Override
-  public List<Transaction> getTransactionsByMonthAndInRangeOfDate(
-      long page, long size,
-      Long bankId, LocalDate fromDate, LocalDate toDate) {
+  public List<Transaction> getTransactionsByBankIdAndInRangeOfDate(
+      long page,
+      long size,
+      Long bankId,
+      LocalDate fromDate,
+      LocalDate toDate) {
     QBank bank1 = new QBank("bank1");
     QBank bank2 = new QBank("bank2");
     return selectFrom(QTransaction.transaction)
@@ -50,7 +63,7 @@ public class CustomTransactionRepositoryImpl extends PremiereAbstractCustomRepos
         .innerJoin(QTransaction.transaction.receiverBank, bank2)
         .where(
             bank1.id.eq(bankId).or(bank2.id.eq(bankId))
-                .and(QTransaction.transaction.createdAt.between(fromDate.atStartOfDay(), toDate.atStartOfDay())))
+                .and(QTransaction.transaction.createdAt.between(fromDate.atStartOfDay(), toDate.plusDays(1).atStartOfDay())))
         .limit(size)
         .offset(page * size)
         .fetch();
@@ -59,7 +72,9 @@ public class CustomTransactionRepositoryImpl extends PremiereAbstractCustomRepos
   private JPAQuery<Transaction> getTransactionsByCustomerIdQuery(
       TransactionType transactionType,
       MoneyTransferCriteria moneyTransferCriteria,
-      Long customerId) {
+      Long customerId,
+      LocalDate fromDate,
+      LocalDate toDate) {
     BooleanExpression whereClause = QUser.user.id.eq(customerId);
 
     if (moneyTransferCriteria == null) {
@@ -78,6 +93,12 @@ public class CustomTransactionRepositoryImpl extends PremiereAbstractCustomRepos
 
     if (transactionType != null) {
       whereClause = whereClause.and(QTransaction.transaction.type.eq(transactionType));
+    }
+
+    if (fromDate != null && toDate != null) {
+      whereClause = whereClause
+          .and(QTransaction.transaction.createdAt
+              .between(fromDate.atStartOfDay(), toDate.plusDays(1).atStartOfDay()));
     }
 
     return new JPAQuery<Transaction>(entityManager)

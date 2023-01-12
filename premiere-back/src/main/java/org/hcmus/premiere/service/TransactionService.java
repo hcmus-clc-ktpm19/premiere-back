@@ -29,10 +29,11 @@ public interface TransactionService {
   throws InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException;
 
   long getTotalPages(TransactionType transactionType, MoneyTransferCriteria moneyTransferCriteria,
-      Long customerId, int size);
+      Long customerId, int size, LocalDate fromDate, LocalDate toDate);
 
   long getTotalElements(TransactionType transactionType,
-      MoneyTransferCriteria moneyTransferCriteria, Long customerId);
+      MoneyTransferCriteria moneyTransferCriteria, Long customerId, LocalDate fromDate,
+      LocalDate toDate);
 
   @PreAuthorize("@SecurityUtils.isCustomer or @SecurityUtils.employeeOrAdmin")
   List<Transaction> getTransactionsByCustomerId(
@@ -40,10 +41,10 @@ public interface TransactionService {
       long size,
       TransactionType transactionType,
       MoneyTransferCriteria moneyTransferCriteria, boolean isAsc,
-      Long customerId);
+      Long customerId, LocalDate fromDate, LocalDate toDate);
 
   @PreAuthorize("hasRole('PREMIERE_ADMIN')")
-  List<Transaction> getTransactionsByMonthAndInRangeOfDate(
+  List<Transaction> getTransactionsByBankIdAndInRangeOfDate(
       long page, long size, Long bankId,
       LocalDate fromDate, LocalDate toDate);
 }

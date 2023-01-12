@@ -32,21 +32,23 @@ class TransactionRepositoryTest {
         TransactionType.MONEY_TRANSFER,
         true,
         MoneyTransferCriteria.OUTGOING,
-        customerId);
+        customerId,
+        LocalDate.of(2022, 11, 1),
+        LocalDate.now());
 
     // Then
     Assertions.assertThat(transactions).isNotEmpty();
   }
 
   @Test
-  void testGetTransactionsByMonthAndInRangeOfDate() {
+  void testGetTransactionsByBankIdAndInRangeOfDate() {
     // Given
     Long bankId = 2L;
     LocalDate fromDate = LocalDate.of(2022, 12, 1);
     LocalDate toDate = LocalDate.of(2022, 12, 31);
 
     // When
-    List<Transaction> transactions = transactionRepository.getTransactionsByMonthAndInRangeOfDate(
+    List<Transaction> transactions = transactionRepository.getTransactionsByBankIdAndInRangeOfDate(
         0,
         9,
         bankId,

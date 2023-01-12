@@ -1,9 +1,12 @@
 package org.hcmus.premiere.model.dto;
 
+import java.time.LocalDate;
 import javax.validation.constraints.Min;
 import lombok.Data;
 import org.hcmus.premiere.model.enums.MoneyTransferCriteria;
 import org.hcmus.premiere.model.enums.TransactionType;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.lang.Nullable;
 
 @Data
@@ -21,4 +24,10 @@ public class TransactionCriteriaDto {
   private boolean isAsc;
   @Nullable
   private MoneyTransferCriteria moneyTransferCriteria;
+  @Nullable
+  @DateTimeFormat(iso = ISO.DATE)
+  private LocalDate fromDate;
+  @Nullable
+  @DateTimeFormat(iso = ISO.DATE)
+  private LocalDate toDate;
 }
