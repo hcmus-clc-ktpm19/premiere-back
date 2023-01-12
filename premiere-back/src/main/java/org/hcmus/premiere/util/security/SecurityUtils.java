@@ -5,8 +5,14 @@ import static org.hcmus.premiere.model.enums.PremiereRole.EMPLOYEE;
 import static org.hcmus.premiere.model.enums.PremiereRole.PREMIERE_ADMIN;
 
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SignatureException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
 import java.util.List;
 import javax.crypto.BadPaddingException;
@@ -80,6 +86,16 @@ public class SecurityUtils {
     return isAsymmetric ? asymmetricEncryptionUtils.encrypt(o) : encrypt(o);
   }
 
+  public String encryptV2(String input)
+      throws InvalidAlgorithmParameterException, IllegalBlockSizeException, UnsupportedEncodingException, BadPaddingException, NoSuchAlgorithmException, InvalidKeySpecException, SignatureException, InvalidKeyException {
+    return asymmetricEncryptionUtils.encryptV2(input);
+  }
+
+  public boolean verify(String input, String signature, String bankPublicKey)
+      throws NoSuchAlgorithmException, SignatureException, InvalidKeyException, InvalidKeySpecException {
+    return asymmetricEncryptionUtils.verify(input, signature, bankPublicKey);
+  }
+
   public String encrypt(Object object)
       throws IllegalBlockSizeException, BadPaddingException, InvalidKeyException, InvalidAlgorithmParameterException {
     return symmetricEncryptionUtils.encrypt(object);
@@ -101,5 +117,25 @@ public class SecurityUtils {
 
   public String getSecretKey() {
     return env.getProperty("system-auth.secret-key");
+  }
+
+  public String getExternalSecretKey() {
+    return env.getProperty("external-bank.secret-key");
+  }
+
+  public String hashMd5(String data) {
+    try {
+      MessageDigest md = MessageDigest.getInstance("MD5");
+      byte[] messageDigest = md.digest(data.getBytes());
+      BigInteger no = new BigInteger(1, messageDigest);
+      StringBuilder hashText = new StringBuilder(no.toString(16));
+      while (hashText.length() < 32) {
+        hashText.insert(0, "0");
+      }
+      return hashText.toString();
+    }
+    catch (NoSuchAlgorithmException e) {
+      throw new RuntimeException(e);
+    }
   }
 }

@@ -3,6 +3,7 @@ package org.hcmus.premiere.service;
 import java.math.BigDecimal;
 import java.util.List;
 import org.hcmus.premiere.model.dto.CreditCardDto;
+import org.hcmus.premiere.model.dto.CreditCardExternalResponseDto;
 import org.hcmus.premiere.model.entity.CreditCard;
 import org.hcmus.premiere.model.entity.User;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,4 +34,6 @@ public interface CreditCardService {
   Long depositMoney(String username, String creditCardNumber, BigDecimal amount);
 
   void disableCreditCard(String cardNumber);
+
+  CreditCardExternalResponseDto getCreditCardByNumberExternalBank(String externalBankName, String cardNumber);
 }

@@ -10,6 +10,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import org.hcmus.premiere.common.consts.PremiereApiUrls;
+import org.hcmus.premiere.model.dto.CreditCardExternalDto;
 import org.hcmus.premiere.model.dto.DepositMoneyExternalRequestDto;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -34,6 +35,13 @@ public interface ExternalBankResource {
       @HeaderParam("X-Auth-Locale") String authLocale,
       @PathParam("creditCardNumber") String creditCardNumber
   );
+
+//  @POST
+//  @Produces({ MediaType.APPLICATION_JSON })
+//  @Consumes({ MediaType.APPLICATION_JSON })
+//  Object getCreditCardByNumberExternalBank(
+//      @RequestBody CreditCardExternalDto creditCardExternalDto
+//  );
 
   @POST
   @Path("/banks/transactions/money-transfer")
