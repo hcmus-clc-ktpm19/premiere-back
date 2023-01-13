@@ -71,8 +71,9 @@ public class CustomTransactionRepositoryImpl extends PremiereAbstractCustomRepos
   }
 
   @Override
-  public BigDecimal getTotalAmount() {
+  public BigDecimal getTotalAmountInRangeOfDate(LocalDate fromDate, LocalDate toDate) {
     return selectFrom(QTransaction.transaction)
+        .where(QTransaction.transaction.createdAt.between(fromDate.atStartOfDay(), toDate.atStartOfDay()))
         .select(QTransaction.transaction.amount.sum())
         .fetchFirst();
   }
@@ -113,5 +114,12 @@ public class CustomTransactionRepositoryImpl extends PremiereAbstractCustomRepos
         .from(QTransaction.transaction, QCreditCard.creditCard)
         .innerJoin(QCreditCard.creditCard.user, QUser.user)
         .where(whereClause);
+  }
+
+  @Override
+  public BigDecimal getTotalAmount() {
+    return selectFrom(QTransaction.transaction)
+        .select(QTransaction.transaction.amount.sum())
+        .fetchFirst();
   }
 }

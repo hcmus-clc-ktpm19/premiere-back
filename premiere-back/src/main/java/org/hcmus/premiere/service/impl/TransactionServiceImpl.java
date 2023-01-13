@@ -8,6 +8,7 @@ import java.security.InvalidKeyException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javax.crypto.BadPaddingException;
@@ -270,6 +271,28 @@ public class TransactionServiceImpl implements TransactionService {
         bankId,
         fromDate,
         toDate);
+  }
+
+  @Override
+  public List<BigDecimal> getTotalAmountInRangeOfDate(LocalDate fromDate, LocalDate toDate) {
+    LocalDate firstDayOfMonth = fromDate.withDayOfMonth(1);
+    LocalDate lastDayOfMonth = fromDate.withDayOfMonth(fromDate.lengthOfMonth());
+    LocalDate lastDayOfRequest = toDate.withDayOfMonth(toDate.lengthOfMonth());
+    // calculate total amount of each month
+    List<BigDecimal> totalAmounts = new ArrayList<>();
+
+    do {
+      firstDayOfMonth = firstDayOfMonth.withDayOfMonth(1);
+      lastDayOfMonth = firstDayOfMonth.withDayOfMonth(firstDayOfMonth.lengthOfMonth());
+      BigDecimal totalAmount = transactionRepository.getTotalAmountInRangeOfDate(firstDayOfMonth,
+          lastDayOfMonth);
+      totalAmounts.add(totalAmount);
+
+      LocalDate nextMonth = firstDayOfMonth.plusMonths(1);
+      firstDayOfMonth = nextMonth;
+    } while (!lastDayOfMonth.isEqual(lastDayOfRequest));
+
+    return totalAmounts;
   }
 
   @Override

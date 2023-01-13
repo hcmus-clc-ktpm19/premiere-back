@@ -20,5 +20,7 @@ public interface CustomTransactionRepository {
       long page, long size,
       Long bankId, LocalDate fromDate, LocalDate toDate);
 
+  BigDecimal getTotalAmountInRangeOfDate(LocalDate fromDate, LocalDate toDate);
+
   BigDecimal getTotalAmount();
 }
