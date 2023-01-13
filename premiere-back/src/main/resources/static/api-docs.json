@@ -1,7 +1,7 @@
 {
   "info": {
     "title": "Premiere API Documentation",
-    "version": "0.0.2"
+    "version": "0.0.3"
   },
   "openapi": "3.0.1",
   "servers": [
@@ -269,9 +269,9 @@
         },
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "OK: Loan reminder's id has been updated will be returned",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "type": "integer",
                   "format": "int64",
@@ -569,28 +569,6 @@
               }
             }
           },
-          "400": {
-            "description": "Assign illegal data",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "Assign illegal data",
-                  "i18nPlaceHolder": "AUTH.ROLE.ASSIGN_ILLEGAL_EMPLOYEE_ROLE"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Wrong password",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "Wrong password",
-                  "i18nPlaceHolder": "AUTH.WRONG_PASSWORD"
-                }
-              }
-            }
-          },
           "409": {
             "description": "Resource already existed",
             "content": {
@@ -654,28 +632,6 @@
               }
             }
           },
-          "400": {
-            "description": "Assign illegal data",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "Assign illegal data",
-                  "i18nPlaceHolder": "AUTH.ROLE.ASSIGN_ILLEGAL_EMPLOYEE_ROLE"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Wrong password",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "Wrong password",
-                  "i18nPlaceHolder": "AUTH.WRONG_PASSWORD"
-                }
-              }
-            }
-          },
           "409": {
             "description": "Resource already existed",
             "content": {
@@ -729,7 +685,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "type": "integer",
                   "format": "int64"
@@ -771,7 +727,7 @@
         "operationId": "validateLoanReminder",
         "parameters": [
           {
-            "description": "Loan reminder id to validate",
+            "description": "Loan reminder's id to validate",
             "name": "id",
             "in": "path",
             "required": true,
@@ -785,7 +741,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "type": "object"
                 }
@@ -797,8 +753,8 @@
             "content": {
               "application/json": {
                 "example": {
-                  "message": "Credit card not found",
-                  "i18nPlaceHolder": "CREDIT_CARD.NOT_FOUND"
+                  "message": "Loan reminder not found",
+                  "i18nPlaceHolder": "LOAN_REMINDER.NOT_FOUND"
                 }
               }
             }
@@ -820,6 +776,7 @@
     "/api/v1/loan-management/loan-reminder/pay": {
       "post": {
         "summary": "Pay loan request",
+        "description": "When debtor pay loan, the system will send an OTP to debtor's mail, user that OTP to verify and pay loan",
         "tags": [
           "Loan Management API"
         ],
@@ -838,7 +795,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "type": "object"
                 }
@@ -904,28 +861,6 @@
                 "example": {
                   "message": "Credit card not found",
                   "i18nPlaceHolder": "CREDIT_CARD.NOT_FOUND"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Assign illegal data",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "Assign illegal data",
-                  "i18nPlaceHolder": "AUTH.ROLE.ASSIGN_ILLEGAL_EMPLOYEE_ROLE"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Wrong password",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "Wrong password",
-                  "i18nPlaceHolder": "AUTH.WRONG_PASSWORD"
                 }
               }
             }
@@ -1074,28 +1009,6 @@
                 "example": {
                   "message": "Credit card not found",
                   "i18nPlaceHolder": "CREDIT_CARD.NOT_FOUND"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Assign illegal data",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "Assign illegal data",
-                  "i18nPlaceHolder": "AUTH.ROLE.ASSIGN_ILLEGAL_EMPLOYEE_ROLE"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Wrong password",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "Wrong password",
-                  "i18nPlaceHolder": "AUTH.WRONG_PASSWORD"
                 }
               }
             }
@@ -1283,39 +1196,6 @@
               }
             }
           },
-          "400": {
-            "description": "Assign illegal data",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "Assign illegal data",
-                  "i18nPlaceHolder": "AUTH.ROLE.ASSIGN_ILLEGAL_EMPLOYEE_ROLE"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Wrong password",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "Wrong password",
-                  "i18nPlaceHolder": "AUTH.WRONG_PASSWORD"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Resource already existed",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "Receiver already existed",
-                  "i18nPlaceHolder": "RECEIVER.EXISTED"
-                }
-              }
-            }
-          },
           "500": {
             "description": "Unexpected error",
             "content": {
@@ -1332,6 +1212,7 @@
     },
     "/api/v2/external/banks/credit-cards/{creditCardNumber}": {
       "get": {
+        "description": "Get credit card info calling from external bank",
         "tags": [
           "External API"
         ],
@@ -1368,39 +1249,6 @@
               }
             }
           },
-          "400": {
-            "description": "Assign illegal data",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "Assign illegal data",
-                  "i18nPlaceHolder": "AUTH.ROLE.ASSIGN_ILLEGAL_EMPLOYEE_ROLE"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Wrong password",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "Wrong password",
-                  "i18nPlaceHolder": "AUTH.WRONG_PASSWORD"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Resource already existed",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "Receiver already existed",
-                  "i18nPlaceHolder": "RECEIVER.EXISTED"
-                }
-              }
-            }
-          },
           "500": {
             "description": "Unexpected error",
             "content": {
@@ -1415,7 +1263,7 @@
         }
       }
     },
-    "/api/v1/receivers/{userId}/{cardNumber}": {
+    "/api/v1/receivers/{userId}/{receiverCardNumber}": {
       "get": {
         "tags": [
           "Receivers API"
@@ -1425,6 +1273,7 @@
         "parameters": [
           {
             "name": "userId",
+            "description": "User to get receiver",
             "in": "path",
             "required": true,
             "schema": {
@@ -1435,7 +1284,8 @@
           },
           {
             "example": "1234567890123451",
-            "name": "cardNumber",
+            "name": "receiverCardNumber",
+            "description": "Receiver to get",
             "in": "path",
             "required": true,
             "schema": {
@@ -1465,35 +1315,13 @@
               }
             }
           },
-          "400": {
-            "description": "Assign illegal data",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "Assign illegal data",
-                  "i18nPlaceHolder": "AUTH.ROLE.ASSIGN_ILLEGAL_EMPLOYEE_ROLE"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Wrong password",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "Wrong password",
-                  "i18nPlaceHolder": "AUTH.WRONG_PASSWORD"
-                }
-              }
-            }
-          },
           "409": {
             "description": "Resource already existed",
             "content": {
               "application/json": {
                 "example": {
-                  "message": "Receiver already existed",
-                  "i18nPlaceHolder": "RECEIVER.EXISTED"
+                  "message": "User's receiver already existed",
+                  "i18nPlaceHolder": "USER_RECEIVER.EXISTED"
                 }
               }
             }
@@ -1515,12 +1343,24 @@
         "tags": [
           "Receivers API"
         ],
-        "summary": "Delete a receiver of a user by that user's id",
+        "summary": "Delete a receiver of a user",
+        "description": "Find a receiver of a user by the receiver's card number and user's id then delete it. If there is no user that saved the receiver, the system will no longer store the receiver's information",
         "operationId": "deleteReceiver",
         "parameters": [
           {
+            "example": "2",
+            "name": "userId",
+            "description": "User's who saved the receiver",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "example": "1234567890123451",
-            "name": "cardNumber",
+            "name": "receiverCardNumber",
+            "description": "Receiver who will be deleted",
             "in": "path",
             "required": true,
             "schema": {
@@ -1541,40 +1381,7 @@
             }
           },
           "204": {
-            "description": "The receiver is deleted successfully but no content is returned"
-          },
-          "400": {
-            "description": "Assign illegal data",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "Assign illegal data",
-                  "i18nPlaceHolder": "AUTH.ROLE.ASSIGN_ILLEGAL_EMPLOYEE_ROLE"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Wrong password",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "Wrong password",
-                  "i18nPlaceHolder": "AUTH.WRONG_PASSWORD"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Resource already existed",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "Receiver already existed",
-                  "i18nPlaceHolder": "RECEIVER.EXISTED"
-                }
-              }
-            }
+            "description": "The receiver has been deleted successfully but no content is returned"
           },
           "500": {
             "description": "Unexpected error",
@@ -1599,7 +1406,7 @@
         "operationId": "getDebtor",
         "parameters": [
           {
-            "description": "Credit card number",
+            "description": "Debtor's card number",
             "name": "cardNumber",
             "in": "path",
             "required": true,
@@ -1646,17 +1453,6 @@
                 "example": {
                   "message": "Assign illegal data",
                   "i18nPlaceHolder": "AUTH.ROLE.ASSIGN_ILLEGAL_EMPLOYEE_ROLE"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Wrong password",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "Wrong password",
-                  "i18nPlaceHolder": "AUTH.WRONG_PASSWORD"
                 }
               }
             }
@@ -1821,7 +1617,7 @@
             "schema": {
               "type": "integer",
               "format": "int64",
-              "example": 1
+              "example": "Premiere"
             }
           },
           {
@@ -1921,17 +1717,6 @@
                 "example": {
                   "message": "Assign illegal data",
                   "i18nPlaceHolder": "AUTH.ROLE.ASSIGN_ILLEGAL_EMPLOYEE_ROLE"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Wrong password",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "Wrong password",
-                  "i18nPlaceHolder": "AUTH.WRONG_PASSWORD"
                 }
               }
             }
