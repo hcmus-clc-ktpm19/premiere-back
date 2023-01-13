@@ -94,6 +94,11 @@ public class ReceiverController extends AbstractApplicationController{
     return new ResponseEntity<>(applicationMapper.toReceiverDto(receiverService.saveReceiver(receiverDto)), CREATED);
   }
 
+  @PostMapping("/external")
+  public ResponseEntity<ReceiverDto> saveReceiverExternal(@RequestBody ReceiverDto receiverDto) {
+    return new ResponseEntity<>(applicationMapper.toReceiverDto(receiverService.saveReceiverExternal(receiverDto)), CREATED);
+  }
+
   @Operation(summary = "Update a receiver of a user by that user's id")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200",

@@ -72,6 +72,49 @@ public class ReceiverServiceImpl implements ReceiverService {
   }
 
   @Override
+  public Receiver saveReceiverExternal(ReceiverDto receiverDto) {
+    User user = userRepository
+        .findById(receiverDto.getUserId())
+        .orElseThrow(() -> new UserNotFoundException(
+            UserNotFoundException.USER_NOT_FOUND_MESSAGE,
+            receiverDto.getUserId().toString(),
+            UserNotFoundException.USER_NOT_FOUND)
+        );
+    Bank bank = bankService.findBankByName(receiverDto.getBankName());
+    Receiver receiver = receiverRepository.findByCardNumber(receiverDto.getCardNumber()).orElse(new Receiver());
+    receiver.setCardNumber(receiverDto.getCardNumber());
+
+    UserReceiver userReceiver;
+    if (receiver.getId() == null) {
+      userReceiver = new UserReceiver();
+    } else {
+      userReceiver = userReceiverRepository
+          .getUserReceiverByUserIdAndReceiverId(user.getId(), receiver.getId())
+          .orElse(new UserReceiver());
+    }
+
+    if (userReceiver.getUserReceiverPk().getReceiverId() != null) {
+      throw new ReceiverExisted(
+          ReceiverExisted.RECEIVER_EXISTED_MESSAGE,
+          receiverDto.getCardNumber(),
+          ReceiverExisted.RECEIVER_EXISTED);
+    }
+
+    userReceiver.setReceiver(receiver);
+    userReceiver.setFullName(receiverDto.getFullName());
+    if (StringUtils.isEmpty(receiverDto.getNickname())) {
+      userReceiver.setNickname(userReceiver.getFullName());
+    } else {
+      userReceiver.setNickname(receiverDto.getNickname());
+    }
+    userReceiver.setUser(user);
+
+    receiver.getUsers().add(userReceiver);
+    receiver.setBank(bank);
+    return receiverRepository.save(receiver);
+  }
+
+  @Override
   public Receiver saveReceiver(ReceiverDto receiverDto) {
     CreditCard creditCard = creditCardService.findCreditCardByNumber(receiverDto.getCardNumber());
     if (creditCard.getStatus() == CardStatus.DISABLED) {

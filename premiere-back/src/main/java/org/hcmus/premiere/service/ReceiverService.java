@@ -9,6 +9,7 @@ public interface ReceiverService {
   Receiver findReceiverByCardNumber(String cardNumber);
   Receiver findReceiverByNickname(String nickname);
   Receiver saveReceiver(ReceiverDto receiverDto);
+  Receiver saveReceiverExternal(ReceiverDto receiverDto);
   List<Receiver> findAllReceiversByUserId(Long userId);
   Receiver updateReceiver(ReceiverDto receiverDto);
   void deleteReceiver(Long userId, String cardNumber);
