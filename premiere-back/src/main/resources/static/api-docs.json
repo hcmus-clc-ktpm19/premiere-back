@@ -1,7 +1,7 @@
 {
   "info": {
     "title": "Premiere API Documentation",
-    "version": "0.0.3"
+    "version": "0.0.4"
   },
   "openapi": "3.0.1",
   "servers": [
@@ -657,6 +657,89 @@
           }
         }
       }
+    },
+    "/api/v1/transactions/total-amount-of-all-time": {
+      "get": {
+        "tags": [
+          "Transactions API"
+        ],
+        "summary": "Get total transaction amount that available in the system",
+        "operationId": "getTotalAmount",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "example": 100000000
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Check and uncheck exception error message",
+                  "i18nPlaceHolder": "PREMIERE.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/transactions/total-amount/{fromDate}/{toDate}": {
+      "get": {
+        "tags": [
+          "Transactions API"
+        ],
+        "summary": "Get total amount between a period of time",
+        "operationId": "getTotalAmountInRangeOfDate",
+        "parameters": [
+          {
+            "name": "fromDate",
+            "description": "The format of date must be ISO (yyyy-MM-dd)",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "example": "2023-01-01"
+            }
+          },
+          {
+            "name": "toDate",
+            "description": "The format of date must be ISO (yyyy-MM-dd)",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "example": "2023-01-31"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "example": 100000000
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Check and uncheck exception error message",
+                  "i18nPlaceHolder": "PREMIERE.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }      }
     },
     "/api/v1/loan-management": {
       "post": {
