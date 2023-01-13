@@ -1,6 +1,7 @@
 package org.hcmus.premiere.service.impl;
 
 import static org.hcmus.premiere.common.consts.PremiereApiUrls.PREMIERE_API_V2_EXTERNAL;
+import static org.hcmus.premiere.common.consts.PremiereApiUrls.TAIXIUBANK_API;
 import static org.hcmus.premiere.model.exception.CreditCardNotFoundException.CREDIT_CARD_DISABLED;
 import static org.hcmus.premiere.model.exception.CreditCardNotFoundException.CREDIT_CARD_NOT_FOUND;
 
@@ -12,21 +13,31 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.hcmus.premiere.common.consts.Constants;
 import org.hcmus.premiere.model.dto.CreditCardDto;
+import org.hcmus.premiere.model.dto.CreditCardExternalDto;
+import org.hcmus.premiere.model.dto.CreditCardExternalResponseDto;
+import org.hcmus.premiere.model.dto.CreditCardNumberDto;
+import org.hcmus.premiere.model.entity.Bank;
 import org.hcmus.premiere.model.entity.CreditCard;
 import org.hcmus.premiere.model.entity.User;
 import org.hcmus.premiere.model.enums.CardStatus;
 import org.hcmus.premiere.model.exception.CreditCardNotFoundException;
 import org.hcmus.premiere.repository.CreditCardRepository;
 import org.hcmus.premiere.resource.ExternalBankResource;
+import org.hcmus.premiere.service.BankService;
 import org.hcmus.premiere.service.CreditCardService;
 import org.hcmus.premiere.service.KeycloakService;
 import org.hcmus.premiere.service.UserService;
 import org.hcmus.premiere.util.CreditCardNumberGenerator;
 import org.hcmus.premiere.util.security.SecurityUtils;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 @Transactional(rollbackFor = Throwable.class)
@@ -44,6 +55,8 @@ public class CreditCardServiceImpl implements CreditCardService {
 
   private final ExternalBankResource resource;
 
+  private final BankService bankService;
+
   private KeycloakService keycloakService;
 
   public CreditCardServiceImpl(
@@ -52,13 +65,15 @@ public class CreditCardServiceImpl implements CreditCardService {
       CreditCardNumberGenerator creditCardNumberGenerator,
       ObjectMapper objectMapper,
       ResteasyWebTarget resteasyWebTarget,
-      SecurityUtils securityUtils) {
+      SecurityUtils securityUtils,
+      BankService bankService) {
     this.creditCardRepository = creditCardRepository;
     this.userService = userService;
     this.creditCardNumberGenerator = creditCardNumberGenerator;
     this.objectMapper = objectMapper;
     this.securityUtils = securityUtils;
     this.resource = resteasyWebTarget.proxy(ExternalBankResource.class);
+    this.bankService = bankService;
   }
 
   @Autowired
@@ -224,6 +239,37 @@ public class CreditCardServiceImpl implements CreditCardService {
     CreditCard creditCard = findCreditCardByNumber(cardNumber);
     creditCard.setStatus(CardStatus.DISABLED);
     creditCardRepository.saveAndFlush(creditCard);
+  }
+
+  @Override
+  public CreditCardExternalResponseDto getCreditCardByNumberExternalBank(String externalBankName,
+      String cardNumber) {
+    Bank bank = bankService.findBankByName(externalBankName);
+    if (Constants.TAIXIU_BANK_NAME.equals(bank.getBankName())) {
+      RestTemplate restTemplate = new RestTemplate();
+      String servletPath = TAIXIUBANK_API + "/accounts/external/get-info";
+      String secretKey = securityUtils.getExternalSecretKey();
+      long credentialsTime = System.currentTimeMillis();
+      CreditCardNumberDto creditCardNumberDto = new CreditCardNumberDto();
+      creditCardNumberDto.setSlug(Constants.PREMIERE_SLUG);
+      creditCardNumberDto.setAccountNumber(cardNumber);
+      JSONObject jsonObject = new JSONObject(creditCardNumberDto);
+      String data = jsonObject.toString();
+      String msgToken = securityUtils.hashMd5(credentialsTime + data + secretKey);
+
+      CreditCardExternalDto creditCardExternalDto = new CreditCardExternalDto();
+      creditCardExternalDto.setAccountNumber(cardNumber);
+      creditCardExternalDto.setTimestamp(credentialsTime);
+      creditCardExternalDto.setMsgToken(msgToken);
+      creditCardExternalDto.setSlug(Constants.PREMIERE_SLUG);
+
+      HttpEntity<?> request = new HttpEntity<>(creditCardExternalDto, null);
+      ResponseEntity<CreditCardExternalResponseDto> response = restTemplate.exchange(servletPath,
+          HttpMethod.POST, request, CreditCardExternalResponseDto.class);
+      return response.getBody();
+    } else {
+      return null;
+    }
   }
 
   @Override

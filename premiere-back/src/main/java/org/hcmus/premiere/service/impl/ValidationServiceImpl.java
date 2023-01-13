@@ -3,9 +3,11 @@ package org.hcmus.premiere.service.impl;
 import static org.hcmus.premiere.model.exception.CreditCardNotFoundException.CREDIT_CARD_DISABLED;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.hcmus.premiere.common.consts.Constants;
+import org.hcmus.premiere.model.dto.CreditCardExternalResponseDto;
 import org.hcmus.premiere.model.dto.TransactionRequestDto;
 import org.hcmus.premiere.model.entity.Bank;
 import org.hcmus.premiere.model.entity.CreditCard;
@@ -65,7 +67,10 @@ public class ValidationServiceImpl implements ValidationService {
         throw new IllegalArgumentException(Constants.BANK_NAME_IS_NOT_VALID);
       }
       Bank receiverBank = bankService.findBankByName(transactionRequestDto.getReceiverBankName());
-      creditCardService.getCreditCardByNumberAndExternalBankId(receiverBank.getId(), transactionRequestDto.getReceiverCardNumber());
+      CreditCardExternalResponseDto creditCardExternalResponseDto = creditCardService.getCreditCardByNumberExternalBank(receiverBank.getBankName(), transactionRequestDto.getReceiverCardNumber());
+      if (Objects.isNull(creditCardExternalResponseDto)) {
+        throw new IllegalArgumentException(Constants.BANK_NAME_NOT_FOUND);
+      }
     }
     return true;
   }

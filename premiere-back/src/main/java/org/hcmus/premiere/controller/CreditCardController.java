@@ -1,9 +1,12 @@
 package org.hcmus.premiere.controller;
 
 import java.util.List;
+import java.util.Objects;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hcmus.premiere.common.consts.Constants;
 import org.hcmus.premiere.model.dto.CreditCardDto;
+import org.hcmus.premiere.model.dto.CreditCardExternalResponseDto;
 import org.hcmus.premiere.model.dto.DepositMoneyRequestDto;
 import org.hcmus.premiere.model.entity.CreditCard;
 import org.hcmus.premiere.service.CreditCardService;
@@ -51,6 +54,14 @@ public class CreditCardController extends AbstractApplicationController {
       @PathVariable Long externalBankName,
       @PathVariable String cardNumber) {
     return creditCardService.getCreditCardByNumberAndExternalBankId(externalBankName, cardNumber);
+  }
+  @GetMapping("/external-bank/{externalBankName}/{cardNumber}")
+  public ResponseEntity<?> getCreditCardByNumberAndExternalBankId(@PathVariable String externalBankName, @PathVariable String cardNumber) {
+    CreditCardExternalResponseDto creditCardExternalResponseDto = creditCardService.getCreditCardByNumberExternalBank(externalBankName, cardNumber);
+    if (Objects.isNull(creditCardExternalResponseDto)) {
+      return ResponseEntity.badRequest().body(Constants.BANK_NAME_NOT_FOUND);
+    }
+      return ResponseEntity.ok(creditCardExternalResponseDto);
   }
 
   @PutMapping("/deposit-money")

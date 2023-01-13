@@ -18,6 +18,10 @@ public class Bank extends PremiereAbstractEntity {
   @Column(name = "bank_name", nullable = false, unique = true, columnDefinition = "VARCHAR(255)")
   private String bankName;
 
+  @Basic
+  @Column(name = "public_key", columnDefinition = "VARCHAR(255)")
+  private String publicKey;
+
   @OneToMany(mappedBy = "bank")
   private Set<Receiver> receivers;
 

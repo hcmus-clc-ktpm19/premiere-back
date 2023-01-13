@@ -1,6 +1,7 @@
 package org.hcmus.premiere.controller;
 
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "Receivers API")
@@ -66,12 +68,12 @@ public class ReceiverController extends AbstractApplicationController{
               mediaType = "application/json",
               schema = @Schema(implementation = ReceiverDto.class)))
   })
-  @GetMapping("/{userId}/{cardNumber}")
+  @GetMapping("/{userId}/{receiverCardNumber}")
   public ResponseEntity<ReceiverDto> getReceiverByCardNumber(
       @PathVariable Long userId,
-      @PathVariable String cardNumber
+      @PathVariable String receiverCardNumber
   ) {
-    Receiver receiver = receiverService.findReceiverByCardNumber(cardNumber);
+    Receiver receiver = receiverService.findReceiverByCardNumber(receiverCardNumber);
     UserReceiver userReceiver = userReceiverService.getUserReceiverByUserIdAndReceiverId(userId, receiver.getId());
     ReceiverDto receiverDto = applicationMapper.toReceiverDto(receiver);
     receiverDto.setNickname(userReceiver.getNickname());
@@ -108,10 +110,11 @@ public class ReceiverController extends AbstractApplicationController{
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "The receiver is deleted successfully but no content is returned")
   })
-  @DeleteMapping("/{cardNumber}")
-  public ResponseEntity<Void> deleteReceiver(@PathVariable String cardNumber) {
-    // TODO: Fix this delete, this delete is not incorrect
-    receiverService.deleteReceiver(cardNumber);
-    return ResponseEntity.noContent().build();
+  @DeleteMapping("/{userId}/{receiverCardNumber}")
+  @ResponseStatus(NO_CONTENT)
+  public void deleteReceiver(
+      @PathVariable Long userId,
+      @PathVariable String receiverCardNumber) {
+    receiverService.deleteReceiver(userId, receiverCardNumber);
   }
 }

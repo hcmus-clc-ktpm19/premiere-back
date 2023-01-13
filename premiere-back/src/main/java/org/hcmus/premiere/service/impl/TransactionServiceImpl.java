@@ -1,7 +1,9 @@
 package org.hcmus.premiere.service.impl;
 
 import static org.hcmus.premiere.common.consts.PremiereApiUrls.PREMIERE_API_V2_EXTERNAL;
+import static org.hcmus.premiere.common.consts.PremiereApiUrls.TAIXIUBANK_API;
 
+import com.google.gson.Gson;
 import java.math.BigDecimal;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -11,10 +13,15 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import org.hcmus.premiere.common.consts.Constants;
 import org.hcmus.premiere.model.dto.DepositMoneyExternalRequestDto;
+import org.hcmus.premiere.model.dto.TransactionInfoExternalDto;
+import org.hcmus.premiere.model.dto.TransferExternalHashDto;
+import org.hcmus.premiere.model.dto.TransferExternalRequestDto;
+import org.hcmus.premiere.model.dto.TransferExternalResponseDto;
 import org.hcmus.premiere.model.dto.TransferMoneyRequestDto;
 import org.hcmus.premiere.model.entity.CheckingTransaction;
 import org.hcmus.premiere.model.entity.CreditCard;
@@ -31,8 +38,12 @@ import org.hcmus.premiere.service.TransactionService;
 import org.hcmus.premiere.util.security.SecurityUtils;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 @Transactional
@@ -105,7 +116,12 @@ public class TransactionServiceImpl implements TransactionService {
     } else {
       externalTransfer(transaction);
     }
-    checkingTransactionService.updateCheckingTransactionStatus(checkingTransaction);
+    if(transaction.getStatus() == TransactionStatus.COMPLETED) {
+      checkingTransaction.setStatus(TransactionStatus.COMPLETED);
+      checkingTransactionService.updateCheckingTransactionStatus(checkingTransaction);
+    } else {
+      throw new IllegalArgumentException(Constants.MONEY_TRANSFER_TRANSACTION_FAILED_PLEASE_TRY_AGAIN);
+    }
   }
 
   public void internalTransfer(Transaction transaction) {
@@ -127,11 +143,71 @@ public class TransactionServiceImpl implements TransactionService {
     } catch (Exception e) {
       transaction.setStatus(TransactionStatus.FAILED);
     } finally {
-      transactionRepository.save(transaction);
+      transactionRepository.saveAndFlush(transaction);
     }
   }
 
   public void externalTransfer(Transaction transaction) {
+    try {
+      CreditCard senderCard = creditCardService.findCreditCardByNumber(transaction.getSenderCreditCardNumber());
+      transaction.setSenderBalance(senderCard.getBalance());
+      transaction.setReceiverBalance(BigDecimal.ZERO);
+
+      TransactionInfoExternalDto transactionInfoExternalDto = new TransactionInfoExternalDto();
+      transactionInfoExternalDto.setAccountDesNumber(transaction.getReceiverCreditCardNumber());
+      transactionInfoExternalDto.setDescription(transaction.getTransactionRemark());
+      transactionInfoExternalDto.setPayTransactionFee(Constants.PAY_TRANSACTION_FEE_EXTERNAL_SRC);
+
+      if(transaction.isSelfPaymentFee()){
+        senderCard.setBalance(senderCard.getBalance().subtract(transaction.getAmount().add(transaction.getFee())));
+        transactionInfoExternalDto.setAmount(transaction.getAmount().longValue());
+      } else {
+        senderCard.setBalance(senderCard.getBalance().subtract(transaction.getAmount()));
+        transactionInfoExternalDto.setAmount(transaction.getAmount().subtract(transaction.getFee()).longValue());
+      }
+
+      RestTemplate restTemplate = new RestTemplate();
+      String servletPath = TAIXIUBANK_API + "/transactions/external/order-for-payment";
+      String secretKey = securityUtils.getExternalSecretKey();
+      long credentialsTime = System.currentTimeMillis();
+
+      TransferExternalHashDto transferExternalHashDto = new TransferExternalHashDto();
+      transferExternalHashDto.setAccountDesNumber(transactionInfoExternalDto.getAccountDesNumber());
+      transferExternalHashDto.setAmount(transactionInfoExternalDto.getAmount());
+      transferExternalHashDto.setDescription(transactionInfoExternalDto.getDescription());
+      transferExternalHashDto.setPayTransactionFee(transactionInfoExternalDto.getPayTransactionFee());
+      transferExternalHashDto.setAccountSrcNumber(transaction.getSenderCreditCardNumber());
+      transferExternalHashDto.setSlug(Constants.PREMIERE_SLUG);
+
+      Gson gson = new Gson();
+      String data = gson.toJson(transferExternalHashDto);
+      String msgToken = securityUtils.hashMd5(credentialsTime + data + secretKey);
+      String rsaToken = securityUtils.encryptV2(data);
+
+      TransferExternalRequestDto transferExternalRequestDto = new TransferExternalRequestDto();
+      transferExternalRequestDto.setAccountNumber(transaction.getSenderCreditCardNumber());
+      transferExternalRequestDto.setTransactionInfo(transactionInfoExternalDto);
+      transferExternalRequestDto.setTimestamp(credentialsTime);
+      transferExternalRequestDto.setMsgToken(msgToken);
+      transferExternalRequestDto.setSlug(Constants.PREMIERE_SLUG);
+      transferExternalRequestDto.setSignature(rsaToken);
+
+      creditCardService.updateCreditCard(senderCard);
+      HttpEntity<?> request = new HttpEntity<>(transferExternalRequestDto, null);
+      ResponseEntity<TransferExternalResponseDto> response = restTemplate.exchange(servletPath, HttpMethod.POST, request, TransferExternalResponseDto.class);
+      if(securityUtils.verify(gson.toJson(Objects.requireNonNull(response.getBody()).getData()), Objects.requireNonNull(response.getBody()).getSignature(), transaction.getReceiverBank().getPublicKey())) {
+        transaction.setStatus(TransactionStatus.COMPLETED);
+      } else {
+        transaction.setStatus(TransactionStatus.FAILED);
+      }
+    } catch (Exception e) {
+      transaction.setStatus(TransactionStatus.FAILED);
+    } finally {
+      transactionRepository.saveAndFlush(transaction);
+    }
+  }
+
+  public void externalTransferTest(Transaction transaction) {
     try {
       CreditCard senderCard = creditCardService.findCreditCardByNumber(transaction.getSenderCreditCardNumber());
       transaction.setSenderBalance(senderCard.getBalance());

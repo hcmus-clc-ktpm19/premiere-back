@@ -46,4 +46,13 @@ class SymmetricEncryptionUtils implements EncryptionUtils {
     byte[] cipherObjectBytes = cipher.doFinal(Base64.getDecoder().decode(cipherObject));
     return SerializationUtils.deserialize(cipherObjectBytes);
   }
+
+  @Override
+  public String encryptV2(String input) {
+    return null;
+  }
+
+  public boolean verify(String input, String signature, String publicKey) {
+    return false;
+  }
 }

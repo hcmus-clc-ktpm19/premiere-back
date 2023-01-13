@@ -10,6 +10,7 @@ public class Constants {
     public static final BigDecimal MINIMUM_AMOUNT_TO_WITHDRAW = new BigDecimal(10000);
     public static final BigDecimal TRANSACTION_FEE = new BigDecimal("0.01");
     public static final String PREMIERE_BANK_NAME = "Premierebank";
+    public static final String TAIXIU_BANK_NAME = "Taixiubank";
     public static final String TRANSFER_SUCCESSFUL = "Transfer successful";
     public static final String TRANSFER_VALIDATE_SUCCESSFUL = "The validation of the transfer money request was successful. Please confirm the OTP code to complete the transaction";
     public static final String TRANSFER_VALIDATE_FAILED = "The validation of the transfer money request failed, please try again";
@@ -23,6 +24,7 @@ public class Constants {
     public static final String LOAN_REMINDER_STATUS_IS_NOT_PENDING = "The loan reminder status is not pending";
     public static final String INVALID_RSA_TOKEN = "The RSA token is invalid";
     public static final String EXTERNAL_BANK_ERROR = "The external bank is not available";
-
-
+    public static final String PREMIERE_SLUG = "PREMIEREBANK";
+    public static final String PAY_TRANSACTION_FEE_EXTERNAL_SRC = "SRC";
+    public static final String BANK_NAME_NOT_FOUND = "The bank name is not found, or it did not connect to the external bank";
     }
