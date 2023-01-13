@@ -51,7 +51,7 @@ public interface TransactionService {
       long page, long size, Long bankId,
       LocalDate fromDate, LocalDate toDate);
 
-  List<BigDecimal> getTotalAmountInRangeOfDate(LocalDate fromDate, LocalDate toDate);
+  List<BigDecimal> getTotalAmountInRangeOfDate(LocalDate fromDate, LocalDate toDate, Long bankId);
 
   BigDecimal getTotalAmount();
 }

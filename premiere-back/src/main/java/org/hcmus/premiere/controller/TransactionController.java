@@ -41,11 +41,12 @@ public class TransactionController extends AbstractApplicationController{
 
   private ValidationService validationService;
 
-  @GetMapping("/total-amount/{fromDate}/{toDate}")
+  @GetMapping("/{bankId}/total-amount/{fromDate}/{toDate}")
   public List<BigDecimal> getTotalAmountInRangeOfDate(
+      @PathVariable Long bankId,
       @PathVariable @DateTimeFormat(iso = ISO.DATE) LocalDate fromDate,
       @PathVariable @DateTimeFormat(iso = ISO.DATE) LocalDate toDate) {
-    return transactionService.getTotalAmountInRangeOfDate(fromDate, toDate);
+    return transactionService.getTotalAmountInRangeOfDate(fromDate, toDate, bankId);
   }
 
   @GetMapping("/total-amount-of-all-time")

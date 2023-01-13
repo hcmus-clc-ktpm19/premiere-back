@@ -71,9 +71,10 @@ public class CustomTransactionRepositoryImpl extends PremiereAbstractCustomRepos
   }
 
   @Override
-  public BigDecimal getTotalAmountInRangeOfDate(LocalDate fromDate, LocalDate toDate) {
+  public BigDecimal getTotalAmountInRangeOfDate(LocalDate fromDate, LocalDate toDate, Long bankId) {
     return selectFrom(QTransaction.transaction)
-        .where(QTransaction.transaction.createdAt.between(fromDate.atStartOfDay(), toDate.atStartOfDay()))
+        .where(QTransaction.transaction.createdAt.between(fromDate.atStartOfDay(),toDate.plusDays(1).atStartOfDay()))
+        .where(QTransaction.transaction.senderBank.id.eq(bankId).or(QTransaction.transaction.receiverBank.id.eq(bankId)))
         .select(QTransaction.transaction.amount.sum())
         .fetchFirst();
   }

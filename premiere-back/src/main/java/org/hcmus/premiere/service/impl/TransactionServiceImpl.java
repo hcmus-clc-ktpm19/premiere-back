@@ -350,7 +350,7 @@ public class TransactionServiceImpl implements TransactionService {
   }
 
   @Override
-  public List<BigDecimal> getTotalAmountInRangeOfDate(LocalDate fromDate, LocalDate toDate) {
+  public List<BigDecimal> getTotalAmountInRangeOfDate(LocalDate fromDate, LocalDate toDate, Long bankId) {
     LocalDate firstDayOfMonth = fromDate.withDayOfMonth(1);
     LocalDate lastDayOfMonth = fromDate.withDayOfMonth(fromDate.lengthOfMonth());
     LocalDate lastDayOfRequest = toDate.withDayOfMonth(toDate.lengthOfMonth());
@@ -360,8 +360,8 @@ public class TransactionServiceImpl implements TransactionService {
     do {
       firstDayOfMonth = firstDayOfMonth.withDayOfMonth(1);
       lastDayOfMonth = firstDayOfMonth.withDayOfMonth(firstDayOfMonth.lengthOfMonth());
-      BigDecimal totalAmount = transactionRepository.getTotalAmountInRangeOfDate(firstDayOfMonth,
-          lastDayOfMonth);
+      BigDecimal totalAmount = transactionRepository
+          .getTotalAmountInRangeOfDate(firstDayOfMonth, lastDayOfMonth, bankId);
       totalAmounts.add(totalAmount);
 
       LocalDate nextMonth = firstDayOfMonth.plusMonths(1);
