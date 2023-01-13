@@ -1,6 +1,7 @@
 package org.hcmus.premiere.controller;
 
 import org.hcmus.premiere.util.mapper.ApplicationMapper;
+import org.hcmus.premiere.util.mapper.BankMapper;
 import org.hcmus.premiere.util.mapper.CreditCardMapper;
 import org.hcmus.premiere.util.mapper.LoanReminderMapper;
 import org.hcmus.premiere.util.mapper.TransactionMapper;
@@ -23,4 +24,7 @@ public abstract class AbstractApplicationController {
 
   @Autowired
   protected TransactionMapper transactionMapper;
+
+  @Autowired
+  protected BankMapper bankMapper;
 }

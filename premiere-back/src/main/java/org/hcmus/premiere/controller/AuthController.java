@@ -19,6 +19,7 @@ import org.hcmus.premiere.model.dto.PasswordDto;
 import org.hcmus.premiere.model.dto.UserDto;
 import org.hcmus.premiere.model.entity.User;
 import org.hcmus.premiere.model.enums.PremiereRole;
+import org.hcmus.premiere.service.CreditCardService;
 import org.hcmus.premiere.service.KeycloakService;
 import org.hcmus.premiere.service.OTPService;
 import org.hcmus.premiere.service.UserService;
@@ -42,6 +43,8 @@ public class AuthController extends AbstractApplicationController {
   private final KeycloakService keycloakService;
 
   private final OTPService otpService;
+
+  private final CreditCardService creditCardService;
 
   @GetMapping("/token/user")
   public UserDto getUserByToken() {
@@ -125,12 +128,13 @@ public class AuthController extends AbstractApplicationController {
     Set<UserRepresentation> userRepresentations = keycloakService.getAllCustomers();
     List<FullInfoUserDto> customers = userRepresentations.stream()
         .map(userRepresentation -> {
-          User user = userService.findUserById(
-              Long.valueOf(userRepresentation.getAttributes().get("userId").get(0)));
+          User user = userService.findUserById(Long.valueOf(userRepresentation.getAttributes().get("userId").get(0)));
+          FullInfoUserDto fullInfoDto = applicationMapper.toFullInfoUserDto(user, userRepresentation, CUSTOMER.value);
+          fullInfoDto.setCardEnabled(creditCardService.isCreditCardEnable(user.getId()));
 
-          return applicationMapper.toFullInfoUserDto(user, userRepresentation, CUSTOMER.value);
+          return fullInfoDto;
         })
-        .collect(Collectors.toList());
+        .toList();
     return ResponseEntity.ok().body(customers);
   }
 

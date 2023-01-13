@@ -11,4 +11,6 @@ public interface CustomCreditCardRepository {
   List<CreditCard> getCreditCardsIgnoreBalance();
 
   Optional<CreditCard> getCreditCardByNumberIgnoreBalance(String number);
+
+  Optional<CreditCard> getCreditCardByUserId(Long userId);
 }

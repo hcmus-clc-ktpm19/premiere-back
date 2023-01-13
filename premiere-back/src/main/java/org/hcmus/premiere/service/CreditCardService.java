@@ -10,6 +10,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface CreditCardService {
 
+  boolean isCreditCardEnable(Long userId);
+
   CreditCard findCreditCardById(Long id);
 
   @PreAuthorize("@SecurityUtils.containsRoles('CUSTOMER', 'PREMIERE_ADMIN', 'EMPLOYEE')")
@@ -36,4 +38,6 @@ public interface CreditCardService {
   void disableCreditCard(String cardNumber);
 
   CreditCardExternalResponseDto getCreditCardByNumberExternalBank(String externalBankName, String cardNumber);
+
+  void enableCreditCard(String cardNumber);
 }

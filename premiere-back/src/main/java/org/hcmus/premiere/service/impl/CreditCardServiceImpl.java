@@ -86,6 +86,17 @@ public class CreditCardServiceImpl implements CreditCardService {
   }
 
   @Override
+  public boolean isCreditCardEnable(Long userId) {
+    CreditCard creditCard = creditCardRepository
+        .getCreditCardByUserId(userId)
+        .orElseThrow(() -> new CreditCardNotFoundException(
+            "Credit card with number not found",
+            userId.toString(),
+            CREDIT_CARD_NOT_FOUND));
+    return CardStatus.AVAILABLE.equals(creditCard.getStatus());
+  }
+
+  @Override
   public CreditCard findCreditCardById(Long id) {
     return creditCardRepository
         .findById(id)
@@ -259,5 +270,12 @@ public class CreditCardServiceImpl implements CreditCardService {
     } else {
       return null;
     }
+  }
+
+  @Override
+  public void enableCreditCard(String cardNumber) {
+    CreditCard creditCard = findCreditCardByNumber(cardNumber);
+    creditCard.setStatus(CardStatus.AVAILABLE);
+    creditCardRepository.saveAndFlush(creditCard);
   }
 }

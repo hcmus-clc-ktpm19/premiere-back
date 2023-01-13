@@ -3,6 +3,7 @@ package org.hcmus.premiere.service.impl;
 import static org.hcmus.premiere.model.exception.BankNotFoundException.BANK_NOT_FOUND;
 import static org.hcmus.premiere.model.exception.BankNotFoundException.BANK_NOT_FOUND_MESSAGE;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.hcmus.premiere.model.entity.Bank;
 import org.hcmus.premiere.model.exception.BankNotFoundException;
@@ -29,5 +30,10 @@ public class BankServiceImpl implements BankService {
     return bankRepository
         .findByBankName(bankName)
         .orElseThrow(() -> new BankNotFoundException(BANK_NOT_FOUND_MESSAGE, bankName, BANK_NOT_FOUND));
+  }
+
+  @Override
+  public List<Bank> getBanks() {
+    return bankRepository.findAll();
   }
 }
