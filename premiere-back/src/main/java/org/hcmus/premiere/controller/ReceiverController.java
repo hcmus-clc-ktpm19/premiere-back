@@ -68,12 +68,12 @@ public class ReceiverController extends AbstractApplicationController{
               mediaType = "application/json",
               schema = @Schema(implementation = ReceiverDto.class)))
   })
-  @GetMapping("/{userId}/{cardNumber}")
+  @GetMapping("/{userId}/{receiverCardNumber}")
   public ResponseEntity<ReceiverDto> getReceiverByCardNumber(
       @PathVariable Long userId,
-      @PathVariable String cardNumber
+      @PathVariable String receiverCardNumber
   ) {
-    Receiver receiver = receiverService.findReceiverByCardNumber(cardNumber);
+    Receiver receiver = receiverService.findReceiverByCardNumber(receiverCardNumber);
     UserReceiver userReceiver = userReceiverService.getUserReceiverByUserIdAndReceiverId(userId, receiver.getId());
     ReceiverDto receiverDto = applicationMapper.toReceiverDto(receiver);
     receiverDto.setNickname(userReceiver.getNickname());
