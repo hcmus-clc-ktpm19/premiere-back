@@ -59,7 +59,7 @@ springdoc:
     path: /api-docs
   swagger-ui:
     operations-sorter: method
-    url: /api-docs.yaml
+    url: /api-docs.json
 
 external-bank:
   secret-key: 2SIo8nL9ik

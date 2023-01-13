@@ -1,7 +1,7 @@
 {
   "info": {
     "title": "Premiere API Documentation",
-    "version": "0.0.4"
+    "version": "0.0.5"
   },
   "openapi": "3.0.1",
   "servers": [
@@ -12,7 +12,7 @@
   ],
   "security": [
     {
-      "bearerAuth": []
+      "openId": []
     }
   ],
   "paths": {
@@ -739,7 +739,8 @@
               }
             }
           }
-        }      }
+        }
+      }
     },
     "/api/v1/loan-management": {
       "post": {
@@ -1659,7 +1660,8 @@
                     "openDay": null,
                     "cardNumber": "1234567890123457",
                     "userId": null
-                  }                }
+                  }
+                }
               }
             }
           },
@@ -2163,9 +2165,12 @@
           "asc": {
             "type": "boolean"
           },
-          "moneyTransferCriteria":  {
+          "moneyTransferCriteria": {
             "type": "string",
-            "enum": ["INCOMING", "OUTGOING"]
+            "enum": [
+              "INCOMING",
+              "OUTGOING"
+            ]
           },
           "fromDate": {
             "type": "string",
@@ -2546,9 +2551,9 @@
       }
     },
     "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer"
+      "openId": {
+        "type": "openIdConnect",
+        "openIdConnectUrl": "http://localhost:8180/realms/premiere-realm/.well-known/openid-configuration"
       }
     }
   }
