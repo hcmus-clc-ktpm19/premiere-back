@@ -534,6 +534,8 @@
     },
     "/api/v1/transactions/money-transfer": {
       "post": {
+        "summary": "Verify OTP and transfer money",
+        "description": "Verify OTP and transfer money from one account to another",
         "tags": [
           "Transactions API"
         ],
@@ -597,6 +599,8 @@
     },
     "/api/v1/transactions/money-transfer/validate": {
       "post": {
+        "summary": "Validate money transfer request and send OTP",
+        "description": "Validate money transfer request and send OTP",
         "tags": [
           "Transactions API"
         ],
@@ -914,6 +918,8 @@
     },
     "/api/v1/auth/verify-otp": {
       "post": {
+        "summary": "Verify OTP",
+        "description": "Verify OTP to reset password",
         "tags": [
           "Auth API"
         ],
@@ -1062,6 +1068,8 @@
     },
     "/api/v1/auth/request-otp": {
       "post": {
+        "summary": "Request OTP",
+        "description": "Request OTP to reset password",
         "tags": [
           "Auth API"
         ],
@@ -1736,6 +1744,58 @@
                 "example": {
                   "message": "Credit card not found",
                   "i18nPlaceHolder": "CREDIT_CARD.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Check and uncheck exception error message",
+                  "i18nPlaceHolder": "PREMIERE.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/credit-card/external-bank/{externalBankName}/{cardNumber}": {
+      "get": {
+        "summary": "Obtain the user's credit card by external bank name and card number",
+        "tags": [
+          "Credit Card API"
+        ],
+        "operationId": "getCreditCardByNumberAndExternalBankName",
+        "parameters": [
+          {
+            "name": "externalBankName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Taixiubank"
+            }
+          },
+          {
+            "name": "cardNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "49578221111"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreditCardExternalResponseDto"
                 }
               }
             }
@@ -2546,6 +2606,33 @@
           "userId": {
             "type": "integer",
             "format": "int64"
+          }
+        }
+      },
+      "CreditCardExternalResponseDto": {
+        "type": "object",
+        "properties": {
+          "ResponseDataDto": {
+            "type": "object"
+          },
+          "statusCode": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "ResponseDataDto": {
+        "type": "object",
+        "properties": {
+          "accountNumber": {
+            "type": "string"
+          },
+          "user": {
+            "type": "object",
+            "format": "Map<String, String>"
           }
         }
       }

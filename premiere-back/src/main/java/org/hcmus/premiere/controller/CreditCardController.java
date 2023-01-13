@@ -55,8 +55,9 @@ public class CreditCardController extends AbstractApplicationController {
       @PathVariable String cardNumber) {
     return creditCardService.getCreditCardByNumberAndExternalBankId(externalBankName, cardNumber);
   }
+
   @GetMapping("/external-bank/{externalBankName}/{cardNumber}")
-  public ResponseEntity<?> getCreditCardByNumberAndExternalBankId(@PathVariable String externalBankName, @PathVariable String cardNumber) {
+  public ResponseEntity<?> getCreditCardByNumberAndExternalBankName(@PathVariable String externalBankName, @PathVariable String cardNumber) {
     CreditCardExternalResponseDto creditCardExternalResponseDto = creditCardService.getCreditCardByNumberExternalBank(externalBankName, cardNumber);
     if (Objects.isNull(creditCardExternalResponseDto)) {
       return ResponseEntity.badRequest().body(Constants.BANK_NAME_NOT_FOUND);
