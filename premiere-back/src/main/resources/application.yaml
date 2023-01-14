@@ -44,6 +44,7 @@ queue:
 
 front-end:
   origin: ${FRONT_END_ORIGIN}
+  back-up-origin: ${FRONT_END_BACK_UP_ORIGIN}
 
 back-end:
   origin: ${BACK_END_ORIGIN}

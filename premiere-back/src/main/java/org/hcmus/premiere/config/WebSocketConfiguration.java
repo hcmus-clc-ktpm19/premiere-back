@@ -33,6 +33,9 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
   @Value("${front-end.origin}")
   private String frontEndOrigin;
 
+  @Value("${front-end.back-up-origin}")
+  private String backUpFrontEndOrigin;
+
   private final RabbitProperties rabbitProperties;
 
   @Bean
@@ -65,7 +68,7 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
 
   @Override
   public void registerStompEndpoints(StompEndpointRegistry registry) {
-    registry.addEndpoint("/ws").setAllowedOrigins(frontEndOrigin);
-    registry.addEndpoint("/ws").setAllowedOrigins(frontEndOrigin).withSockJS();
+    registry.addEndpoint("/ws").setAllowedOrigins(frontEndOrigin, backUpFrontEndOrigin);
+    registry.addEndpoint("/ws").setAllowedOrigins(frontEndOrigin, backUpFrontEndOrigin).withSockJS();
   }
 }
